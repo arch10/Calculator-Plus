@@ -163,6 +163,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         text.setText(textArea);
     }
 
+    private void noNeed(){
+        //This is a useless function
+        //This is just for checking GitHub
+    }
+
     private void checkScreen() {
         if(text.getText().toString().equals("Error")||text.getText().toString().equals("Divide Error")){
             text.setText("0");
