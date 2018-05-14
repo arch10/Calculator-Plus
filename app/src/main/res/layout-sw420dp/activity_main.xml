@@ -28,7 +28,7 @@
                 android:maxLines="1"
                 tools:text="0"
                 android:textAlignment="textEnd"
-                android:textSize="80sp" />
+                android:textSize="90sp" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -38,7 +38,7 @@
             android:gravity="end|center_vertical"
             android:maxLines="1"
             tools:text="0"
-            android:textSize="75sp" />
+            android:textSize="85sp" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
