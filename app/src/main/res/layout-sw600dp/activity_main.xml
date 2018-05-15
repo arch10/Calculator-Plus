@@ -27,11 +27,13 @@
                 android:background="@null"
                 android:maxLines="1"
                 tools:text="0"
+                android:cursorVisible="false"
                 android:textAlignment="textEnd"
                 android:textSize="75sp" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/tv_display"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.75"
@@ -191,7 +193,6 @@
                 android:textSize="36sp" />
 
             <Button
-                android:id="@+id/equal"
                 style="@style/ButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -210,6 +211,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline">
 
         <Button
+            android:id="@+id/div"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -218,6 +220,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/mul"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -227,6 +230,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/add"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -235,6 +239,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/sub"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -260,6 +265,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline">
 
         <Button
+            android:id="@+id/del"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -284,6 +290,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/equal"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
