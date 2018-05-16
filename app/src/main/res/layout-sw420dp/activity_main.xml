@@ -27,11 +27,13 @@
                 android:background="@null"
                 android:maxLines="1"
                 tools:text="0"
+                android:cursorVisible="false"
                 android:textAlignment="textEnd"
                 android:textSize="90sp" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
+            android:id="@+id/tv_display"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.75"
@@ -203,6 +205,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline">
 
         <Button
+            android:id="@+id/del"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -210,6 +213,7 @@
             android:text="Del"
             android:textSize="24sp" />
         <Button
+            android:id="@+id/div"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -218,6 +222,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/mul"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -226,6 +231,7 @@
             android:textAllCaps="false"
             android:textSize="36sp" />
         <Button
+            android:id="@+id/add"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -234,6 +240,7 @@
             android:textSize="36sp" />
 
         <Button
+            android:id="@+id/sub"
             style="@style/SecondaryButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
