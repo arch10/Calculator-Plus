@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.Stack;
@@ -114,14 +115,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Double ans = getResult(equ);
         DecimalFormat df = new DecimalFormat("#.######");
 
+        //Toast.makeText(this,"Ans = "+df.format(ans),Toast.LENGTH_SHORT).show();
+
         equ = equ.replace("/", "÷");
         equ = equ.replace("*", "x");
 
         result.setText(df.format(ans));
     }
 
-    //empty screen mul and div
-    //delcimal on decimal
 
     @Override
     public void onClick(View v) {
@@ -130,12 +131,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (id) {
             case R.id.mul:
-                c = equ.charAt(equ.length() - 1);
-                if (!isEquationEmpty() && c != '.') {
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
                     if (ifPrevOperator()) {
                         equ = equ.substring(0, equ.length() - 1);
                         add("x");
                         equation.setText(equ);
+                    } else if(c == '.'){
+                        break;
                     } else {
                         add("x");
                     }
@@ -143,12 +146,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.div:
-                c = equ.charAt(equ.length() - 1);
-                if (!isEquationEmpty() && c != '.') {
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
                     if (ifPrevOperator()) {
                         equ = equ.substring(0, equ.length() - 1);
                         add("÷");
                         equation.setText(equ);
+                    } else if(c == '.') {
+                        break;
                     } else {
                         add("÷");
                     }
@@ -180,12 +185,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.decimal:
                 if (!isEquationEmpty()) {
-                    c = equ.charAt(equ.length() - 1);
-                    if (c != '.') {
-                        if (ifPrevOperator()) {
-                            add("0.");
-                        } else {
-                            add(".");
+                    if(canPlaceDecimal()) {
+                        c = equ.charAt(equ.length() - 1);
+                        if (c != '.') {
+                            if (ifPrevOperator()) {
+                                add("0.");
+                            } else {
+                                add(".");
+                            }
                         }
                     }
                 } else if (isEquationEmpty()) {
@@ -220,8 +227,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(c!='.' && !isOperator(c))
                         add("-");
                     else if (isOperator(c)) {
-                        equ = equ.substring(0, equ.length() - 1);
-                        add("-");
+
+                        if(c=='+' || c == '÷' || c == 'x')
+                            add("-");
+                        //equ = equ.substring(0, equ.length() - 1);
+                        //add("-");
                     }
                     break;
                 }
@@ -301,8 +311,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private double getResult(String input) {
 
         char c = input.charAt(input.length() - 1);
-        if (c == '+' || c == '-' || c == '/' || c == '*') {
+        while(isOperator(c)) {
             input = input.substring(0, input.length() - 1);
+            c = input.charAt(input.length() - 1);
         }
 
         /* Create stacks for operators and operands */
@@ -322,6 +333,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         input = "0" + input;
 
         input = input.replaceAll("-", "+-");
+
+        input = input.replaceAll("(\\*\\+)","*");
+        input = input.replaceAll("(\\/\\+)","/");
+        input = input.replaceAll("(\\+\\+)","+");
+
+
+
 
         /* Store operands and operators in respective stacks */
 
@@ -458,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //return Pattern.matches("[-+]?[0-9]+\\.[0-9]+[-+\\/ * \\u00f7 x][0-9 - + \\/ * \\u00f7 x \\.]+",equ);
         //return Pattern.matches("[-+]?[0-9]+.[0-9]+[-+\\/*÷x][0-9-+\\/*÷x.]+",equ);
         //boolean bool = Pattern.matches("[-+]?[0-9]+\\.[0-9]+[-+\\/*][0-9-+*\\/\\.]+",equ);
-        boolean bool = Pattern.matches("[-+]?\\d+(\\.\\d+)?[-+\\/*÷x](\\d+(\\.\\d+)?[-+\\/*÷x]?(\\d+(\\.\\d+)?)?)+", equ);
+        boolean bool = Pattern.matches("[-+]?\\d+(\\.\\d+)?[-+\\/*÷x]-?(\\d+(\\.\\d+)?[-+\\/*÷x]?-?(\\d+(\\.\\d+)?)?)+", equ);
         //Toast.makeText(this,bool+"'"+equ+"'",Toast.LENGTH_SHORT).show();
         return bool;
     }
@@ -470,9 +488,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (equ.equals(""))
             return true;
         char c = equ.charAt(equ.length() - 1);
-        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == 'x')
-            return true;
-        return false;
+        return isOperator(c);
     }
 
     private boolean isOperator(char c) {
@@ -496,5 +512,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             result.setText("");
         }
+    }
+
+    private boolean canPlaceDecimal() {
+        String eq = equ;
+
+        int j = eq.length()-1;
+        int count = 0;
+        while (j>=0 && !isOperator(eq.charAt(j))) {
+            if(eq.charAt(j)=='.')
+                count++;
+            j--;
+        }
+        if(count==0)
+            return true;
+        else
+            return false;
     }
 }
