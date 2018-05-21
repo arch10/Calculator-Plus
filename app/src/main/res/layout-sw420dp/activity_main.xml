@@ -212,6 +212,7 @@
             android:layout_weight="1"
             android:text="Del"
             android:textSize="24sp" />
+
         <Button
             android:id="@+id/div"
             style="@style/SecondaryButtonStyle"
@@ -230,6 +231,7 @@
             android:text="x"
             android:textAllCaps="false"
             android:textSize="36sp" />
+
         <Button
             android:id="@+id/add"
             style="@style/SecondaryButtonStyle"
@@ -248,5 +250,14 @@
             android:text="-"
             android:textSize="36sp" />
     </LinearLayout>
-
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 </android.support.constraint.ConstraintLayout>

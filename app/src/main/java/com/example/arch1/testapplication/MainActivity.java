@@ -1,15 +1,19 @@
 package com.example.arch1.testapplication;
 
+import android.animation.Animator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.text.DecimalFormat;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -20,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
     private EditText equation;
     private String equ = "";
+    private View view;
+    private Animator anim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bequal = findViewById(R.id.equal);
         bdel = findViewById(R.id.del);
         bdecimal = findViewById(R.id.decimal);
+        view = findViewById(R.id.view2);
 
         //adding onClickListeners
         b1.setOnClickListener(this);
@@ -77,9 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bdel.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                equ = "";
-                equation.setText(equ);
-                result.setText("");
+                if (!isEquationEmpty()) {
+                    animateClear(view);
+                    equ = "";
+                    equation.setText(equ);
+                    result.setText("");
+                }
                 return true;
             }
         });
@@ -106,6 +116,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        //registering alarm for checking updates periodically
+        Intent repeatingIntent = new Intent(this, MyBroadcastReceiver.class);
+        PendingIntent repeatingPendingIntent = PendingIntent.getBroadcast(this,
+                0, repeatingIntent, 0);
+        AlarmManager manager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(),
+                AlarmManager.INTERVAL_DAY, repeatingPendingIntent);
     }
 
     private void calculateResult() {
@@ -114,8 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Double ans = getResult(equ);
         DecimalFormat df = new DecimalFormat("#.######");
-
-        //Toast.makeText(this,"Ans = "+df.format(ans),Toast.LENGTH_SHORT).show();
 
         equ = equ.replace("/", "÷");
         equ = equ.replace("*", "x");
@@ -137,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equ = equ.substring(0, equ.length() - 1);
                         add("x");
                         equation.setText(equ);
-                    } else if(c == '.'){
+                    } else if (c == '.') {
                         break;
                     } else {
                         add("x");
@@ -152,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equ = equ.substring(0, equ.length() - 1);
                         add("÷");
                         equation.setText(equ);
-                    } else if(c == '.') {
+                    } else if (c == '.') {
                         break;
                     } else {
                         add("÷");
@@ -185,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.decimal:
                 if (!isEquationEmpty()) {
-                    if(canPlaceDecimal()) {
+                    if (canPlaceDecimal()) {
                         c = equ.charAt(equ.length() - 1);
                         if (c != '.') {
                             if (ifPrevOperator()) {
@@ -222,16 +238,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.sub:
-                if(!isEquationEmpty()){
+                if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if(c!='.' && !isOperator(c))
+                    if (c != '.' && !isOperator(c))
                         add("-");
                     else if (isOperator(c)) {
 
-                        if(c=='+' || c == '÷' || c == 'x')
+                        if (c == '+' || c == '÷' || c == 'x')
                             add("-");
-                        //equ = equ.substring(0, equ.length() - 1);
-                        //add("-");
                     }
                     break;
                 }
@@ -311,173 +325,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private double getResult(String input) {
 
         char c = input.charAt(input.length() - 1);
-        while(isOperator(c)) {
+
+        while (isOperator(c)) {
             input = input.substring(0, input.length() - 1);
             c = input.charAt(input.length() - 1);
         }
 
         /* Create stacks for operators and operands */
-
         Stack<Integer> op = new Stack<Integer>();
-
         Stack<Double> val = new Stack<Double>();
 
         /* Create temporary stacks for operators and operands */
-
         Stack<Integer> optmp = new Stack<Integer>();
-
         Stack<Double> valtmp = new Stack<Double>();
 
         /* Accept expression */
-
         input = "0" + input;
-
         input = input.replaceAll("-", "+-");
-
-        input = input.replaceAll("(\\*\\+)","*");
-        input = input.replaceAll("(\\/\\+)","/");
-        input = input.replaceAll("(\\+\\+)","+");
-
-
-
+        input = input.replaceAll("(\\*\\+)", "*");
+        input = input.replaceAll("(\\/\\+)", "/");
+        input = input.replaceAll("(\\+\\+)", "+");
 
         /* Store operands and operators in respective stacks */
-
         String temp = "";
-
-        for (int i = 0; i < input.length(); i++)
-
-        {
-
+        for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
 
             if (ch == '-')
-
                 temp = "-" + temp;
-
             else if (ch != '+' && ch != '*' && ch != '/')
-
                 temp = temp + ch;
-
-            else
-
-            {
-
+            else {
                 val.push(Double.parseDouble(temp));
-
                 op.push((int) ch);
-
                 temp = "";
-
             }
-
         }
 
         val.push(Double.parseDouble(temp));
-
-        /* Create char array of operators as per precedence */
-
-        /* -ve sign is already taken care of while storing */
-
         char operators[] = {'/', '*', '+'};
 
         /* Evaluation of expression */
-
-        for (int i = 0; i < 3; i++)
-
-        {
-
+        for (int i = 0; i < 3; i++) {
             boolean it = false;
-
-            while (!op.isEmpty())
-
-            {
-
+            while (!op.isEmpty()) {
                 int optr = op.pop();
-
                 double v1 = val.pop();
-
                 double v2 = val.pop();
-
-                if (optr == operators[i])
-
-                {
-
+                if (optr == operators[i]) {
                     /* if operator matches evaluate and store in temporary stack */
-
-                    if (i == 0)
-
-                    {
-
+                    if (i == 0) {
                         valtmp.push(v2 / v1);
-
                         it = true;
-
                         break;
-
-                    } else if (i == 1)
-
-                    {
-
+                    } else if (i == 1) {
                         valtmp.push(v2 * v1);
-
                         it = true;
-
                         break;
-
-                    } else if (i == 2)
-
-                    {
-
+                    } else if (i == 2) {
                         valtmp.push(v2 + v1);
-
                         it = true;
-
                         break;
-
                     }
-
-                } else
-
-                {
-
+                } else {
                     valtmp.push(v1);
-
                     val.push(v2);
-
                     optmp.push(optr);
-
                 }
-
             }
 
             /* Push back all elements from temporary stacks to main stacks */
-
             while (!valtmp.isEmpty())
-
                 val.push(valtmp.pop());
 
             while (!optmp.isEmpty())
-
                 op.push(optmp.pop());
 
             /* Iterate again for same operator */
-
             if (it)
-
                 i--;
-
         }
-
         return val.pop();
     }
 
     private boolean ifAnEquation(String equ) {
-        //return Pattern.matches("[-+]?[0-9]+\\.[0-9]+[-+\\/ * \\u00f7 x][0-9 - + \\/ * \\u00f7 x \\.]+",equ);
-        //return Pattern.matches("[-+]?[0-9]+.[0-9]+[-+\\/*÷x][0-9-+\\/*÷x.]+",equ);
-        //boolean bool = Pattern.matches("[-+]?[0-9]+\\.[0-9]+[-+\\/*][0-9-+*\\/\\.]+",equ);
         boolean bool = Pattern.matches("[-+]?\\d+(\\.\\d+)?[-+\\/*÷x]-?(\\d+(\\.\\d+)?[-+\\/*÷x]?-?(\\d+(\\.\\d+)?)?)+", equ);
-        //Toast.makeText(this,bool+"'"+equ+"'",Toast.LENGTH_SHORT).show();
         return bool;
     }
 
@@ -517,16 +449,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean canPlaceDecimal() {
         String eq = equ;
 
-        int j = eq.length()-1;
+        int j = eq.length() - 1;
         int count = 0;
-        while (j>=0 && !isOperator(eq.charAt(j))) {
-            if(eq.charAt(j)=='.')
+        while (j >= 0 && !isOperator(eq.charAt(j))) {
+            if (eq.charAt(j) == '.')
                 count++;
             j--;
         }
-        if(count==0)
+        if (count == 0)
             return true;
         else
             return false;
     }
+
+    private void animateClear(View viewRoot) {
+        int cx = viewRoot.getRight();
+        int cy = viewRoot.getBottom();
+        int l = viewRoot.getHeight();
+        int b = viewRoot.getWidth();
+        int finalRadius = (int) Math.sqrt((l * l) + (b * b));
+
+        anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+        viewRoot.setVisibility(View.VISIBLE);
+        anim.setDuration(300);
+        anim.addListener(listener);
+        anim.start();
+    }
+
+    private Animator.AnimatorListener listener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            view.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    };
+
 }
