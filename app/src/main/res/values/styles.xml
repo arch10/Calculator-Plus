@@ -9,12 +9,12 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/darkGray</item>
+        <item name="android:background">@drawable/button_background</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/gray</item>
+        <item name="android:background">@drawable/button_background_secondary</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 </resources>

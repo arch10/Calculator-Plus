@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="gray">#757575</color>
+    <color name="colorTransparent">#773F51B5</color>
+    <color name="lightGray">#C5C5C5</color>
     <color name="darkGray">#454545</color>
     <color name="colorWhite">#FFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

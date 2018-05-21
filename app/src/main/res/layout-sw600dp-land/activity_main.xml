@@ -25,11 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:maxLines="1"
-                tools:text="0"
                 android:cursorVisible="false"
+                android:maxLines="1"
                 android:textAlignment="textEnd"
-                android:textSize="65sp" />
+                android:textSize="65sp"
+                tools:text="0" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -39,8 +39,8 @@
             android:layout_weight="0.75"
             android:gravity="end|center_vertical"
             android:maxLines="1"
-            tools:text="0"
-            android:textSize="60sp" />
+            android:textSize="60sp"
+            tools:text="0" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
@@ -298,5 +298,15 @@
             android:text="="
             android:textSize="36sp" />
     </LinearLayout>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
 </android.support.constraint.ConstraintLayout>
