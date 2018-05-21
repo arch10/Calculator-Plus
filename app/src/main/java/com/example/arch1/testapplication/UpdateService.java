@@ -118,14 +118,12 @@ public class UpdateService extends Service {
                 latestVersion = jsonObject.getString("tag_name");
                 prerelease = jsonObject.getString("prerelease");
 
-                if (version.equals(latestVersion) && prerelease.equals("false")) {
-                    //result.setText("Update Available");
+                if (!version.equals(latestVersion) && prerelease.equals("false")) {
                     JSONArray assets = jsonObject.getJSONArray("assets");
                     JSONObject object = assets.getJSONObject(0);
                     url = object.getString("browser_download_url");
                     String count = object.getString("download_count");
                     popUpdateNotification(url);
-                    //Toast.makeText(this,url+" :: "+count,Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
