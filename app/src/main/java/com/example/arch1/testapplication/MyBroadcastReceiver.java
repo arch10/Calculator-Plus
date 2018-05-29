@@ -38,13 +38,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             CustomTabsHelper.openCustomTab(context, customTabsIntent, Uri.parse(url), new WebViewFallback());
 
         } else if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            //registering alarm for checking updates periodically
             Intent repeatingIntent = new Intent(context, MyBroadcastReceiver.class);
             PendingIntent repeatingPendingIntent = PendingIntent.getBroadcast(context,
                     0, repeatingIntent, 0);
             AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-            int intevalinMin = 5;
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(),
-                    intevalinMin * 1000, repeatingPendingIntent);
+            manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                    SystemClock.elapsedRealtime()+AlarmManager.INTERVAL_DAY,
+                    AlarmManager.INTERVAL_DAY*7, repeatingPendingIntent);
         } else {
             Intent background = new Intent(context, UpdateService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

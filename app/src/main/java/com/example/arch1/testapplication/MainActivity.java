@@ -9,6 +9,8 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.Button;
@@ -18,17 +20,23 @@ import java.text.DecimalFormat;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
 
     private TextView result;
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
+    private Button open, close, percent;
     private EditText equation;
     private String equ = "";
     private View view;
     private Animator anim;
+    private View mainLayout, slidingLayout;
+    private AppPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = AppPreferences.getInstance(this);
+        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -36,25 +44,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             equ = savedInstanceState.getString("equ");
 
         //Initialisations
+        mainLayout = findViewById(R.id.mainLayout);
+        slidingLayout = findViewById(R.id.slidingLayout);
         equation = findViewById(R.id.et_display1);
         result = findViewById(R.id.tv_display);
-        b1 = findViewById(R.id.one);
-        b2 = findViewById(R.id.two);
-        b3 = findViewById(R.id.three);
-        b4 = findViewById(R.id.four);
-        b5 = findViewById(R.id.five);
-        b6 = findViewById(R.id.six);
-        b7 = findViewById(R.id.seven);
-        b8 = findViewById(R.id.eight);
-        b9 = findViewById(R.id.nine);
-        b0 = findViewById(R.id.zero);
-        badd = findViewById(R.id.add);
-        bsub = findViewById(R.id.sub);
-        bmul = findViewById(R.id.mul);
-        bdiv = findViewById(R.id.div);
-        bequal = findViewById(R.id.equal);
-        bdel = findViewById(R.id.del);
-        bdecimal = findViewById(R.id.decimal);
+        b1 = mainLayout.findViewById(R.id.one);
+        b2 = mainLayout.findViewById(R.id.two);
+        b3 = mainLayout.findViewById(R.id.three);
+        b4 = mainLayout.findViewById(R.id.four);
+        b5 = mainLayout.findViewById(R.id.five);
+        b6 = mainLayout.findViewById(R.id.six);
+        b7 = mainLayout.findViewById(R.id.seven);
+        b8 = mainLayout.findViewById(R.id.eight);
+        b9 = mainLayout.findViewById(R.id.nine);
+        b0 = mainLayout.findViewById(R.id.zero);
+        badd = mainLayout.findViewById(R.id.add);
+        bsub = mainLayout.findViewById(R.id.sub);
+        bmul = mainLayout.findViewById(R.id.mul);
+        bdiv = mainLayout.findViewById(R.id.div);
+        bequal = mainLayout.findViewById(R.id.equal);
+        bdel = mainLayout.findViewById(R.id.del);
+        bdecimal = mainLayout.findViewById(R.id.decimal);
+        open = mainLayout.findViewById(R.id.open);
+        close = mainLayout.findViewById(R.id.close);
+        percent = mainLayout.findViewById(R.id.percent);
         view = findViewById(R.id.view2);
 
         //adding onClickListeners
@@ -95,35 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-        equation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        equation.addTextChangedListener(this);
 
-            }
+        setUpdateChecker();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (ifAnEquation(equ)) {
-                    calculateResult();
-                } else {
-                    result.setText("");
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-
-        //registering alarm for checking updates periodically
-        Intent repeatingIntent = new Intent(this, MyBroadcastReceiver.class);
-        PendingIntent repeatingPendingIntent = PendingIntent.getBroadcast(this,
-                0, repeatingIntent, 0);
-        AlarmManager manager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(),
-                AlarmManager.INTERVAL_DAY, repeatingPendingIntent);
     }
 
     private void calculateResult() {
@@ -498,4 +486,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    private void setUpdateChecker() {
+        //registering alarm for checking updates periodically
+        Intent repeatingIntent = new Intent(this, MyBroadcastReceiver.class);
+        PendingIntent repeatingPendingIntent = PendingIntent.getBroadcast(this,
+                0, repeatingIntent, 0);
+        AlarmManager manager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP,
+                SystemClock.elapsedRealtime()+AlarmManager.INTERVAL_DAY,
+                AlarmManager.INTERVAL_DAY*7, repeatingPendingIntent);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (ifAnEquation(equ)) {
+            calculateResult();
+        } else {
+            result.setText("");
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int resId = item.getItemId();
+
+        switch (resId) {
+            case R.id.settings :
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setTheme(String themeName) {
+        if (themeName.equals("green")) {
+
+            setTheme(R.style.GreenAppTheme);
+
+
+        } else if (themeName.equals("orange")) {
+
+            setTheme(R.style.AppTheme);
+
+        } else if (themeName.equals("blue")) {
+
+            setTheme(R.style.BlueAppTheme);
+
+        } else if (themeName.equals("lgreen")) {
+
+            setTheme(R.style.LightGreenAppTheme);
+
+        } else if (themeName.equals("pink")) {
+
+            setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("")) {
+
+            setTheme(R.style.AppTheme);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "orange");
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }

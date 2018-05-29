@@ -57,12 +57,14 @@ public class UpdateService extends Service {
             }
 
             //Ongoing Notification
-            mBuilder = new NotificationCompat.Builder(context, "Default")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Checking Update")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setProgress(0, 0, true);
-            startForeground(001, mBuilder.build());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mBuilder = new NotificationCompat.Builder(context, "Default")
+                        .setSmallIcon(R.drawable.ic_action_name)
+                        .setContentTitle("Checking Update")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setProgress(0, 0, true);
+                startForeground(001, mBuilder.build());
+            }
 
             //checking update status
             String res = "";

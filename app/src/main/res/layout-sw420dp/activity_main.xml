@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        style="?displayStyle"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +29,10 @@
                 android:background="@null"
                 android:maxLines="1"
                 tools:text="0"
+                style="?displayTextStyle"
                 android:cursorVisible="false"
                 android:textAlignment="textEnd"
-                android:textSize="90sp" />
+                android:textSize="55sp" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -37,10 +40,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.75"
+            style="?displayTextStyle"
             android:gravity="end|center_vertical"
             android:maxLines="1"
             tools:text="0"
-            android:textSize="85sp" />
+            android:textSize="40sp" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
@@ -48,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
@@ -57,207 +61,37 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
-    <LinearLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/seven"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="7"
-                android:textSize="36sp"/>
+        android:gravity="bottom"
+        sothree:layout_constraintBottom_toBottomOf="parent"
+        sothree:layout_constraintEnd_toEndOf="parent"
+        sothree:layout_constraintStart_toStartOf="parent"
+        sothree:layout_constraintTop_toTopOf="@+id/guideline"
+        sothree:umanoPanelHeight="40dp"
+        sothree:umanoShadowHeight="4dp">
 
-            <Button
-                android:id="@+id/eight"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="8"
-                android:textSize="36sp"
-                android:layout_weight="1"/>
+        <include layout="@layout/one"
+            android:id="@+id/mainLayout"/>
 
-            <Button
-                android:id="@+id/nine"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="9"
-                android:textSize="36sp"
-                android:layout_weight="1" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/four"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="4"
-                android:textSize="36sp"/>
+        <include layout="@layout/two"
+            android:id="@+id/slidingLayout"
+            android:visibility="invisible"/>
 
-            <Button
-                android:id="@+id/five"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="5"
-                android:textSize="36sp"
-                android:layout_weight="1"/>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-            <Button
-                android:id="@+id/six"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="6"
-                android:textSize="36sp"
-                android:layout_weight="1" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/one"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="1"
-                android:textSize="36sp"/>
-
-            <Button
-                android:id="@+id/two"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="2"
-                android:textSize="36sp"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/three"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="3"
-                android:textSize="36sp"
-                android:layout_weight="1" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/decimal"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="."
-                android:textSize="36sp"/>
-
-            <Button
-                android:id="@+id/zero"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="0"
-                android:textSize="36sp"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/equal"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="="
-                android:textSize="36sp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/guideline">
-
-        <Button
-            android:id="@+id/del"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Del"
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/div"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="\u00F7"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/mul"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="x"
-            android:textAllCaps="false"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/add"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="+"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/sub"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="-"
-            android:textSize="36sp" />
-    </LinearLayout>
     <View
         android:id="@+id/view2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/colorTransparent"
+        style="?clearStyle"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
 </android.support.constraint.ConstraintLayout>
+
+
