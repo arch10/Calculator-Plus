@@ -12,6 +12,7 @@ public class AppPreferences {
     final String SHARED_PREF_STRING = "com.example.arch1.testapplication";
     final static String APP_THEME = "appTheme";
     final static String APP_FIRST_LAUNCH = "AppFirstLaunch";
+    final static String APP_ANSWER_PRECISION = "precision";
 
     public AppPreferences(Context context) {
         ctx = context;

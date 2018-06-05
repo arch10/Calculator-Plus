@@ -42,14 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppPreferences preferences;
     private android.support.v7.widget.Toolbar toolbar;
     private boolean firstLauch;
-    private DecimalFormat df = new DecimalFormat("#.######");
+    private DecimalFormat df;
+    private String precisionString = "";
     private boolean equalPressed = false;
 
     private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
 
     //[-+]?\d+(\.\d+)?%?[-+\/*÷x%]-?((\d+(\.\d+)?%?[-+\/*÷x%]?-?(\d+(\.\d+)?)?%?)+)?
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = AppPreferences.getInstance(this);
@@ -153,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return "";
     }
-
 
     @Override
     public void onClick(View v) {
@@ -327,6 +326,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (isOperator(c)) {
                         if (equ.length() >= 2 && (isNumber(equ.charAt(equ.length() - 2) + ""))) {
+                            if(c=='-'){
+                                removeBackOperators();
+                                add("+");
+                                break;
+                            }
                             add("-");
                             break;
                         }
@@ -530,7 +534,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         equation.setText(equ);
     }
 
-
     private boolean isEquationEmpty() {
         String eq = equ;//equation.getText().toString().trim();
         if (eq.equals(""))
@@ -552,16 +555,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return "";
         }
 
-        for (int i = 0; i < equation.length(); i++) {
-            c = equation.charAt(i);
-            if (c == '%') {
-                if (i != equation.length() - 1) {
-                    equation = equation.substring(0, i) + "/100" + equation.substring(i + 1, equation.length());
-                } else {
-                    equation = equation.substring(0, i) + "/100";
-                }
-            }
-        }
+//        for (int i = 0; i < equation.length(); i++) {
+//            c = equation.charAt(i);
+//            if (c == '%') {
+//                if (i != equation.length() - 1) {
+//                    equation = equation.substring(0, i) + "/100" + equation.substring(i + 1, equation.length());
+//                } else {
+//                    equation = equation.substring(0, i) + "/100";
+//                }
+//            }
+//        }
 
         Stack<String> stack = new Stack<>();
         String temp = "";
@@ -588,7 +591,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     abc = stack.pop() + abc;
                 }
                 stack.pop();
-                stack.push(df.format(getResult(abc)));
+                //stack.push(df.format(getResult(abc)));
+                stack.push(df.format(getValue(abc)));
             } else {
                 temp = temp + c;
             }
@@ -602,7 +606,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             lll = stack.pop() + lll;
         }
 
-        return df.format(getResult(lll));
+        //return df.format(getResult(lll));
+        return df.format(getValue(lll));
     }
 
     private double getResult(String input) {
@@ -698,6 +703,176 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 i--;
         }
         return val.pop();
+    }
+
+    private double getValue (String equation) {
+
+        char c = equation.charAt(equation.length() - 1);
+
+        while (isOperator(c) && c != '%') {
+            equation = equation.substring(0, equation.length() - 1);
+            if (!equation.equals(""))
+                c = equation.charAt(equation.length() - 1);
+        }
+
+        String temp = "";
+        Stack<String> stack = new Stack<>();
+        Stack<String> workingStack = new Stack<>();
+
+        equation = equation.replaceAll("-", "+-");
+        equation = equation.replaceAll("(\\*\\+)", "*");
+        equation = equation.replaceAll("(\\/\\+)", "/");
+        equation = equation.replaceAll("(\\+\\+)", "+");
+
+
+        //tokenize
+        temp = "";
+        for(int i=0;i<equation.length();i++) {
+            c = equation.charAt(i);
+
+            if (isOp(c)) {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                stack.push(c + "");
+            } else {
+                temp = temp + c;
+            }
+        }
+
+        if(!temp.equals(""))
+            stack.push(temp);
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if operation is over
+        if(workingStack.size()==1){
+            String ans = workingStack.pop();
+            return Double.parseDouble(ans);
+        }
+
+        //unary operator
+        stack.clear();
+        while (!workingStack.empty()){
+            temp = workingStack.pop();
+
+            if(temp.equals("%")){
+                String val1 = stack.pop();
+                double num1 = Double.parseDouble(val1);
+                num1 = num1/100;
+                val1 = num1+"";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if operation is over
+        if(workingStack.size()==1){
+            String ans = workingStack.pop();
+            return Double.parseDouble(ans);
+        }
+
+        //division
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if(temp.length()==1 && temp.charAt(0)=='/'){
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                num1 = num1/num2;
+                val1 = num1+"";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if operation is over
+        if(workingStack.size()==1){
+            String ans = workingStack.pop();
+            return Double.parseDouble(ans);
+        }
+
+        //multiplication
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if(temp.length()==1 && temp.charAt(0)=='*'){
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                num1 = num1*num2;
+                val1 = num1+"";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if operation is over
+        if(workingStack.size()==1){
+            String ans = workingStack.pop();
+            return Double.parseDouble(ans);
+        }
+
+        //addition
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if(temp.length()==1 && temp.charAt(0)=='+'){
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                num1 = num1+num2;
+                val1 = num1+"";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if operation is over
+        if(workingStack.size()==1){
+            String ans = workingStack.pop();
+                return Double.parseDouble(ans);
+        } else
+            return 0.0;
+    }
+
+    private boolean isOp(char c){
+        if(c=='+'||c=='/'||c=='*'||c=='%')
+            return true;
+        return false;
     }
 
     private boolean ifAnEquation(String equ) {
@@ -829,7 +1004,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
