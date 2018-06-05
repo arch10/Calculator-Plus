@@ -34,7 +34,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\Archit\Desktop\icons8-math-96.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/C:\Users\Archit\Desktop\icons8-math-96.png" />
                                       <entry key="theme" value="CUSTOM" />
                                     </map>
                                   </option>
@@ -51,7 +51,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="58" />
+                                                <entry key="scalingPercent" value="52" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -63,8 +63,35 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="C:\Users\Archit\Desktop\icons8-math-96.png" />
-                                      <entry key="legacyIconShape" value="NONE" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/Calculator Icons/xxxhdpi/ic_launcher_APP.png" />
+                                      <entry key="previewDensity" value="HIGH" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                            <entry key="launcherLegacy">
+                              <value>
+                                <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="5" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/Calculator Icons/xxxhdpi/ic_launcher_APP.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -87,17 +114,6 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="clipartAsset">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_announcement_black_24dp.xml" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                       <entry key="image">
                                         <value>
                                           <PersistentState>
@@ -114,7 +130,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="C:\Users\Archit\Desktop\icons8-math-96.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/C:\Users\Archit\Desktop\icons8-math-96.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -124,7 +140,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="NOTIFICATION" />
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>
@@ -150,7 +166,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/file/ic_file_download_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/snap/android-studio/47/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_settings_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -160,8 +176,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_file_download_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Archit" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_settings_black_24dp" />
+                            <entry key="sourceFile" value="$USER_HOME$/C:\Users\Archit" />
                           </map>
                         </option>
                       </PersistentState>

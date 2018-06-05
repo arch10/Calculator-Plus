@@ -92,6 +92,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="?actionBarStyle"
+        android:clickable="true"
+        android:elevation="0dp" />
+
 </android.support.constraint.ConstraintLayout>
 
 

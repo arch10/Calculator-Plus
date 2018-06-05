@@ -1,14 +1,19 @@
 package com.example.arch1.testapplication;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.RadioGroup;
 
 public class ThemeActivity extends AppCompatActivity {
 
     private RadioGroup themeGroup;
     private AppPreferences preferences;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +22,19 @@ public class ThemeActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theme);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //setting toolbar style manually
+        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         themeGroup = findViewById(R.id.rg_theme_group);
         checkSelectedTheme();
@@ -40,6 +58,8 @@ public class ThemeActivity extends AppCompatActivity {
                     case R.id.rb_theme_pink:
                         changeTheme("pink");
                         break;
+                    case R.id.rb_theme_default:
+                        changeTheme("default");
                 }
             }
         });
@@ -95,6 +115,15 @@ public class ThemeActivity extends AppCompatActivity {
             intent[0] = new Intent(this, MainActivity.class);
             startActivities(intent);
             finish();
+        } else if (themeName.equals("default")) {
+
+            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            Intent intent[] = new Intent[3];
+            intent[2] = new Intent(this, ThemeActivity.class);
+            intent[1] = new Intent(this, SettingsActivity.class);
+            intent[0] = new Intent(this, MainActivity.class);
+            startActivities(intent);
+            finish();
         }
 
     }
@@ -121,10 +150,14 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.PinkAppTheme);
 
+        } else if (themeName.equals("default")) {
+
+            setTheme(R.style.DefAppTheme);
+
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.AppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "orange");
+            setTheme(R.style.DefAppTheme);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
 
         }
     }
@@ -135,7 +168,6 @@ public class ThemeActivity extends AppCompatActivity {
         if (themeName.equals("green")) {
 
             themeGroup.check(R.id.rb_theme_green);
-
 
         } else if (themeName.equals("orange")) {
 
@@ -153,9 +185,71 @@ public class ThemeActivity extends AppCompatActivity {
 
             themeGroup.check(R.id.rb_theme_pink);
 
+        } else if (themeName.equals("default")) {
+
+            themeGroup.check(R.id.rb_theme_default);
+
         } else if (themeName.equals("")) {
 
-            themeGroup.check(R.id.rb_theme_orange);
+            themeGroup.check(R.id.rb_theme_default);
+
+        }
+    }
+
+    private void setToolBarStyle(String themeName) {
+        if (themeName.equals("green")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setBackground(getDrawable(R.drawable.green_title));
+            } else
+                ContextCompat.getDrawable(this, R.drawable.pink_title);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        } else if (themeName.equals("orange")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setBackground(getDrawable(R.drawable.orange_title));
+            } else
+                ContextCompat.getDrawable(this, R.drawable.pink_title);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        } else if (themeName.equals("blue")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setBackground(getDrawable(R.drawable.blue_title));
+            } else
+                ContextCompat.getDrawable(this, R.drawable.pink_title);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        } else if (themeName.equals("lgreen")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setBackground(getDrawable(R.drawable.lightgreen_title));
+            } else
+                ContextCompat.getDrawable(this, R.drawable.pink_title);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        } else if (themeName.equals("pink")) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                toolbar.setBackground(getDrawable(R.drawable.pink_title));
+
+            } else
+                ContextCompat.getDrawable(this, R.drawable.pink_title);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        } else if (themeName.equals("default")) {
+
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+
+        } else if (themeName.equals("")) {
+
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
 
         }
     }

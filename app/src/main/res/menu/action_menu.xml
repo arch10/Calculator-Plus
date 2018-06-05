@@ -5,10 +5,10 @@
     <item
         android:id="@+id/settings"
         android:title="Settings"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/about"
         android:title="About"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="never"/>
 
 </menu>

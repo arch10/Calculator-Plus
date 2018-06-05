@@ -11,6 +11,7 @@ public class AppPreferences {
 
     final String SHARED_PREF_STRING = "com.example.arch1.testapplication";
     final static String APP_THEME = "appTheme";
+    final static String APP_FIRST_LAUNCH = "AppFirstLaunch";
 
     public AppPreferences(Context context) {
         ctx = context;
@@ -29,6 +30,15 @@ public class AppPreferences {
 
     public static AppPreferences getInstance(Context context) {
         return new AppPreferences(context);
+    }
+
+    public boolean getBooleanPreference(String key) {
+        return sharedPreferences.getBoolean(key,true);
+    }
+
+    public void setBooleanPreference(String key, Boolean value) {
+        editor.putBoolean(key,value);
+        editor.commit();
     }
 
 }

@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,9 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+
 import java.text.DecimalFormat;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -26,12 +35,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
     private Button open, close, percent;
     private EditText equation;
-    private String equ = "";
+    private String equ = "", tempEqu;
     private View view;
     private Animator anim;
     private View mainLayout, slidingLayout;
     private AppPreferences preferences;
+    private android.support.v7.widget.Toolbar toolbar;
+    private boolean firstLauch;
+    private DecimalFormat df = new DecimalFormat("#.######");
+    private boolean equalPressed = false;
 
+    private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
+
+    //[-+]?\d+(\.\d+)?%?[-+\/*÷x%]-?((\d+(\.\d+)?%?[-+\/*÷x%]?-?(\d+(\.\d+)?)?%?)+)?
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = AppPreferences.getInstance(this);
@@ -42,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (savedInstanceState != null)
             equ = savedInstanceState.getString("equ");
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+        //checking if first Launch
+        firstLauch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
+        if (firstLauch) {
+            startTutorial();
+            preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
+        }
 
         //Initialisations
         mainLayout = findViewById(R.id.mainLayout);
@@ -88,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bequal.setOnClickListener(this);
         bdel.setOnClickListener(this);
         bdecimal.setOnClickListener(this);
+        open.setOnClickListener(this);
+        close.setOnClickListener(this);
+        percent.setOnClickListener(this);
 
         //avoiding keyboard input
         equation.setShowSoftInputOnFocus(false);
@@ -97,12 +129,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bdel.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (!isEquationEmpty()) {
-                    animateClear(view);
-                    equ = "";
-                    equation.setText(equ);
-                    result.setText("");
-                }
+                if(!equation.getText().toString().equals(""))
+                animateClear(view);
+                equ = "";
+                equation.setText(equ);
+                result.setText("");
                 return true;
             }
         });
@@ -110,21 +141,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         equation.addTextChangedListener(this);
 
-        setUpdateChecker();
-
     }
 
-    private void calculateResult() {
-        equ = equ.replace("÷", "/");
-        equ = equ.replace("x", "*");
+    private String calculateResult(String equ) {
+        if (!equ.equals("")) {
+            equ = equ.replace("÷", "/");
+            equ = equ.replace("x", "*");
 
-        Double ans = getResult(equ);
-        DecimalFormat df = new DecimalFormat("#.######");
-
-        equ = equ.replace("/", "÷");
-        equ = equ.replace("*", "x");
-
-        result.setText(df.format(ans));
+            return getAnswer(equ);
+            //return df.format(getResult(equ));
+        }
+        return "";
     }
 
 
@@ -135,12 +162,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (id) {
             case R.id.mul:
+                equalPressed = false;
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (ifPrevOperator()) {
-                        equ = equ.substring(0, equ.length() - 1);
+                    if (c == '%') {
                         add("x");
-                        equation.setText(equ);
+                        break;
+                    }
+                    if (c == '(') {
+                        break;
+                    }
+                    if (ifPrevOperator()) {
+                        if (equ.length() == 1) {
+                            break;
+                        }
+                        if (removeBackOperators()) {
+                            add("%x");
+                        } else {
+                            add("x");
+                        }
                     } else if (c == '.') {
                         break;
                     } else {
@@ -150,12 +190,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.div:
+                equalPressed = false;
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (ifPrevOperator()) {
-                        equ = equ.substring(0, equ.length() - 1);
+                    if (c == '%') {
                         add("÷");
-                        equation.setText(equ);
+                        break;
+                    }
+                    if (c == '(') {
+                        break;
+                    }
+                    if (ifPrevOperator()) {
+                        if (equ.length() == 1) {
+                            break;
+                        }
+                        if (removeBackOperators()) {
+                            add("%÷");
+                        } else {
+                            add("÷");
+                        }
                     } else if (c == '.') {
                         break;
                     } else {
@@ -167,10 +220,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.equal:
                 if (!isEquationEmpty()) {
                     String res = result.getText().toString().trim();
+                    if (res.equals("") || res.equals(getString(R.string.invalid_expression))) {
+                        result.setText(getString(R.string.invalid_expression));
+                        result.setTextColor(getResources().getColor(R.color.colorRed));
+                        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                        result.startAnimation(shake);
+                        break;
+                    }
                     if (!res.equals("")) {
-                        equ = res;
-                        equation.setText(equ);
+                        equ = "";
+                        equation.setText(res);
                         result.setText("");
+                        equalPressed = true;
                     }
                 }
                 break;
@@ -179,25 +240,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (!isEquationEmpty()) {
                     equ = equ.substring(0, equ.length() - 1);
                     equation.setText(equ);
-                    if (ifAnEquation(equ)) {
-                        calculateResult();
-                    } else {
-                        result.setText("");
-                    }
+                } else {
+                    equation.setText("");
                 }
                 break;
 
             case R.id.decimal:
                 if (!isEquationEmpty()) {
-                    if (canPlaceDecimal()) {
-                        c = equ.charAt(equ.length() - 1);
-                        if (c != '.') {
-                            if (ifPrevOperator()) {
-                                add("0.");
-                            } else {
-                                add(".");
-                            }
-                        }
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c + "") && canPlaceDecimal()) {
+                        add(".");
+                        break;
+                    }
+                    if (ifPrevOperator()) {
+                        add("0.");
+                        break;
+                    }
+                    if (c == '(') {
+                        add("0.");
+                        break;
+                    }
+                    if (c == ')') {
+                        add("x0.");
+                        break;
                     }
                 } else if (isEquationEmpty()) {
                     add("0.");
@@ -207,6 +272,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.add:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
+                    if (c == '%') {
+                        add("+");
+                        break;
+                    }
+                    if (c == '(') {
+                        break;
+                    }
+                    if (c == ')') {
+                        add("+");
+                        break;
+                    }
+                    if (isOperator(c)) {
+                        if (removeBackOperators()) {
+                            add("%+");
+                        } else {
+                            add("+");
+                        }
+                        break;
+                    }
+
                     if (c != '.' && !isOperator(c))
                         add("+");
                     else if (isOperator(c)) {
@@ -228,6 +313,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sub:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
+                    if (c == '%') {
+                        add("-");
+                        break;
+                    }
+                    if (c == '(') {
+                        break;
+                    }
+                    if (c == ')') {
+                        add("-");
+                        break;
+                    }
+
+                    if (isOperator(c)) {
+                        if (equ.length() >= 2 && (isNumber(equ.charAt(equ.length() - 2) + ""))) {
+                            add("-");
+                            break;
+                        }
+                        if (removeBackOperators()) {
+                            add("%-");
+                        } else {
+                            add("-");
+                        }
+                        break;
+                    }
+
                     if (c != '.' && !isOperator(c))
                         add("-");
                     else if (isOperator(c)) {
@@ -248,48 +358,168 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.one:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x1");
+                    break;
+                }
                 add("1");
                 break;
 
             case R.id.two:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x2");
+                    break;
+                }
                 add("2");
                 break;
 
             case R.id.three:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x3");
+                    break;
+                }
                 add("3");
                 break;
 
             case R.id.four:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x4");
+                    break;
+                }
                 add("4");
                 break;
 
             case R.id.five:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x5");
+                    break;
+                }
                 add("5");
                 break;
 
             case R.id.six:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x6");
+                    break;
+                }
                 add("6");
                 break;
 
             case R.id.seven:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x7");
+                    break;
+                }
                 add("7");
                 break;
 
             case R.id.eight:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x8");
+                    break;
+                }
                 add("8");
                 break;
 
             case R.id.nine:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x9");
+                    break;
+                }
                 add("9");
                 break;
 
             case R.id.zero:
+                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
+                    add("x0");
+                    break;
+                }
                 add("0");
+                break;
+
+            case R.id.percent:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c + "") || c == ')') {
+                        add("%");
+                        break;
+                    }
+                    if (isOperator(c)) {
+                        if (equ.length() == 1) {
+                            break;
+                        }
+                        removeBackOperators();
+                        if (!isEquationEmpty())
+                            add("%");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0%");
+                    }
+                }
+                break;
+
+            case R.id.open:
+                if (!isEquationEmpty() && equ.charAt(equ.length() - 1) == '.') {
+                    equ = equ.substring(0, equ.length() - 1);
+                    add("x(");
+                    break;
+                }
+
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c + "") || c == '%' || c == ')') {
+                        add("x(");
+                        break;
+                    }
+                    if (c == '(' || isOperator(c)) {
+                        add("(");
+                        break;
+                    }
+                } else {
+                    add("(");
+                }
+                break;
+
+            case R.id.close:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c + "") || c == ')' || c == '%') {
+                        add(")");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0)");
+                        break;
+                    }
+                    if (c == '(') {
+                        equ = equ.substring(0, equ.length() - 1);
+                        equation.setText(equ);
+                        break;
+                    }
+                }
                 break;
 
             default:
                 break;
         }
+    }
+
+    private boolean removeBackOperators() {
+        boolean value = false;
+        if (!isEquationEmpty()) {
+            char c = equ.charAt(equ.length() - 1);
+            while (isOperator(c)) {
+                if (c == '%')
+                    value = true;
+                equ = equ.substring(0, equ.length() - 1);
+                if (equ.length() == 0)
+                    break;
+                c = equ.charAt(equ.length() - 1);
+            }
+        }
+        equation.setText(equ);
+        return value;
     }
 
     private void add(String str) {
@@ -302,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private boolean isEquationEmpty() {
-        String eq = equation.getText().toString().trim();
+        String eq = equ;//equation.getText().toString().trim();
         if (eq.equals(""))
             return true;
         if (eq == null)
@@ -310,13 +540,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
+    private String getAnswer(String equation) {
+
+        char c = equation.charAt(equation.length() - 1);
+
+        while (isOperator(c) && c != '%') {
+            equation = equation.substring(0, equation.length() - 1);
+            if (!equation.equals(""))
+                c = equation.charAt(equation.length() - 1);
+            else
+                return "";
+        }
+
+        for (int i = 0; i < equation.length(); i++) {
+            c = equation.charAt(i);
+            if (c == '%') {
+                if (i != equation.length() - 1) {
+                    equation = equation.substring(0, i) + "/100" + equation.substring(i + 1, equation.length());
+                } else {
+                    equation = equation.substring(0, i) + "/100";
+                }
+            }
+        }
+
+        Stack<String> stack = new Stack<>();
+        String temp = "";
+        for (int i = 0; i < equation.length(); i++) {
+            c = equation.charAt(i);
+            if (isOperator(c)) {
+                if (!temp.equals(""))
+                    stack.push(temp);
+                stack.push(c + "");
+                temp = "";
+            } else if (c == '(') {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                stack.push("(");
+            } else if (c == ')') {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                String abc = "";
+                while (!stack.peek().equals("(")) {
+                    abc = stack.pop() + abc;
+                }
+                stack.pop();
+                stack.push(df.format(getResult(abc)));
+            } else {
+                temp = temp + c;
+            }
+        }
+
+        if (!temp.equals(""))
+            stack.push(temp);
+
+        String lll = "";
+        while (!stack.empty()) {
+            lll = stack.pop() + lll;
+        }
+
+        return df.format(getResult(lll));
+    }
+
     private double getResult(String input) {
 
         char c = input.charAt(input.length() - 1);
 
-        while (isOperator(c)) {
+        while (isOperator(c) && c != '%') {
             input = input.substring(0, input.length() - 1);
-            c = input.charAt(input.length() - 1);
+            if (!input.equals(""))
+                c = input.charAt(input.length() - 1);
         }
 
         /* Create stacks for operators and operands */
@@ -383,8 +679,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             /* Push back all elements from temporary stacks to main stacks */
-            while (!valtmp.isEmpty())
-                val.push(valtmp.pop());
+            while (!valtmp.isEmpty()) {
+                if (!op.empty() && op.peek() == '/') {
+                    Double val1 = valtmp.pop();
+                    Double val2 = val.pop();
+                    val.push(val1);
+                    val.push(val2);
+                } else {
+                    val.push(valtmp.pop());
+                }
+            }
 
             while (!optmp.isEmpty())
                 op.push(optmp.pop());
@@ -397,12 +701,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean ifAnEquation(String equ) {
-        boolean bool = Pattern.matches("[-+]?\\d+(\\.\\d+)?[-+\\/*÷x]-?(\\d+(\\.\\d+)?[-+\\/*÷x]?-?(\\d+(\\.\\d+)?)?)+", equ);
-        return bool;
+        return Pattern.matches(EVALUATION_PATTERN, equ);
     }
-
-    //[-+]?\d+(\.\d+)?[-+\/*÷](\d+(\.\d+)?[-+\/*]?(\d+(\.\d+)?)?)+
-
 
     private boolean ifPrevOperator() {
         if (equ.equals(""))
@@ -412,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isOperator(char c) {
-        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == 'x')
+        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == 'x' || c == '%')
             return true;
         return false;
     }
@@ -427,10 +727,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         equ = savedInstanceState.getString("equ");
-        if (ifAnEquation(equ)) {
-            calculateResult();
+
+        if (balancedParenthesis(equ)) {
+            result.setTextColor(getTextColor());
+            result.setText(calculateResult(equ));
         } else {
-            result.setText("");
+            //trying to balance equation
+            // this is smart calculator
+            tryBalancingBrackets();
+            //if could balance the equation, calculate the result
+            if (balancedParenthesis(tempEqu)) {
+                //calculate result
+                result.setTextColor(getTextColor());
+                result.setText(calculateResult(tempEqu));
+            } else {
+                result.setText("");
+            }
         }
     }
 
@@ -457,11 +769,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int b = viewRoot.getWidth();
         int finalRadius = (int) Math.sqrt((l * l) + (b * b));
 
-        anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
-        viewRoot.setVisibility(View.VISIBLE);
-        anim.setDuration(300);
-        anim.addListener(listener);
-        anim.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+            viewRoot.setVisibility(View.VISIBLE);
+            anim.setDuration(300);
+            anim.addListener(listener);
+            anim.start();
+        }
     }
 
     private Animator.AnimatorListener listener = new Animator.AnimatorListener() {
@@ -486,17 +800,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void setUpdateChecker() {
-        //registering alarm for checking updates periodically
-        Intent repeatingIntent = new Intent(this, MyBroadcastReceiver.class);
-        PendingIntent repeatingPendingIntent = PendingIntent.getBroadcast(this,
-                0, repeatingIntent, 0);
-        AlarmManager manager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP,
-                SystemClock.elapsedRealtime()+AlarmManager.INTERVAL_DAY,
-                AlarmManager.INTERVAL_DAY*7, repeatingPendingIntent);
-    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -509,17 +812,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (ifAnEquation(equ)) {
-            calculateResult();
+        if (balancedParenthesis(equ)) {
+            result.setTextColor(getTextColor());
+            result.setText(calculateResult(equ));
         } else {
-            result.setText("");
+            //trying to balance equation
+            // this is smart calculator
+            tryBalancingBrackets();
+            //if could balance the equation, calculate the result
+            if (balancedParenthesis(tempEqu)) {
+                //calculate result
+                result.setTextColor(getTextColor());
+                result.setText(calculateResult(tempEqu));
+            } else {
+                result.setText("");
+            }
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_menu,menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.action_menu, menu);
+        return true;
     }
 
     @Override
@@ -528,7 +843,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int resId = item.getItemId();
 
         switch (resId) {
-            case R.id.settings :
+            case R.id.settings:
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
@@ -559,10 +874,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             setTheme(R.style.PinkAppTheme);
 
+        } else if (themeName.equals("default")) {
+
+            setTheme(R.style.DefAppTheme);
+
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.AppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "orange");
+            setTheme(R.style.DefAppTheme);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
 
         }
     }
@@ -571,4 +890,116 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         finishAffinity();
     }
+
+    private boolean isNumber(String str) {
+        return Pattern.matches("\\d+(\\.\\d+)?", str);
+    }
+
+    private void startTutorial() {
+        TapTargetView.showFor(this,
+                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is new options " +
+                        "menu. This will help you to change app settings and preferences. Click " +
+                        "here to open the menu.")
+                        .outerCircleColor(R.color.darkGray)
+                        .outerCircleAlpha(0.70f)
+                        .targetCircleColor(R.color.colorWhite)
+                        .titleTextSize(28)
+                        .titleTextColor(R.color.colorWhite)
+                        .descriptionTextColor(R.color.colorWhite)
+                        .descriptionTextSize(18)
+                        .cancelable(false)
+                , new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        openOptionsMenu();
+                    }
+                });
+    }
+
+    private boolean balancedParenthesis(String s) {
+        Stack<Character> stack = new Stack<Character>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
+                if (stack.isEmpty() || stack.pop() != '(') {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    private void tryBalancingBrackets() {
+        tempEqu = equ;
+        int a = 0, b = 0;
+
+        for (int i = 0; i < tempEqu.length(); i++) {
+            char c = tempEqu.charAt(i);
+            if (c == '(')
+                a++;
+            if (c == ')')
+                b++;
+        }
+
+        if (a != b) {
+            int num = -1;
+            if (a > b) {
+                num = a - b;
+                char c = tempEqu.charAt(tempEqu.length() - 1);
+                if (isNumber(c + "") || c == ')' || c == '%') {
+                    tempEqu = tempEqu + ")";
+                    num--;
+                } else if (c == '.') {
+                    tempEqu = tempEqu + "0)";
+                    num--;
+                } else if (c == '(') {
+                    return;
+                }
+
+                while (num > 0) {
+                    tempEqu = tempEqu + ")";
+                    num--;
+                }
+            }
+            if (a < b) {
+                num = b - a;
+                while (num > 0) {
+                    tempEqu = "(" + tempEqu;
+                    num--;
+                }
+            }
+        } else {
+            //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+        }
+
+
+//        tempEqu = equ;
+//        int numOfOpen = 0;
+//
+//        for(int i=0;i<tempEqu.length();i++){
+//            char c = tempEqu.charAt(i);
+//            if(c == '('){
+//                numOfOpen++;
+//            }
+//            if (c == ')'){
+//                if(numOfOpen == 0){
+//                    tempEqu = "("+tempEqu;
+//                }
+//                numOfOpen--;
+//            }
+//        }
+    }
+
+    private int getTextColor() {
+        String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
+
+        if(theme.equals("default") || theme.equals("")){
+            return getResources().getColor(R.color.colorBlack);
+        }
+        return getResources().getColor(R.color.colorWhite);
+    }
+
 }

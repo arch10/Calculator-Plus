@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.arch1.testapplication.ThemeActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        android:theme="?actionBarStyle"/>
 
     <RadioGroup
         android:id="@+id/rg_theme_group"
@@ -19,18 +25,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.0">
 
+        <RadioButton
+            android:id="@+id/rb_theme_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16sp"
+            android:layout_weight="1"
+            android:text="Default"
+            android:textSize="28sp" />
 
         <RadioButton
             android:id="@+id/rb_theme_orange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16sp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Orange" />
+            android:text="Orange"
+            android:textSize="28sp" />
 
         <RadioButton
             android:id="@+id/rb_theme_green"
@@ -39,7 +55,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Green" />
+            android:text="Green"
+            android:textSize="28sp" />
 
         <RadioButton
             android:id="@+id/rb_theme_blue"
@@ -48,7 +65,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Blue" />
+            android:text="Blue"
+            android:textSize="28sp" />
 
 
         <RadioButton
@@ -58,7 +76,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Light Green" />
+            android:text="Light Green"
+            android:textSize="28sp" />
 
         <RadioButton
             android:id="@+id/rb_theme_pink"
@@ -67,7 +86,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Pink" />
+            android:text="Pink"
+            android:textSize="28sp" />
 
     </RadioGroup>
 </android.support.constraint.ConstraintLayout>
