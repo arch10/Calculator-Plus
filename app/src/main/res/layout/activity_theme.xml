@@ -30,7 +30,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_default"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
@@ -40,7 +40,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_orange"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
@@ -50,7 +50,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_green"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
@@ -60,7 +60,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_blue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
@@ -71,7 +71,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_lightgreen"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
@@ -81,7 +81,7 @@
 
         <RadioButton
             android:id="@+id/rb_theme_pink"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"

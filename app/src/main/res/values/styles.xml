@@ -4,13 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorLime</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -28,7 +29,7 @@
     </style>
 
     <style name="DisplayStyle">
-        <item name="android:background">@drawable/background_body</item>
+        <item name="android:background">@drawable/orange_body</item>
     </style>
 
     <style name="DisplayTextStyle">
@@ -52,13 +53,14 @@
     <style name="GreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorGreenPrimary</item>
         <item name="colorPrimaryDark">@color/colorGreenDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorYellow</item>
         <item name="actionBarStyle">@style/GreenMyActionBar</item>
         <item name="buttonPrimary">@style/GreenButtonStyle</item>
         <item name="buttonSecondary">@style/GreenSecondaryButtonStyle</item>
         <item name="displayStyle">@style/GreenDisplayStyle</item>
         <item name="displayTextStyle">@style/GreenDisplayTextStyle</item>
         <item name="clearStyle">@style/GreenDisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="GreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -99,13 +101,14 @@
     <style name="BlueAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorBluePrimary</item>
         <item name="colorPrimaryDark">@color/colorBlueDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorLime</item>
         <item name="actionBarStyle">@style/BlueMyActionBar</item>
         <item name="buttonPrimary">@style/BlueButtonStyle</item>
         <item name="buttonSecondary">@style/BlueSecondaryButtonStyle</item>
         <item name="displayStyle">@style/BlueDisplayStyle</item>
         <item name="displayTextStyle">@style/BlueDisplayTextStyle</item>
         <item name="clearStyle">@style/BlueDisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="BlueButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -146,13 +149,14 @@
     <style name="LightGreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorLightGreenPrimary</item>
         <item name="colorPrimaryDark">@color/colorLightGreenDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPinkAccent</item>
         <item name="actionBarStyle">@style/LightGreenMyActionBar</item>
         <item name="buttonPrimary">@style/LightGreenButtonStyle</item>
         <item name="buttonSecondary">@style/LightGreenSecondaryButtonStyle</item>
         <item name="displayStyle">@style/LightGreenDisplayStyle</item>
         <item name="displayTextStyle">@style/LightGreenDisplayTextStyle</item>
         <item name="clearStyle">@style/LightGreenDisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="LightGreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -192,13 +196,14 @@
     <style name="PinkAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPinkPrimary</item>
         <item name="colorPrimaryDark">@color/colorPinkDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPinkAccent</item>
         <item name="actionBarStyle">@style/PinkMyActionBar</item>
         <item name="buttonPrimary">@style/PinkButtonStyle</item>
         <item name="buttonSecondary">@style/PinkSecondaryButtonStyle</item>
         <item name="displayStyle">@style/PinkDisplayStyle</item>
         <item name="displayTextStyle">@style/PinkDisplayTextStyle</item>
         <item name="clearStyle">@style/PinkDisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="PinkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -238,13 +243,14 @@
     <style name="DefAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/gray</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorDefAccent</item>
         <item name="actionBarStyle">@style/DefMyActionBar</item>
         <item name="buttonPrimary">@style/DefButtonStyle</item>
         <item name="buttonSecondary">@style/DefSecondaryButtonStyle</item>
         <item name="displayStyle">@style/DefDisplayStyle</item>
         <item name="displayTextStyle">@style/DefDisplayTextStyle</item>
         <item name="clearStyle">@style/DefDisplayClearStyle</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -275,6 +281,22 @@
     <style name="DefMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
         <item name="elevation">0dp</item>
         <item name="background">@color/colorWhite</item>
+    </style>
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="PopUpStyle">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowAnimationStyle">@style/WindowTransition</item>
+    </style>
+
+    <style name="WindowTransition">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
 </resources>

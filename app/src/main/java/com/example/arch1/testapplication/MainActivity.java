@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,9 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -43,8 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private android.support.v7.widget.Toolbar toolbar;
     private boolean firstLauch;
     private DecimalFormat df;
-    private String precisionString = "";
-    private boolean equalPressed = false;
+    private String precisionString, precision;
 
     private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
 
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //set Activity Theme
         preferences = AppPreferences.getInstance(this);
         setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
 
@@ -61,76 +66,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (savedInstanceState != null)
             equ = savedInstanceState.getString("equ");
 
+        //set ToolBar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+        //initialising variables
+        initialiseVariables();
 
         //checking if first Launch
         firstLauch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
         if (firstLauch) {
             startTutorial();
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
+            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
         }
 
-        //Initialisations
-        mainLayout = findViewById(R.id.mainLayout);
-        slidingLayout = findViewById(R.id.slidingLayout);
-        equation = findViewById(R.id.et_display1);
-        result = findViewById(R.id.tv_display);
-        b1 = mainLayout.findViewById(R.id.one);
-        b2 = mainLayout.findViewById(R.id.two);
-        b3 = mainLayout.findViewById(R.id.three);
-        b4 = mainLayout.findViewById(R.id.four);
-        b5 = mainLayout.findViewById(R.id.five);
-        b6 = mainLayout.findViewById(R.id.six);
-        b7 = mainLayout.findViewById(R.id.seven);
-        b8 = mainLayout.findViewById(R.id.eight);
-        b9 = mainLayout.findViewById(R.id.nine);
-        b0 = mainLayout.findViewById(R.id.zero);
-        badd = mainLayout.findViewById(R.id.add);
-        bsub = mainLayout.findViewById(R.id.sub);
-        bmul = mainLayout.findViewById(R.id.mul);
-        bdiv = mainLayout.findViewById(R.id.div);
-        bequal = mainLayout.findViewById(R.id.equal);
-        bdel = mainLayout.findViewById(R.id.del);
-        bdecimal = mainLayout.findViewById(R.id.decimal);
-        open = mainLayout.findViewById(R.id.open);
-        close = mainLayout.findViewById(R.id.close);
-        percent = mainLayout.findViewById(R.id.percent);
-        view = findViewById(R.id.view2);
-
-        //adding onClickListeners
-        b1.setOnClickListener(this);
-        b2.setOnClickListener(this);
-        b3.setOnClickListener(this);
-        b4.setOnClickListener(this);
-        b5.setOnClickListener(this);
-        b6.setOnClickListener(this);
-        b7.setOnClickListener(this);
-        b8.setOnClickListener(this);
-        b9.setOnClickListener(this);
-        b0.setOnClickListener(this);
-        badd.setOnClickListener(this);
-        bsub.setOnClickListener(this);
-        bmul.setOnClickListener(this);
-        bdiv.setOnClickListener(this);
-        bequal.setOnClickListener(this);
-        bdel.setOnClickListener(this);
-        bdecimal.setOnClickListener(this);
-        open.setOnClickListener(this);
-        close.setOnClickListener(this);
-        percent.setOnClickListener(this);
+        //setting toolbar style manually
+        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
 
         //avoiding keyboard input
         equation.setShowSoftInputOnFocus(false);
         equation.setTextIsSelectable(false);
         equation.setLongClickable(false);
 
+        //adding button long press listener
         bdel.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(!equation.getText().toString().equals(""))
-                animateClear(view);
+                if (!equation.getText().toString().equals(""))
+                    animateClear(view);
                 equ = "";
                 equation.setText(equ);
                 result.setText("");
@@ -138,9 +103,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
+        //adding text change listener
         equation.addTextChangedListener(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //setting app precision
+        precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
+        setPrecision(precision);
+        df = new DecimalFormat(precisionString);
     }
 
     private String calculateResult(String equ) {
@@ -161,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (id) {
             case R.id.mul:
-                equalPressed = false;
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
                     if (c == '%') {
@@ -189,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.div:
-                equalPressed = false;
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
                     if (c == '%') {
@@ -230,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equ = "";
                         equation.setText(res);
                         result.setText("");
-                        equalPressed = true;
                     }
                 }
                 break;
@@ -326,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (isOperator(c)) {
                         if (equ.length() >= 2 && (isNumber(equ.charAt(equ.length() - 2) + ""))) {
-                            if(c=='-'){
+                            if (c == '-') {
                                 removeBackOperators();
                                 add("+");
                                 break;
@@ -606,6 +577,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             lll = stack.pop() + lll;
         }
 
+        if(df==null){
+            //setting app precision
+            precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
+            setPrecision(precision);
+            df = new DecimalFormat(precisionString);
+        }
         //return df.format(getResult(lll));
         return df.format(getValue(lll));
     }
@@ -705,7 +682,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return val.pop();
     }
 
-    private double getValue (String equation) {
+    private double getValue(String equation) {
 
         char c = equation.charAt(equation.length() - 1);
 
@@ -719,6 +696,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Stack<String> stack = new Stack<>();
         Stack<String> workingStack = new Stack<>();
 
+        equation = "0" + equation;
         equation = equation.replaceAll("-", "+-");
         equation = equation.replaceAll("(\\*\\+)", "*");
         equation = equation.replaceAll("(\\/\\+)", "/");
@@ -727,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //tokenize
         temp = "";
-        for(int i=0;i<equation.length();i++) {
+        for (int i = 0; i < equation.length(); i++) {
             c = equation.charAt(i);
 
             if (isOp(c)) {
@@ -741,7 +719,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        if(!temp.equals(""))
+        if (!temp.equals(""))
             stack.push(temp);
 
         while (!stack.empty()) {
@@ -749,21 +727,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //check if operation is over
-        if(workingStack.size()==1){
+        if (workingStack.size() == 1) {
             String ans = workingStack.pop();
             return Double.parseDouble(ans);
         }
 
         //unary operator
         stack.clear();
-        while (!workingStack.empty()){
+        while (!workingStack.empty()) {
             temp = workingStack.pop();
 
-            if(temp.equals("%")){
+            if (temp.equals("%")) {
                 String val1 = stack.pop();
                 double num1 = Double.parseDouble(val1);
-                num1 = num1/100;
-                val1 = num1+"";
+                num1 = num1 / 100;
+                val1 = num1 + "";
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -775,7 +753,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //check if operation is over
-        if(workingStack.size()==1){
+        if (workingStack.size() == 1) {
             String ans = workingStack.pop();
             return Double.parseDouble(ans);
         }
@@ -785,14 +763,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         while (!workingStack.empty()) {
             temp = workingStack.pop();
 
-            if(temp.length()==1 && temp.charAt(0)=='/'){
+            if (temp.length() == 1 && temp.charAt(0) == '/') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
                 double num1 = Double.parseDouble(val1);
                 double num2 = Double.parseDouble(val2);
 
-                num1 = num1/num2;
-                val1 = num1+"";
+                num1 = num1 / num2;
+                val1 = num1 + "";
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -804,7 +782,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //check if operation is over
-        if(workingStack.size()==1){
+        if (workingStack.size() == 1) {
             String ans = workingStack.pop();
             return Double.parseDouble(ans);
         }
@@ -814,14 +792,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         while (!workingStack.empty()) {
             temp = workingStack.pop();
 
-            if(temp.length()==1 && temp.charAt(0)=='*'){
+            if (temp.length() == 1 && temp.charAt(0) == '*') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
                 double num1 = Double.parseDouble(val1);
                 double num2 = Double.parseDouble(val2);
 
-                num1 = num1*num2;
-                val1 = num1+"";
+                num1 = num1 * num2;
+                val1 = num1 + "";
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -833,7 +811,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //check if operation is over
-        if(workingStack.size()==1){
+        if (workingStack.size() == 1) {
             String ans = workingStack.pop();
             return Double.parseDouble(ans);
         }
@@ -843,14 +821,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         while (!workingStack.empty()) {
             temp = workingStack.pop();
 
-            if(temp.length()==1 && temp.charAt(0)=='+'){
+            if (temp.length() == 1 && temp.charAt(0) == '+') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
                 double num1 = Double.parseDouble(val1);
                 double num2 = Double.parseDouble(val2);
 
-                num1 = num1+num2;
-                val1 = num1+"";
+                num1 = num1 + num2;
+                val1 = num1 + "";
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -862,15 +840,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //check if operation is over
-        if(workingStack.size()==1){
+        if (workingStack.size() == 1) {
             String ans = workingStack.pop();
-                return Double.parseDouble(ans);
+            return Double.parseDouble(ans);
         } else
             return 0.0;
     }
 
-    private boolean isOp(char c){
-        if(c=='+'||c=='/'||c=='*'||c=='%')
+    private boolean isOp(char c) {
+        if (c == '+' || c == '/' || c == '*' || c == '%')
             return true;
         return false;
     }
@@ -1015,12 +993,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int resId = item.getItemId();
+        Intent intent;
 
         switch (resId) {
             case R.id.settings:
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
+
+            case R.id.tutorial:
+                startTutorial();
+                break;
+
+            case R.id.about:
+                intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -1070,25 +1059,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startTutorial() {
-        TapTargetView.showFor(this,
-                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is new options " +
+//        TapTargetView.showFor(this,
+//                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
+//                        "menu. This will help you to change app settings and preferences. Click " +
+//                        "here to open the menu.")
+//                        .outerCircleColor(R.color.darkGray)
+//                        .outerCircleAlpha(0.70f)
+//                        .targetCircleColor(R.color.colorWhite)
+//                        .titleTextSize(28)
+//                        .titleTextColor(R.color.colorWhite)
+//                        .descriptionTextColor(R.color.colorWhite)
+//                        .descriptionTextSize(18)
+//                        .cancelable(false)
+//                , new TapTargetView.Listener() {
+//                    @Override
+//                    public void onTargetClick(TapTargetView view) {
+//                        super.onTargetClick(view);
+//                        openOptionsMenu();
+//                    }
+//                });
+
+        TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
+
+        tapTargetSequence.targets(
+                TapTarget.forView(mainLayout.findViewById(R.id.del),
+                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
+                                "calculator screen")
+                        .outerCircleColor(R.color.colorBluePrimary)
+                        .outerCircleAlpha(0.90f)
+                        .targetCircleColor(R.color.colorWhite)
+                        .titleTextSize(28)
+                        .tintTarget(false)
+                        .titleTextColor(R.color.colorWhite)
+                        .descriptionTextColor(R.color.colorWhite)
+                        .descriptionTextSize(18)
+                        .cancelable(false),
+                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
                         "menu. This will help you to change app settings and preferences. Click " +
                         "here to open the menu.")
-                        .outerCircleColor(R.color.darkGray)
-                        .outerCircleAlpha(0.70f)
+                        .outerCircleColor(R.color.colorBluePrimary)
+                        .outerCircleAlpha(0.90f)
                         .targetCircleColor(R.color.colorWhite)
                         .titleTextSize(28)
                         .titleTextColor(R.color.colorWhite)
                         .descriptionTextColor(R.color.colorWhite)
                         .descriptionTextSize(18)
                         .cancelable(false)
-                , new TapTargetView.Listener() {
-                    @Override
-                    public void onTargetClick(TapTargetView view) {
-                        super.onTargetClick(view);
-                        openOptionsMenu();
-                    }
-                });
+        );
+        tapTargetSequence.start();
     }
 
     private boolean balancedParenthesis(String s) {
@@ -1170,10 +1188,120 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int getTextColor() {
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        if(theme.equals("default") || theme.equals("")){
+        if (theme.equals("default") || theme.equals("")) {
             return getResources().getColor(R.color.colorBlack);
         }
         return getResources().getColor(R.color.colorWhite);
     }
 
+    public void setPrecision(String precision) {
+        if (precision.equals("")) {
+            precisionString = "#.######";
+            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
+        } else {
+            switch (precision) {
+                case "two":
+                    precisionString = "#.##";
+                    break;
+                case "three":
+                    precisionString = "#.###";
+                    break;
+                case "four":
+                    precisionString = "#.####";
+                    break;
+                case "five":
+                    precisionString = "#.#####";
+                    break;
+                case "six":
+                    precisionString = "#.######";
+                    break;
+                case "seven":
+                    precisionString = "#.#######";
+                    break;
+                case "eight":
+                    precisionString = "#.########";
+                    break;
+                case "nine":
+                    precisionString = "#.#########";
+                    break;
+                case "ten":
+                    precisionString = "#.##########";
+                    break;
+                default:
+                    precisionString = "#.######";
+                    break;
+            }
+        }
+    }
+
+    private void setToolBarStyle(String themeName) {
+        if (themeName.equals("green")) {
+            toolbar.setBackground(getDrawable(R.drawable.green_title));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (themeName.equals("orange")) {
+            toolbar.setBackground(getDrawable(R.drawable.orange_title));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (themeName.equals("blue")) {
+            toolbar.setBackground(getDrawable(R.drawable.blue_title));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (themeName.equals("lgreen")) {
+            toolbar.setBackground(getDrawable(R.drawable.lightgreen_title));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        } else if (themeName.equals("pink")) {
+            toolbar.setBackground(getDrawable(R.drawable.pink_title));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        }
+    }
+
+    private void initialiseVariables() {
+        //Initialisations
+        mainLayout = findViewById(R.id.mainLayout);
+        slidingLayout = findViewById(R.id.slidingLayout);
+        equation = findViewById(R.id.et_display1);
+        result = findViewById(R.id.tv_display);
+        b1 = mainLayout.findViewById(R.id.one);
+        b2 = mainLayout.findViewById(R.id.two);
+        b3 = mainLayout.findViewById(R.id.three);
+        b4 = mainLayout.findViewById(R.id.four);
+        b5 = mainLayout.findViewById(R.id.five);
+        b6 = mainLayout.findViewById(R.id.six);
+        b7 = mainLayout.findViewById(R.id.seven);
+        b8 = mainLayout.findViewById(R.id.eight);
+        b9 = mainLayout.findViewById(R.id.nine);
+        b0 = mainLayout.findViewById(R.id.zero);
+        badd = mainLayout.findViewById(R.id.add);
+        bsub = mainLayout.findViewById(R.id.sub);
+        bmul = mainLayout.findViewById(R.id.mul);
+        bdiv = mainLayout.findViewById(R.id.div);
+        bequal = mainLayout.findViewById(R.id.equal);
+        bdel = mainLayout.findViewById(R.id.del);
+        bdecimal = mainLayout.findViewById(R.id.decimal);
+        open = mainLayout.findViewById(R.id.open);
+        close = mainLayout.findViewById(R.id.close);
+        percent = mainLayout.findViewById(R.id.percent);
+        view = findViewById(R.id.view2);
+
+        //adding onClickListeners
+        b1.setOnClickListener(this);
+        b2.setOnClickListener(this);
+        b3.setOnClickListener(this);
+        b4.setOnClickListener(this);
+        b5.setOnClickListener(this);
+        b6.setOnClickListener(this);
+        b7.setOnClickListener(this);
+        b8.setOnClickListener(this);
+        b9.setOnClickListener(this);
+        b0.setOnClickListener(this);
+        badd.setOnClickListener(this);
+        bsub.setOnClickListener(this);
+        bmul.setOnClickListener(this);
+        bdiv.setOnClickListener(this);
+        bequal.setOnClickListener(this);
+        bdel.setOnClickListener(this);
+        bdecimal.setOnClickListener(this);
+        open.setOnClickListener(this);
+        close.setOnClickListener(this);
+        percent.setOnClickListener(this);
+
+    }
 }

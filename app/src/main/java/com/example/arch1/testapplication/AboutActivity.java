@@ -1,37 +1,19 @@
 package com.example.arch1.testapplication;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import java.util.ArrayList;
+public class AboutActivity extends AppCompatActivity {
 
-public class SettingsActivity extends AppCompatActivity {
-
-    private ListView listView;
-    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> listOfSettings;
-    private Intent intent;
     private AppPreferences preferences;
     private Toolbar toolbar;
-    private ConstraintLayout layout;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private TextView version,build;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +21,13 @@ public class SettingsActivity extends AppCompatActivity {
         setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_about);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        layout = findViewById(R.id.root_layout);
+        version = findViewById(R.id.version);
+        build = findViewById(R.id.build);
 
         //setting toolbar style manually
         setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
@@ -59,50 +39,10 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
-        listView = findViewById(R.id.listview);
-
-        listOfSettings = new ArrayList<>();
-        listOfSettings.add("Themes");
-        listOfSettings.add("Answer Precision");
-        listOfSettings.add("Send Feedback");
-        listOfSettings.add("About");
-
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.setting_list_layout, listOfSettings);
-        listView.setAdapter(arrayAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "calc_theme");
-                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Themes");
-                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Option");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                    intent = new Intent(SettingsActivity.this, ThemeActivity.class);
-                    startActivity(intent);
-                }
-                if (position == 1) {
-                    //show pop up
-                    intent = new Intent(SettingsActivity.this, Precision.class);
-                    startActivity(intent);
-                }
-                if (position == 2) {
-                    intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setType("text/email");
-                    intent.setData(Uri.parse("mailto:"));
-                    intent.putExtra(Intent.EXTRA_EMAIL,new String[] {"arch1824@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT,"Calculator Plus Feedback");
-                    startActivity(intent);
-                }
-                if (position == 3){
-                    intent = new Intent(SettingsActivity.this, AboutActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-
+        Date buildDate = BuildConfig.buildTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a z");
+        build.setText("Build Date: "+sdf.format(buildDate));
+        version.setText("Version: "+BuildConfig.VERSION_NAME);
     }
 
     private void setTheme(String themeName) {

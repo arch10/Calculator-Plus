@@ -8,14 +8,14 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
+        style="?displayStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        style="?displayStyle"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <me.grantland.widget.AutofitLayout
             android:layout_width="match_parent"
@@ -24,27 +24,27 @@
 
             <EditText
                 android:id="@+id/et_display1"
+                style="?displayTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:maxLines="1"
-                tools:text="0"
-                style="?displayTextStyle"
                 android:cursorVisible="false"
+                android:maxLines="1"
                 android:textAlignment="textEnd"
-                android:textSize="55sp" />
+                android:textSize="65sp"
+                tools:text="0" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
             android:id="@+id/tv_display"
+            style="?displayTextStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.75"
-            style="?displayTextStyle"
             android:gravity="end|center_vertical"
             android:maxLines="1"
-            tools:text="0"
-            android:textSize="40sp" />
+            android:textSize="50sp"
+            tools:text="0" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
@@ -52,48 +52,56 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.45" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.75" />
 
-
-    <include
-        android:id="@+id/mainLayout"
-        layout="@layout/one"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        android:gravity="bottom"
+        sothree:layout_constraintBottom_toBottomOf="parent"
+        sothree:layout_constraintEnd_toEndOf="parent"
+        sothree:layout_constraintStart_toStartOf="parent"
+        sothree:layout_constraintTop_toTopOf="@+id/guideline"
+        sothree:umanoPanelHeight="40dp"
+        sothree:umanoShadowHeight="4dp">
 
-    <include
-        android:id="@+id/slidingLayout"
-        layout="@layout/two"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        <include layout="@layout/one"
+            android:id="@+id/mainLayout"/>
+
+        <include layout="@layout/two"
+            android:id="@+id/slidingLayout"
+            android:visibility="invisible"/>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:theme="?actionBarStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view2"
+        style="?clearStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        style="?clearStyle"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>
 

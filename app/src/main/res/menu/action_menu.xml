@@ -7,6 +7,10 @@
         android:title="Settings"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/tutorial"
+        android:title="Show Tutorial"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/about"
         android:title="About"
         app:showAsAction="never"/>
