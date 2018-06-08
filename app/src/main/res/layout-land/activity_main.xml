@@ -3,17 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:id="@+id/linearLayout"
+        style="?displayStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <me.grantland.widget.AutofitLayout
             android:layout_width="match_parent"
@@ -22,25 +24,27 @@
 
             <EditText
                 android:id="@+id/et_display1"
+                style="?displayTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:maxLines="1"
-                tools:text="0"
                 android:cursorVisible="false"
+                android:maxLines="1"
                 android:textAlignment="textEnd"
-                android:textSize="60sp" />
+                android:textSize="45sp"
+                tools:text="0" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
             android:id="@+id/tv_display"
+            style="?displayTextStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.75"
             android:gravity="end|center_vertical"
             android:maxLines="1"
-            tools:text="0"
-            android:textSize="55sp" />
+            android:textSize="30sp"
+            tools:text="0" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
@@ -48,265 +52,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.45" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.75" />
 
-    <LinearLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        android:gravity="bottom"
+        sothree:layout_constraintBottom_toBottomOf="parent"
+        sothree:layout_constraintEnd_toEndOf="parent"
+        sothree:layout_constraintStart_toStartOf="parent"
+        sothree:layout_constraintTop_toTopOf="@+id/guideline"
+        sothree:umanoPanelHeight="40dp"
+        sothree:umanoShadowHeight="4dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+        <include layout="@layout/one"
+            android:id="@+id/mainLayout"/>
 
-            <Button
-                android:id="@+id/seven"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="7"
-                android:textSize="36sp" />
+        <include layout="@layout/two"
+            android:id="@+id/slidingLayout"
+            android:visibility="invisible"/>
 
-            <Button
-                android:id="@+id/eight"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="8"
-                android:textSize="36sp" />
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-            <Button
-                android:id="@+id/nine"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="9"
-                android:textSize="36sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/four"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="4"
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/five"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="5"
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/six"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="6"
-                android:textSize="36sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/one"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="1"
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/two"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="2"
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/three"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="3"
-                android:textSize="36sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/decimal"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="."
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/zero"
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="0"
-                android:textSize="36sp" />
-
-            <Button
-                style="@style/ButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="36sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/guideline">
-
-        <Button
-            android:id="@+id/div"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="\u00F7"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/mul"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="x"
-            android:textAllCaps="false"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/add"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="+"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/sub"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="-"
-            android:textSize="36sp" />
-    </LinearLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:theme="?actionBarStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@id/guideline">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/del"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Del"
-            android:textSize="24sp" />
-
-
-        <Button
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:textSize="36sp" />
-
-        <Button
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/equal"
-            style="@style/SecondaryButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="="
-            android:textSize="36sp" />
-    </LinearLayout>
     <View
         android:id="@+id/view2"
+        style="?clearStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/colorTransparent"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>
+
+

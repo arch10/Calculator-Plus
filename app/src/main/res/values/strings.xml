@@ -1,4 +1,11 @@
 <resources>
-    <string name="app_name">Calculator</string>
-    <string name="delete">DE</string>
+    <string name="app_name">Calculator Plus</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_theme">Themes</string>
+
+    <string name="invalid_expression">Invalid Expression</string>
+
+    <string name="version">Version 1.4.0</string>
+    <string name="release_date">Build Date: 08th June 2018</string>
+
 </resources>
