@@ -32,7 +32,8 @@
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 android:textSize="45sp"
-                tools:text="0" />
+                tools:text="0"
+                android:inputType="textNoSuggestions" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -76,8 +77,7 @@
             android:id="@+id/mainLayout"/>
 
         <include layout="@layout/two"
-            android:id="@+id/slidingLayout"
-            android:visibility="invisible"/>
+            android:id="@+id/slidingLayout"/>
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

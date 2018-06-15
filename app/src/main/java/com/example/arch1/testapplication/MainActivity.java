@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView result;
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
+    private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
     private Button open, close, percent;
     private EditText equation;
     private String equ = "", tempEqu;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean firstLauch;
     private DecimalFormat df;
     private String precisionString, precision;
+    private String errMsg = "abc abc test";
 
     private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
 
@@ -120,43 +124,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String calculateResult(String equ) {
         if (!equ.equals("")) {
             equ = equ.replace("÷", "/");
-            equ = equ.replace("x", "*");
+            equ = equ.replace("\u00d7", "*");
 
-            return getAnswer(equ);
+            //return getAnswer(equ);
             //return df.format(getResult(equ));
+            return getTestAnswer(equ);
         }
         return "";
+    }
+
+    private boolean isOneError(String string) {
+        if (string.equals("Invalid Expression") || string.equals("Domain error") || string.equals("Cannot divide by 0"))
+            return true;
+        return false;
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+//        v.playSoundEffect(SoundEffectConstants.CLICK);
+//        Vibrator vb = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//        vb.vibrate(50);
+
         char c;
 
         switch (id) {
             case R.id.mul:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (c == '%') {
-                        add("x");
+                    if (c == '%' || c == '!' || c == ')' || isNumber(c)) {
+                        add("\u00d7");
                         break;
                     }
-                    if (c == '(') {
-                        break;
-                    }
-                    if (ifPrevOperator()) {
+                    if (isOperator(c)) {
                         if (equ.length() == 1) {
                             break;
                         }
-                        if (removeBackOperators()) {
-                            add("%x");
-                        } else {
-                            add("x");
-                        }
-                    } else if (c == '.') {
+                        removeBackOperators();
+                        add("\u00d7");
                         break;
-                    } else {
-                        add("x");
                     }
                 }
                 break;
@@ -164,26 +170,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.div:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (c == '%') {
+                    if (c == '%' || c == '!' || c == ')' || isNumber(c)) {
                         add("÷");
                         break;
                     }
-                    if (c == '(') {
-                        break;
-                    }
-                    if (ifPrevOperator()) {
+                    if (isOperator(c)) {
                         if (equ.length() == 1) {
                             break;
                         }
-                        if (removeBackOperators()) {
-                            add("%÷");
-                        } else {
-                            add("÷");
-                        }
-                    } else if (c == '.') {
-                        break;
-                    } else {
+                        removeBackOperators();
                         add("÷");
+                        break;
                     }
                 }
                 break;
@@ -191,8 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.equal:
                 if (!isEquationEmpty()) {
                     String res = result.getText().toString().trim();
-                    if (res.equals("") || res.equals(getString(R.string.invalid_expression))) {
-                        result.setText(getString(R.string.invalid_expression));
+                    if (res.equals("") || isOneError(res)) {
+                        result.setText(errMsg);
                         result.setTextColor(getResources().getColor(R.color.colorRed));
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
@@ -208,6 +205,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.del:
                 if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (c == '(') {
+                        if (equ.length() >= 3) {
+                            c = equ.charAt(equ.length() - 2);
+                            if (isAlphabet(c)) {
+                                removeTrigo();
+                                equation.setText(equ);
+                                break;
+                            }
+                        }
+                    }
                     equ = equ.substring(0, equ.length() - 1);
                     equation.setText(equ);
                 } else {
@@ -218,20 +226,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.decimal:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (isNumber(c + "") && canPlaceDecimal()) {
+                    if (c == 'e' || c == '\u03c0')
+                        break;
+                    if (isNumber(c) && canPlaceDecimal()) {
                         add(".");
                         break;
                     }
-                    if (ifPrevOperator()) {
-                        add("0.");
+                    if (c == ')' || c == '%' || c == '!') {
+                        add("\u00d70.");
                         break;
                     }
-                    if (c == '(') {
+                    if (isOperator(c) || c == '(' || c == '\u221a' || c == '\u221b') {
                         add("0.");
-                        break;
-                    }
-                    if (c == ')') {
-                        add("x0.");
                         break;
                     }
                 } else if (isEquationEmpty()) {
@@ -242,61 +248,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.add:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (c == '%') {
-                        add("+");
-                        break;
-                    }
-                    if (c == '(') {
-                        break;
-                    }
-                    if (c == ')') {
+                    if (c == '%' || c == '!' || c == ')') {
                         add("+");
                         break;
                     }
                     if (isOperator(c)) {
-                        if (removeBackOperators()) {
-                            add("%+");
-                        } else {
-                            add("+");
+                        if (equ.length() == 1) {
+                            break;
                         }
+                        removeBackOperators();
+                        add("+");
                         break;
                     }
-
-                    if (c != '.' && !isOperator(c))
-                        add("+");
-                    else if (isOperator(c)) {
-                        equ = equ.substring(0, equ.length() - 1);
+                    if (isNumber(c)) {
                         add("+");
                     }
                     break;
-                }
-                if ((!ifPrevOperator()) || equ.equals("")) {
-                    add("+");
-                } else if (ifPrevOperator()) {
-                    if (!isEquationEmpty()) {
-                        equ = equ.substring(0, equ.length() - 1);
-                        add("+");
-                    }
                 }
                 break;
 
             case R.id.sub:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (c == '%') {
-                        add("-");
-                        break;
-                    }
-                    if (c == '(') {
-                        break;
-                    }
-                    if (c == ')') {
+                    if (c == '%' || c == ')' || c == '!') {
                         add("-");
                         break;
                     }
 
                     if (isOperator(c)) {
-                        if (equ.length() >= 2 && (isNumber(equ.charAt(equ.length() - 2) + ""))) {
+                        if (equ.length() >= 2 && (isNumber(equ.charAt(equ.length() - 2)))) {
                             if (c == '-') {
                                 removeBackOperators();
                                 add("+");
@@ -305,20 +285,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             add("-");
                             break;
                         }
-                        if (removeBackOperators()) {
-                            add("%-");
-                        } else {
-                            add("-");
-                        }
+                        removeBackOperators();
+                        add("-");
                         break;
                     }
 
-                    if (c != '.' && !isOperator(c))
+                    if (isNumber(c)) {
                         add("-");
-                    else if (isOperator(c)) {
-
-                        if (c == '+' || c == '÷' || c == 'x')
-                            add("-");
+                        break;
                     }
                     break;
                 }
@@ -333,80 +307,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.one:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x1");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d71");
                     break;
                 }
                 add("1");
                 break;
 
             case R.id.two:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x2");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d72");
                     break;
                 }
                 add("2");
                 break;
 
             case R.id.three:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x3");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d73");
                     break;
                 }
                 add("3");
                 break;
 
             case R.id.four:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x4");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d74");
                     break;
                 }
                 add("4");
                 break;
 
             case R.id.five:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x5");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d75");
                     break;
                 }
                 add("5");
                 break;
 
             case R.id.six:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x6");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d76");
                     break;
                 }
                 add("6");
                 break;
 
             case R.id.seven:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x7");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d77");
                     break;
                 }
                 add("7");
                 break;
 
             case R.id.eight:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x8");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d78");
                     break;
                 }
                 add("8");
                 break;
 
             case R.id.nine:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x9");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d79");
                     break;
                 }
                 add("9");
                 break;
 
             case R.id.zero:
-                if (!isEquationEmpty() && (equ.charAt(equ.length() - 1) == ')' || equ.charAt(equ.length() - 1) == '%')) {
-                    add("x0");
+                if (!isEquationEmpty() && testNumber()) {
+                    add("\u00d70");
                     break;
                 }
                 add("0");
@@ -415,7 +389,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.percent:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (isNumber(c + "") || c == ')') {
+
+                    if (c == '%' || c == '!') {
+                        equ = equ.substring(0, equ.length() - 1);
+                        add("%");
+                        break;
+                    }
+
+                    if (isNumber(c) || c == ')') {
                         add("%");
                         break;
                     }
@@ -423,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (equ.length() == 1) {
                             break;
                         }
-                        removeBackOperators();
+                        removeAllBackOperators();
                         if (!isEquationEmpty())
                             add("%");
                         break;
@@ -437,17 +418,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.open:
                 if (!isEquationEmpty() && equ.charAt(equ.length() - 1) == '.') {
                     equ = equ.substring(0, equ.length() - 1);
-                    add("x(");
+                    add("\u00d7(");
                     break;
                 }
 
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (isNumber(c + "") || c == '%' || c == ')') {
-                        add("x(");
+                    if (isNumber(c) || c == '%' || c == ')' || c == '!') {
+                        add("\u00d7(");
                         break;
                     }
-                    if (c == '(' || isOperator(c)) {
+                    if (c == '(' || isOperator(c) || c == '\u221a' || c == '\u221b') {
                         add("(");
                         break;
                     }
@@ -459,6 +440,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.close:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
+                    if (c == 'e' || c == '\u03c0' || c == '!') {
+                        add(")");
+                        break;
+                    }
                     if (isNumber(c + "") || c == ')' || c == '%') {
                         add(")");
                         break;
@@ -468,25 +453,281 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     if (c == '(') {
-                        equ = equ.substring(0, equ.length() - 1);
-                        equation.setText(equ);
-                        break;
+                        if (equ.length() >= 3) {
+                            c = equ.charAt(equ.length() - 2);
+                            if (isAlphabet(c)) {
+                                break;
+                            }
+                            equ = equ.substring(0, equ.length() - 1);
+                            equation.setText(equ);
+                            break;
+                        }
                     }
                 }
                 break;
 
-            default:
+            case R.id.sin:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7sin(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7sin(");
+                        break;
+                    }
+                }
+                add("sin(");
+                break;
+            case R.id.cos:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7cos(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7cos(");
+                        break;
+                    }
+                }
+                add("cos(");
+                break;
+            case R.id.tan:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7tan(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7tan(");
+                        break;
+                    }
+                }
+                add("tan(");
+                break;
+            case R.id.asin:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7asin(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7asin(");
+                        break;
+                    }
+                }
+                add("asin(");
+                break;
+            case R.id.acos:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7acos(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7acos(");
+                        break;
+                    }
+                }
+                add("acos(");
+                break;
+            case R.id.atan:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7atan(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7atan(");
+                        break;
+                    }
+                }
+                add("atan(");
+                break;
+
+            case R.id.exp:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+
+                    if (c == '%' || c == ')' || isNumber(c) || c == '!') {
+                        add("\u00d7e");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7e");
+                        break;
+                    }
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                        add("e");
+                        break;
+                    }
+                } else {
+                    add("e");
+                    break;
+                }
+                break;
+            case R.id.log:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7log(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7log(");
+                        break;
+                    }
+                }
+                add("log(");
+                break;
+            case R.id.ln:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("\u00d7ln(");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7ln(");
+                        break;
+                    }
+                }
+                add("ln(");
+                break;
+            case R.id.pow:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if (isNumber(c) || c == '%' || c == ')' || c == 'e' || c == '!' || c == '\u03c0') {
+                        add("^");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0^");
+                        break;
+                    }
+                    if (isOperator(c)) {
+                        if (equ.length() == 1) {
+                            break;
+                        }
+                        removeBackOperators();
+                        add("^");
+                        break;
+                    }
+                }
+                break;
+            case R.id.fact:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+
+                    if (c == '%' || c == '!') {
+                        equ = equ.substring(0, equ.length() - 1);
+                        add("!");
+                        break;
+                    }
+
+                    if (isNumber(c) || c == ')') {
+                        add("!");
+                        break;
+                    }
+                    if (isOperator(c)) {
+                        if (equ.length() == 1) {
+                            break;
+                        }
+                        removeAllBackOperators();
+                        if (!isEquationEmpty())
+                            add("!");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0!");
+                    }
+                }
+                break;
+            case R.id.sqroot:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+
+                    if (c == '%' || c == ')' || isNumber(c) || c == '!') {
+                        add("\u00d7\u221a");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7\u221a");
+                        break;
+                    }
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                        add("\u221a");
+                        break;
+                    }
+                } else {
+                    add("\u221a");
+                    break;
+                }
+                break;
+            case R.id.cuberoot:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+
+                    if (c == '%' || c == ')' || isNumber(c) || c == '!') {
+                        add("\u00d7\u221b");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7\u221b");
+                        break;
+                    }
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                        add("\u221b");
+                        break;
+                    }
+                } else {
+                    add("\u221b");
+                    break;
+                }
+                break;
+            case R.id.pi:
+                if (!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+
+                    if (c == '%' || c == ')' || isNumber(c) || c == '!') {
+                        add("\u00d7\u03c0");
+                        break;
+                    }
+                    if (c == '.') {
+                        add("0\u00d7\u03c0");
+                        break;
+                    }
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                        add("\u03c0");
+                        break;
+                    }
+                } else {
+                    add("\u03c0");
+                    break;
+                }
                 break;
         }
     }
 
-    private boolean removeBackOperators() {
-        boolean value = false;
+    private boolean testNumber() {
+        return (equ.charAt(equ.length() - 1) == ')'
+                || equ.charAt(equ.length() - 1) == '%'
+                || equ.charAt(equ.length() - 1) == '!'
+                || equ.charAt(equ.length() - 1) == 'e'
+                || equ.charAt(equ.length() - 1) == '\u03c0'
+        );
+    }
+
+    private void removeBackOperators() {
         if (!isEquationEmpty()) {
             char c = equ.charAt(equ.length() - 1);
-            while (isOperator(c)) {
-                if (c == '%')
-                    value = true;
+            while (isOperator(c) && !(c == '%' || c == '!')) {
                 equ = equ.substring(0, equ.length() - 1);
                 if (equ.length() == 0)
                     break;
@@ -494,7 +735,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         equation.setText(equ);
-        return value;
+    }
+
+    private void removeAllBackOperators() {
+        if (!isEquationEmpty()) {
+            char c = equ.charAt(equ.length() - 1);
+            while (isOperator(c)) {
+                equ = equ.substring(0, equ.length() - 1);
+                if (equ.length() == 0)
+                    break;
+                c = equ.charAt(equ.length() - 1);
+            }
+        }
+        equation.setText(equ);
+    }
+
+    private void removeTrigo() {
+        equ = equ.substring(0, equ.length() - 1);
+
+        while (!equ.isEmpty()) {
+            char c = equ.charAt(equ.length() - 1);
+            if (isAlphabet(c)) {
+                equ = equ.substring(0, equ.length() - 1);
+            } else {
+                break;
+            }
+        }
+    }
+
+    private boolean isAlphabet(char c) {
+        return Character.isLowerCase(c);
     }
 
     private void add(String str) {
@@ -525,17 +795,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else
                 return "";
         }
-
-//        for (int i = 0; i < equation.length(); i++) {
-//            c = equation.charAt(i);
-//            if (c == '%') {
-//                if (i != equation.length() - 1) {
-//                    equation = equation.substring(0, i) + "/100" + equation.substring(i + 1, equation.length());
-//                } else {
-//                    equation = equation.substring(0, i) + "/100";
-//                }
-//            }
-//        }
 
         Stack<String> stack = new Stack<>();
         String temp = "";
@@ -577,7 +836,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             lll = stack.pop() + lll;
         }
 
-        if(df==null){
+        if (df == null) {
             //setting app precision
             precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
             setPrecision(precision);
@@ -585,101 +844,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         //return df.format(getResult(lll));
         return df.format(getValue(lll));
-    }
-
-    private double getResult(String input) {
-
-        char c = input.charAt(input.length() - 1);
-
-        while (isOperator(c) && c != '%') {
-            input = input.substring(0, input.length() - 1);
-            if (!input.equals(""))
-                c = input.charAt(input.length() - 1);
-        }
-
-        /* Create stacks for operators and operands */
-        Stack<Integer> op = new Stack<Integer>();
-        Stack<Double> val = new Stack<Double>();
-
-        /* Create temporary stacks for operators and operands */
-        Stack<Integer> optmp = new Stack<Integer>();
-        Stack<Double> valtmp = new Stack<Double>();
-
-        /* Accept expression */
-        input = "0" + input;
-        input = input.replaceAll("-", "+-");
-        input = input.replaceAll("(\\*\\+)", "*");
-        input = input.replaceAll("(\\/\\+)", "/");
-        input = input.replaceAll("(\\+\\+)", "+");
-
-        /* Store operands and operators in respective stacks */
-        String temp = "";
-        for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
-
-            if (ch == '-')
-                temp = "-" + temp;
-            else if (ch != '+' && ch != '*' && ch != '/')
-                temp = temp + ch;
-            else {
-                val.push(Double.parseDouble(temp));
-                op.push((int) ch);
-                temp = "";
-            }
-        }
-
-        val.push(Double.parseDouble(temp));
-        char operators[] = {'/', '*', '+'};
-
-        /* Evaluation of expression */
-        for (int i = 0; i < 3; i++) {
-            boolean it = false;
-            while (!op.isEmpty()) {
-                int optr = op.pop();
-                double v1 = val.pop();
-                double v2 = val.pop();
-                if (optr == operators[i]) {
-                    /* if operator matches evaluate and store in temporary stack */
-                    if (i == 0) {
-                        valtmp.push(v2 / v1);
-                        it = true;
-                        break;
-                    } else if (i == 1) {
-                        valtmp.push(v2 * v1);
-                        it = true;
-                        break;
-                    } else if (i == 2) {
-                        valtmp.push(v2 + v1);
-                        it = true;
-                        break;
-                    }
-                } else {
-                    valtmp.push(v1);
-                    val.push(v2);
-                    optmp.push(optr);
-                }
-            }
-
-            /* Push back all elements from temporary stacks to main stacks */
-            while (!valtmp.isEmpty()) {
-                if (!op.empty() && op.peek() == '/') {
-                    Double val1 = valtmp.pop();
-                    Double val2 = val.pop();
-                    val.push(val1);
-                    val.push(val2);
-                } else {
-                    val.push(valtmp.pop());
-                }
-            }
-
-            while (!optmp.isEmpty())
-                op.push(optmp.pop());
-
-            /* Iterate again for same operator */
-            if (it)
-                i--;
-        }
-        return val.pop();
     }
 
     private double getValue(String equation) {
@@ -853,10 +1017,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private boolean ifAnEquation(String equ) {
-        return Pattern.matches(EVALUATION_PATTERN, equ);
-    }
-
     private boolean ifPrevOperator() {
         if (equ.equals(""))
             return true;
@@ -865,7 +1025,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isOperator(char c) {
-        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == 'x' || c == '%')
+        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == '\u00d7' || c == '%' || c == '!' || c == '^')
             return true;
         return false;
     }
@@ -968,6 +1128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (balancedParenthesis(equ)) {
             result.setTextColor(getTextColor());
             result.setText(calculateResult(equ));
+            //result.setText(equ);
         } else {
             //trying to balance equation
             // this is smart calculator
@@ -977,8 +1138,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //calculate result
                 result.setTextColor(getTextColor());
                 result.setText(calculateResult(tempEqu));
+                //result.setText(tempEqu);
             } else {
                 result.setText("");
+                errMsg = "Invalid Expression";
             }
         }
     }
@@ -1020,7 +1183,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             setTheme(R.style.GreenAppTheme);
 
-
         } else if (themeName.equals("orange")) {
 
             setTheme(R.style.AppTheme);
@@ -1054,10 +1216,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finishAffinity();
     }
 
-    private boolean isNumber(String str) {
-        return Pattern.matches("\\d+(\\.\\d+)?", str);
-    }
-
     private void startTutorial() {
 //        TapTargetView.showFor(this,
 //                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
@@ -1083,7 +1241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tapTargetSequence.targets(
                 TapTarget.forView(mainLayout.findViewById(R.id.del),
-                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
+                        "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
                                 "calculator screen")
                         .outerCircleColor(R.color.colorBluePrimary)
                         .outerCircleAlpha(0.90f)
@@ -1279,6 +1437,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         open = mainLayout.findViewById(R.id.open);
         close = mainLayout.findViewById(R.id.close);
         percent = mainLayout.findViewById(R.id.percent);
+
+        sin = slidingLayout.findViewById(R.id.sin);
+        cos = slidingLayout.findViewById(R.id.cos);
+        tan = slidingLayout.findViewById(R.id.tan);
+        asin = slidingLayout.findViewById(R.id.asin);
+        acos = slidingLayout.findViewById(R.id.acos);
+        atan = slidingLayout.findViewById(R.id.atan);
+        exp = slidingLayout.findViewById(R.id.exp);
+        log = slidingLayout.findViewById(R.id.log);
+        ln = slidingLayout.findViewById(R.id.ln);
+        pow = slidingLayout.findViewById(R.id.pow);
+        factorial = slidingLayout.findViewById(R.id.fact);
+        sqrt = slidingLayout.findViewById(R.id.sqroot);
+        cbrt = slidingLayout.findViewById(R.id.cuberoot);
+        pi = slidingLayout.findViewById(R.id.pi);
+
         view = findViewById(R.id.view2);
 
         //adding onClickListeners
@@ -1302,6 +1476,549 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         open.setOnClickListener(this);
         close.setOnClickListener(this);
         percent.setOnClickListener(this);
+        sin.setOnClickListener(this);
+        cos.setOnClickListener(this);
+        tan.setOnClickListener(this);
+        asin.setOnClickListener(this);
+        acos.setOnClickListener(this);
+        atan.setOnClickListener(this);
+        exp.setOnClickListener(this);
+        log.setOnClickListener(this);
+        ln.setOnClickListener(this);
+        pow.setOnClickListener(this);
+        factorial.setOnClickListener(this);
+        sqrt.setOnClickListener(this);
+        cbrt.setOnClickListener(this);
+        pi.setOnClickListener(this);
 
+    }
+
+    private static Integer fact(Integer n) {
+        if (n >= 0) {
+            if (n == 0)
+                return 1;
+            else
+                return n * fact(n - 1);
+        } else {
+            return n * fact(-n - 1);
+        }
+    }
+
+    private static boolean isTestOperator(char c) {
+        if (c == '+' || c == '/' || c == '*' || c == '%' || c == '!' || c == '^' || c == '\u221a' || c == '\u221b')
+            return true;
+        return false;
+    }
+
+    private static boolean isNumber(String string) {
+        return Pattern.matches("-?\\d+(\\.\\d+)?", string);
+    }
+
+    private boolean canBeLastChar(char c) {
+        if (isNumber(c))
+            return true;
+        if (c == ')' || c == '%' || c == '!')
+            return true;
+        return false;
+    }
+
+    private boolean isNumber(char c) {
+        switch (c) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            case '0':
+            case 'e':
+            case '\u03c0':
+                return true;
+        }
+        return false;
+    }
+
+
+    //Test Methods
+    private String getTestAnswer(String equation) {
+
+        equation = equation.replaceAll("e", Math.E + "");
+        equation = equation.replaceAll("\u03c0", "" + Math.PI);
+        equation = equation.replaceAll("-", "+-");
+        equation = equation.replaceAll("(\\*\\+)", "*");
+        equation = equation.replaceAll("(\\/\\+)", "/");
+        equation = equation.replaceAll("(\\+\\+)", "+");
+
+        equation = equation.replaceAll("\\+\\)", ")");
+        equation = equation.replaceAll("\\-\\)", ")");
+        equation = equation.replaceAll("\\/\\)", ")");
+        equation = equation.replaceAll("\\*\\)", ")");
+
+
+        char c = equation.charAt(equation.length() - 1);
+
+        while (!canBeLastChar(c)) {
+            equation = equation.substring(0, equation.length() - 1);
+            if (!equation.equals(""))
+                c = equation.charAt(equation.length() - 1);
+            else
+                return "";
+        }
+
+        c = equation.charAt(0);
+        if (c == '+' || c == '-')
+            equation = "0" + equation;
+
+        Stack<String> stack = new Stack<>();
+        String temp = "";
+        for (int i = 0; i < equation.length(); i++) {
+            c = equation.charAt(i);
+            if (isTestOperator(c)) {
+                if (!temp.equals(""))
+                    stack.push(temp);
+                stack.push(c + "");
+                temp = "";
+            } else if (c == '(') {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                stack.push("(");
+            } else if (c == ')') {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                Stack<String> abc = new Stack<>();
+                while (!stack.peek().equals("(")) {
+                    abc.push(stack.pop());
+                }
+                stack.pop();
+                Double dd = getTestValue(abc);
+                if (dd == null)
+                    return "";
+                stack.push(dd + "");
+            } else {
+                temp = temp + c;
+            }
+        }
+
+        if (!temp.equals(""))
+            stack.push(temp);
+
+        Stack<String> abc = new Stack<>();
+        while (!stack.empty()) {
+            abc.push(stack.pop());
+        }
+
+        Double dd = getTestValue(abc);
+        if (dd != null) {
+            if (df == null) {
+                //setting app precision
+                precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
+                setPrecision(precision);
+                df = new DecimalFormat(precisionString);
+            }
+            return df.format(dd);
+        }
+        else
+            return "";
+    }
+
+    private Double getTestValue(Stack<String> token) {
+        char c;
+        String temp = "";
+        Stack<String> stack = new Stack<>();
+        Stack<String> workingStack = token;
+
+        if (workingStack.contains("-")) {
+            while (!workingStack.empty()) {
+                temp = workingStack.pop();
+                if (temp.equals("-")) {
+                    temp = temp + workingStack.pop();
+
+                }
+                stack.push(temp);
+            }
+
+            while (!stack.empty()) {
+                workingStack.push(stack.pop());
+            }
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //solve for pre unary operators
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+            Double num1;
+
+            switch (temp) {
+                case "sin":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Math.toRadians(num1);
+                    stack.push(Math.sin(num1) + "");
+                    break;
+                case "cos":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Math.toRadians(num1);
+                    stack.push(Math.cos(num1) + "");
+                    break;
+                case "tan":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 % 90 == 0) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    num1 = Math.toRadians(num1);
+                    stack.push(Math.tan(num1) + "");
+                    break;
+                case "asin":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 > 1 || num1 < -1) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push(Math.toDegrees(Math.asin(num1)) + "");
+                    break;
+                case "acos":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 > 1 || num1 < -1) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push(Math.toDegrees(Math.acos(num1)) + "");
+                    break;
+                case "atan":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    stack.push(Math.toDegrees(Math.atan(num1)) + "");
+                    break;
+                case "log":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 < 0) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push(Math.log10(num1) + "");
+                    break;
+                case "ln":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 < 0) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push(Math.log(num1) + "");
+                    break;
+                case "\u221a":
+                    if (!isNumber(workingStack.peek())) {
+                        String ll = workingStack.peek();
+                        if (ll.equals("\u221a") || ll.equals("\u221b")) {
+                            Stack<String> gg = new Stack<>();
+                            while (!workingStack.empty() && isRoot(ll)) {
+                                gg.push(workingStack.pop());
+                                if (!workingStack.empty())
+                                    ll = workingStack.peek();
+                            }
+                            if(isNumber(workingStack.peek())){
+                                gg.push(workingStack.pop());
+                            }
+                            num1 = solveRoot(gg);
+                            stack.push(Math.sqrt(num1) + "");
+                            break;
+                        }
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    stack.push(Math.sqrt(num1) + "");
+                    break;
+                case "\u221b":
+                    if (!isNumber(workingStack.peek())) {
+                        String ll = workingStack.peek();
+                        if (ll.equals("\u221a") || ll.equals("\u221b")) {
+                            Stack<String> gg = new Stack<>();
+                            while (!workingStack.empty() && isRoot(ll)) {
+                                gg.push(workingStack.pop());
+                                if (!workingStack.empty())
+                                    ll = workingStack.peek();
+                            }
+                            if(isNumber(workingStack.peek())){
+                                gg.push(workingStack.pop());
+                            }
+                            num1 = solveRoot(gg);
+                            stack.push(Math.cbrt(num1) + "");
+                            break;
+                        }
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    stack.push(Math.cbrt(num1) + "");
+                    break;
+                default:
+                    stack.push(temp);
+                    break;
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //solve for post unary operators
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+            Double num1;
+
+            switch (temp) {
+                case "%":
+                    num1 = Double.parseDouble(stack.pop());
+                    num1 = num1 / 100;
+                    stack.push(num1 + "");
+                    break;
+                case "!":
+                    if (!Pattern.matches("-?\\d+(\\.0)?", stack.peek())) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    int a = Integer.parseInt(stack.pop());
+                    stack.push(fact(a) + "");
+                    break;
+                default:
+                    stack.push(temp);
+                    break;
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //power  ^
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if (temp.equals("^")) {
+                Double num1 = Double.parseDouble(stack.pop());
+                Double num2 = Double.parseDouble(workingStack.pop());
+                stack.push(Math.pow(num1, num2) + "");
+            } else
+                stack.push(temp);
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //division
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if (temp.length() == 1 && temp.charAt(0) == '/') {
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                if (num2 == 0) {
+                    errMsg = "Cannot divide by 0";
+                    return null;
+                }
+
+                num1 = num1 / num2;
+                val1 = num1 + "";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //multiplication
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if (temp.length() == 1 && temp.charAt(0) == '*') {
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                num1 = num1 * num2;
+                val1 = num1 + "";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        //addition
+        stack.clear();
+        while (!workingStack.empty()) {
+            temp = workingStack.pop();
+
+            if (temp.length() == 1 && temp.charAt(0) == '+') {
+                String val1 = stack.pop();
+                String val2 = workingStack.pop();
+                double num1 = Double.parseDouble(val1);
+                double num2 = Double.parseDouble(val2);
+
+                num1 = num1 + num2;
+                val1 = num1 + "";
+                stack.push(val1);
+            } else {
+                stack.push(temp);
+            }
+        }
+
+        while (!stack.empty()) {
+            workingStack.push(stack.pop());
+        }
+
+        //check if solved
+        if (workingStack.size() == 1) {
+            String tt = workingStack.peek();
+            try {
+                return Double.parseDouble(tt);
+            } catch (NumberFormatException e) {
+                errMsg = "Invalid Expression";
+                return null;
+            }
+        }
+
+        errMsg = "Invalid Expression";
+        return null;
+    }
+
+    private Double solveRoot(Stack<String> gg) {
+        Double num = Double.parseDouble(gg.pop());
+        while (!gg.empty()){
+            String kk = gg.pop();
+            if(kk.equals("\u221a")){
+                num = Math.sqrt(num);
+            }
+            if(kk.equals("\u221b")){
+                num = Math.cbrt(num);
+            }
+        }
+        return num;
+    }
+
+    private boolean isRoot(String string) {
+        if (string.equals("\u221a") || string.equals("\u221b")) {
+            return true;
+        }
+        return false;
     }
 }

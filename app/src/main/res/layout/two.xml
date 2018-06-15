@@ -36,24 +36,6 @@
             android:layout_weight="1"
             android:text="tan"
             android:textSize="28sp"/>
-
-        <Button
-            android:id="@+id/pow"
-            style="?buttonSecondary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="^"
-            android:textSize="36sp" />
-        <Button
-            android:id="@+id/fact"
-            style="?buttonSecondary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="!"
-            android:textAllCaps="false"
-            android:textSize="36sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,7 +51,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="asin"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/acos"
@@ -78,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="acos"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/atan"
@@ -87,25 +69,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="atan"
-            android:textSize="28sp" />
-        <Button
-            android:id="@+id/sqroot"
-            style="?buttonSecondary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="\u221a"
-            android:textSize="36sp" />
-
-        <Button
-            android:id="@+id/cuberoot"
-            style="?buttonSecondary"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="\u221b"
-            android:textSize="36sp" />
-
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -121,7 +85,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="e"
-            android:textSize="32sp" />
+            android:textSize="28sp" />
 
         <Button
             android:id="@+id/log"
@@ -130,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="log"
-            android:textSize="32sp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/ln"
@@ -139,8 +103,49 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="ln"
-            android:textSize="32sp" />
+            android:textSize="26sp" />
+        <Button
+            android:id="@+id/pow"
+            style="?buttonSecondary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="^"
+            android:textSize="36sp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/fact"
+            style="?buttonSecondary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="!"
+            android:textAllCaps="false"
+            android:textSize="36sp" />
+        <Button
+            android:id="@+id/sqroot"
+            style="?buttonSecondary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="\u221a"
+            android:textSize="28sp" />
+
+        <Button
+            android:id="@+id/cuberoot"
+            style="?buttonSecondary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="\u221b"
+            android:textSize="28sp" />
         <Button
             android:id="@+id/pi"
             style="?buttonSecondary"
@@ -148,7 +153,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="\u03c0"
-            android:textSize="36sp" />
+            android:textSize="28sp" />
     </LinearLayout>
-
 </LinearLayout>

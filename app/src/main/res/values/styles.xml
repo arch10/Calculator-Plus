@@ -15,14 +15,14 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
@@ -64,14 +64,14 @@
     </style>
 
     <style name="GreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="GreenSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:textColor">@color/colorGreenPrimary</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
@@ -112,14 +112,14 @@
     </style>
 
     <style name="BlueButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="BlueSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:textColor">@color/colorBluePrimary</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
@@ -160,14 +160,14 @@
     </style>
 
     <style name="LightGreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="LightGreenSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:textColor">@color/colorLightGreenPrimary</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
@@ -207,14 +207,14 @@
     </style>
 
     <style name="PinkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="PinkSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/button_background</item>
+        <item name="android:background">@color/colorWhite</item>
         <item name="android:textColor">@color/colorPinkPrimary</item>
         <item name="android:fontFamily">serif-monospace</item>
         <item name="android:textAllCaps">false</item>

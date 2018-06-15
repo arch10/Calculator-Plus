@@ -32,7 +32,8 @@
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 android:textSize="55sp"
-                tools:text="0" />
+                tools:text="0"
+                android:inputType="textNoSuggestions" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -59,31 +60,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent="0.6" />
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    <include
+        android:id="@+id/mainLayout"
+        layout="@layout/one"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom"
-        sothree:layout_constraintBottom_toBottomOf="parent"
-        sothree:layout_constraintEnd_toEndOf="parent"
-        sothree:layout_constraintHorizontal_bias="1.0"
-        sothree:layout_constraintStart_toStartOf="parent"
-        sothree:layout_constraintTop_toTopOf="@+id/guideline"
-        sothree:layout_constraintVertical_bias="0.0"
-        sothree:umanoPanelHeight="40dp"
-        sothree:umanoShadowHeight="4dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-        <include
-            android:id="@+id/mainLayout"
-            layout="@layout/one" />
-
-        <include
-            android:id="@+id/slidingLayout"
-            layout="@layout/two"
-            android:visibility="invisible" />
-
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    <include
+        android:id="@+id/slidingLayout"
+        layout="@layout/two"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

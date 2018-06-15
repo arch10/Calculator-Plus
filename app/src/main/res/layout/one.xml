@@ -129,7 +129,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="x"
+            android:text="×"
             android:textAllCaps="false"
             android:textSize="36sp" />
     </LinearLayout>

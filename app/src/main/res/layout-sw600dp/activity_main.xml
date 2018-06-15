@@ -32,7 +32,8 @@
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 android:textSize="75sp"
-                tools:text="0" />
+                tools:text="0"
+                android:inputType="textNoSuggestions" />
         </me.grantland.widget.AutofitLayout>
 
         <me.grantland.widget.AutofitTextView
@@ -61,25 +62,26 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+
+    <include
+        android:id="@+id/mainLayout"
+        layout="@layout/one"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom"
-        sothree:layout_constraintBottom_toBottomOf="parent"
-        sothree:layout_constraintEnd_toEndOf="parent"
-        sothree:layout_constraintStart_toStartOf="parent"
-        sothree:layout_constraintTop_toTopOf="@+id/guideline"
-        sothree:umanoPanelHeight="40dp"
-        sothree:umanoShadowHeight="4dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
-        <include layout="@layout/one"
-            android:id="@+id/mainLayout"/>
-
-        <include layout="@layout/two"
-            android:id="@+id/slidingLayout"
-            android:visibility="invisible"/>
-
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    <include
+        android:id="@+id/slidingLayout"
+        layout="@layout/two"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -102,6 +104,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
 
 </android.support.constraint.ConstraintLayout>
 
