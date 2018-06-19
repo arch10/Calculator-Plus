@@ -35,9 +35,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16sp"
             android:layout_weight="1"
-            android:text="Default"
+            android:text="Classic"
             android:textSize="28sp" />
-
         <RadioButton
             android:id="@+id/rb_theme_orange"
             android:layout_width="match_parent"

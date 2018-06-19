@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.arch1.testapplication">
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -31,7 +31,10 @@
         <activity
             android:name=".Precision"
             android:theme="@style/PopUpStyle" />
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".AboutActivity"
+            android:label="About"/>
+        <activity android:name=".HistoryActivity"
+            android:label="History"/>
     </application>
 
 </manifest>

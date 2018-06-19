@@ -3,8 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/history_icon"
+        android:title="History"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/ic_history_black_24dp"/>
+    <item
+        android:id="@+id/deg"
+        android:onClick="clickDeg"
+        android:title="DEG"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/settings"
         android:title="Settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/history"
+        android:title="History"
         app:showAsAction="never"/>
     <item
         android:id="@+id/tutorial"
@@ -13,6 +28,6 @@
     <item
         android:id="@+id/about"
         android:title="About"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 </menu>

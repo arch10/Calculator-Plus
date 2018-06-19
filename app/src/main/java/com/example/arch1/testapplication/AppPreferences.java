@@ -9,10 +9,12 @@ public class AppPreferences {
     private Context ctx;
     private SharedPreferences.Editor editor;
 
-    final String SHARED_PREF_STRING = "com.example.arch1.testapplication";
+    final private String SHARED_PREF_STRING = "com.example.arch1.testapplication";
     final static String APP_THEME = "appTheme";
     final static String APP_FIRST_LAUNCH = "AppFirstLaunch";
     final static String APP_ANSWER_PRECISION = "precision";
+    final static String APP_ANGLE = "angle";
+    final static String APP_HISTORY = "history";
 
     public AppPreferences(Context context) {
         ctx = context;

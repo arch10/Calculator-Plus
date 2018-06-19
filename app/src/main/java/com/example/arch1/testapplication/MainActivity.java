@@ -51,7 +51,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean firstLauch;
     private DecimalFormat df;
     private String precisionString, precision;
-    private String errMsg = "abc abc test";
+    private String errMsg = "Invalid Expression";
+    private Menu menu;
+    private boolean ifDegree;
+    private History history;
 
     private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
 
@@ -75,8 +78,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
+        //setting menu for DEG or RAD
+        ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
+
         //initialising variables
         initialiseVariables();
+
+        //adding history
+        history = new History(this);
 
         //checking if first Launch
         firstLauch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
@@ -109,6 +118,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding text change listener
         equation.addTextChangedListener(this);
+
+        //checking if called by history intent
+        Intent intent = getIntent();
+        if(intent !=null){
+            String historyEqu = intent.getStringExtra("equation");
+            if(historyEqu != null){
+                equ = historyEqu;
+                equation.setText(equ);
+            }
+        }
     }
 
     @Override
@@ -128,7 +147,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //return getAnswer(equ);
             //return df.format(getResult(equ));
-            return getTestAnswer(equ);
+            String ans = getTestAnswer(equ);
+            if (ans.equals("-0"))
+                ans = "0";
+            return ans;
         }
         return "";
     }
@@ -196,6 +218,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     if (!res.equals("")) {
+                        String historyEqu = equ;
+                        String historyVal = res;
+                        history.addToHistory(historyEqu,historyVal,System.currentTimeMillis());
                         equ = "";
                         equation.setText(res);
                         result.setText("");
@@ -1034,12 +1059,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("equ", equ);
+        outState.putBoolean("ifDeg", ifDegree);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         equ = savedInstanceState.getString("equ");
+        ifDegree = savedInstanceState.getBoolean("ifDeg");
 
         if (balancedParenthesis(equ)) {
             result.setTextColor(getTextColor());
@@ -1149,6 +1176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -1170,6 +1198,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.about:
                 intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.history:
+                intent = new Intent(MainActivity.this,HistoryActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.history_icon:
+                intent = new Intent(MainActivity.this,HistoryActivity.class);
                 startActivity(intent);
                 break;
 
@@ -1286,6 +1324,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tempEqu = equ;
         int a = 0, b = 0;
 
+        if(tempEqu.charAt(tempEqu.length()-1)=='('){
+            while (tempEqu.charAt(tempEqu.length()-1)=='('){
+                tempEqu = tempEqu.substring(0,tempEqu.length()-1);
+                if(tempEqu.length()==0)
+                    return;
+            }
+        }
+
+        //test method
+        int numOfPairs = 0;
+        int openBracketCount = 0;
+
+        for (int i = 0; i < tempEqu.length(); i++) {
+            char c = tempEqu.charAt(i);
+            if (c == '(') {
+                openBracketCount++;
+            }
+            if (c == ')' && openBracketCount>0) {
+                openBracketCount--;
+                numOfPairs++;
+            }
+        }
+
         for (int i = 0; i < tempEqu.length(); i++) {
             char c = tempEqu.charAt(i);
             if (c == '(')
@@ -1294,53 +1355,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 b++;
         }
 
-        if (a != b) {
-            int num = -1;
-            if (a > b) {
-                num = a - b;
-                char c = tempEqu.charAt(tempEqu.length() - 1);
-                if (isNumber(c + "") || c == ')' || c == '%') {
-                    tempEqu = tempEqu + ")";
-                    num--;
-                } else if (c == '.') {
-                    tempEqu = tempEqu + "0)";
-                    num--;
-                } else if (c == '(') {
-                    return;
-                }
+        int reqOpen = b - numOfPairs;
+        int reqClose = a - numOfPairs;
 
-                while (num > 0) {
-                    tempEqu = tempEqu + ")";
-                    num--;
-                }
-            }
-            if (a < b) {
-                num = b - a;
-                while (num > 0) {
-                    tempEqu = "(" + tempEqu;
-                    num--;
-                }
-            }
-        } else {
-            //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+        while (reqOpen>0){
+            tempEqu = "(" + tempEqu;
+            reqOpen--;
         }
 
+        while (reqClose>0) {
+            tempEqu = tempEqu + ")";
+            reqClose--;
+        }
 
-//        tempEqu = equ;
-//        int numOfOpen = 0;
-//
-//        for(int i=0;i<tempEqu.length();i++){
-//            char c = tempEqu.charAt(i);
-//            if(c == '('){
-//                numOfOpen++;
-//            }
-//            if (c == ')'){
-//                if(numOfOpen == 0){
-//                    tempEqu = "("+tempEqu;
+//        if (a != b) {
+//            int num = -1;
+//            if (a > b) {
+//                num = a - b;
+//                char c = tempEqu.charAt(tempEqu.length() - 1);
+//                if (isNumber(c + "") || c == ')' || c == '%') {
+//                    tempEqu = tempEqu + ")";
+//                    num--;
+//                } else if (c == '.') {
+//                    tempEqu = tempEqu + "0)";
+//                    num--;
+//                } else if (c == '(') {
+//                    return;
 //                }
-//                numOfOpen--;
+//
+//                while (num > 0) {
+//                    tempEqu = tempEqu + ")";
+//                    num--;
+//                }
+//            }
+//            if (a < b) {
+//                num = b - a;
+//                while (num > 0) {
+//                    tempEqu = "(" + tempEqu;
+//                    num--;
+//                }
+//            }
+//        } else if(a == b){
+//            //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+//            int numOfPairs = 0;
+//            int openBracketCount = 0;
+//
+//            for (int i = 0; i < tempEqu.length(); i++) {
+//                char c = tempEqu.charAt(i);
+//                if (c == '(') {
+//                    openBracketCount++;
+//                }
+//                if (c == ')' && openBracketCount>0) {
+//                    openBracketCount--;
+//                    numOfPairs++;
+//                }
+//            }
+//            int requiredPairs = a - numOfPairs;
+//
+//            while (requiredPairs>0){
+//                tempEqu = "("+tempEqu+")";
+//                requiredPairs--;
 //            }
 //        }
+
     }
 
     private int getTextColor() {
@@ -1541,7 +1618,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-
     //Test Methods
     private String getTestAnswer(String equation) {
 
@@ -1564,8 +1640,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             equation = equation.substring(0, equation.length() - 1);
             if (!equation.equals(""))
                 c = equation.charAt(equation.length() - 1);
-            else
+            else {
+                errMsg = "Invalid Expression";
                 return "";
+            }
         }
 
         c = equation.charAt(0);
@@ -1623,8 +1701,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 df = new DecimalFormat(precisionString);
             }
             return df.format(dd);
-        }
-        else
+        } else
             return "";
     }
 
@@ -1673,7 +1750,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     num1 = Double.parseDouble(workingStack.pop());
-                    num1 = Math.toRadians(num1);
+                    if (ifDegree)
+                        num1 = Math.toRadians(num1);
                     stack.push(Math.sin(num1) + "");
                     break;
                 case "cos":
@@ -1682,7 +1760,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     num1 = Double.parseDouble(workingStack.pop());
-                    num1 = Math.toRadians(num1);
+                    if (ifDegree)
+                        num1 = Math.toRadians(num1);
                     stack.push(Math.cos(num1) + "");
                     break;
                 case "tan":
@@ -1691,11 +1770,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     num1 = Double.parseDouble(workingStack.pop());
-                    if (num1 % 90 == 0) {
-                        errMsg = "Domain error";
-                        return null;
+                    if (ifDegree) {
+                        if (num1 % 90 == 0) {
+                            errMsg = "Domain error";
+                            return null;
+                        }
+                        num1 = Math.toRadians(num1);
+                    } else {
+                        if (num1 % (Math.PI / 2) == 0) {
+                            errMsg = "Domain error";
+                            return null;
+                        }
                     }
-                    num1 = Math.toRadians(num1);
                     stack.push(Math.tan(num1) + "");
                     break;
                 case "asin":
@@ -1708,7 +1794,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         errMsg = "Domain error";
                         return null;
                     }
-                    stack.push(Math.toDegrees(Math.asin(num1)) + "");
+                    if (ifDegree)
+                        stack.push(Math.toDegrees(Math.asin(num1)) + "");
+                    else
+                        stack.push(Math.asin(num1) + "");
                     break;
                 case "acos":
                     if (!isNumber(workingStack.peek())) {
@@ -1720,7 +1809,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         errMsg = "Domain error";
                         return null;
                     }
-                    stack.push(Math.toDegrees(Math.acos(num1)) + "");
+                    if (ifDegree)
+                        stack.push(Math.toDegrees(Math.acos(num1)) + "");
+                    else
+                        stack.push(Math.acos(num1) + "");
                     break;
                 case "atan":
                     if (!isNumber(workingStack.peek())) {
@@ -1728,7 +1820,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     num1 = Double.parseDouble(workingStack.pop());
-                    stack.push(Math.toDegrees(Math.atan(num1)) + "");
+                    if (ifDegree)
+                        stack.push(Math.toDegrees(Math.atan(num1)) + "");
+                    else
+                        stack.push(Math.atan(num1) + "");
                     break;
                 case "log":
                     if (!isNumber(workingStack.peek())) {
@@ -1764,7 +1859,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (!workingStack.empty())
                                     ll = workingStack.peek();
                             }
-                            if(isNumber(workingStack.peek())){
+                            if (isNumber(workingStack.peek())) {
                                 gg.push(workingStack.pop());
                             }
                             num1 = solveRoot(gg);
@@ -1787,7 +1882,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (!workingStack.empty())
                                     ll = workingStack.peek();
                             }
-                            if(isNumber(workingStack.peek())){
+                            if (isNumber(workingStack.peek())) {
                                 gg.push(workingStack.pop());
                             }
                             num1 = solveRoot(gg);
@@ -2003,12 +2098,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Double solveRoot(Stack<String> gg) {
         Double num = Double.parseDouble(gg.pop());
-        while (!gg.empty()){
+        while (!gg.empty()) {
             String kk = gg.pop();
-            if(kk.equals("\u221a")){
+            if (kk.equals("\u221a")) {
                 num = Math.sqrt(num);
             }
-            if(kk.equals("\u221b")){
+            if (kk.equals("\u221b")) {
                 num = Math.cbrt(num);
             }
         }
@@ -2020,5 +2115,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return false;
+    }
+
+    public void clickDeg(MenuItem item) {
+        String text = item.getTitle().toString();
+        if (text.equals("DEG")) {
+            item.setTitle("RAD");
+            ifDegree = false;
+        } else if (text.equals("RAD")) {
+            item.setTitle("DEG");
+            ifDegree = true;
+        }
+        afterTextChanged(equation.getText());
+        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,ifDegree);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(menu != null){
+            if(ifDegree){
+                menu.findItem(R.id.deg).setTitle("DEG");
+            } else {
+                menu.findItem(R.id.deg).setTitle("RAD");
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setAngle(){
+        if(menu != null){
+            if(ifDegree){
+                menu.findItem(R.id.deg).setTitle("DEG");
+            } else {
+                menu.findItem(R.id.deg).setTitle("RAD");
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,ifDegree);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
+        setAngle();
     }
 }
