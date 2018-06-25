@@ -13,7 +13,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private AppPreferences preferences;
     private Toolbar toolbar;
-    private TextView version,build;
+    private TextView version, build;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +41,8 @@ public class AboutActivity extends AppCompatActivity {
 
         Date buildDate = BuildConfig.buildTime;
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a z");
-        build.setText("Build Date: "+sdf.format(buildDate));
-        version.setText("Version: "+BuildConfig.VERSION_NAME);
+        build.setText("Build Date: " + sdf.format(buildDate));
+        version.setText("Version: " + BuildConfig.VERSION_NAME);
     }
 
     private void setTheme(String themeName) {

@@ -4,7 +4,7 @@ public class ListData {
     private String title, body;
     private int img;
 
-    public ListData(){
+    public ListData() {
         title = "";
         body = "";
         img = 0;

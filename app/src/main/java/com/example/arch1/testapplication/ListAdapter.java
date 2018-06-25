@@ -20,11 +20,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
     private ArrayList<ListData> list;
     private ListAdapter.OnSettingClickListener listener;
 
-    public interface OnSettingClickListener{
+    public interface OnSettingClickListener {
         void OnSettingClick(ListData data, int position);
     }
 
-    public ListAdapter(Context context, ArrayList<ListData> list, ListAdapter.OnSettingClickListener listener){
+    public ListAdapter(Context context, ArrayList<ListData> list, ListAdapter.OnSettingClickListener listener) {
         ctx = context;
         this.list = list;
         this.listener = listener;
@@ -39,7 +39,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
     public SettingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.setting_list_layout,parent,false);
+        View view = inflater.inflate(R.layout.setting_list_layout, parent, false);
         SettingViewHolder holder = new SettingViewHolder(view);
         return holder;
     }
@@ -51,8 +51,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         holder.title.setText(data.getTitle());
         holder.body.setText(data.getBody());
         holder.icon.setImageResource(data.getImg());
-        holder.icon.setColorFilter(ContextCompat.getColor(ctx,getColor()));
-        holder.bind(data,listener);
+        holder.icon.setColorFilter(ContextCompat.getColor(ctx, getColor()));
+        holder.bind(data, listener);
     }
 
     @Override
@@ -61,9 +61,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
     }
 
 
-    class SettingViewHolder extends RecyclerView.ViewHolder{
+    class SettingViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title,body;
+        TextView title, body;
         ImageView icon;
 
         public SettingViewHolder(View itemView) {
@@ -77,7 +77,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.OnSettingClick(data,getAdapterPosition());
+                    listener.OnSettingClick(data, getAdapterPosition());
                 }
             });
         }

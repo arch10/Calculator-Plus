@@ -139,7 +139,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ArrayList<Calculations> reverseHistory(ArrayList<Calculations> calculations) {
         ArrayList<Calculations> list = new ArrayList<>();
 
-        for(int i = calculations.size()-1; i>=0; i--){
+        for (int i = calculations.size() - 1; i >= 0; i--) {
             list.add(calculations.get(i));
         }
         return list;
@@ -153,7 +153,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.clearHistory){
+        if (item.getItemId() == R.id.clearHistory) {
             history.setJsonString("");
             mAdapter.setList(reverseHistory(history.showHistory()));
             recyclerView.setAdapter(mAdapter);

@@ -40,7 +40,7 @@
     </style>
 
     <style name="MyActionBar">
-        <item name="background">@drawable/background_title</item>
+        <item name="background">@drawable/orange_title</item>
         <item name="android:titleTextAppearance">@color/colorWhite</item>
         <item name="android:colorControlNormal">@color/colorWhite</item>
         <item name="android:navigationIcon">@drawable/ic_arrow_back_white_24dp</item>

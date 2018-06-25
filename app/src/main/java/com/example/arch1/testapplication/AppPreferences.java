@@ -18,16 +18,16 @@ public class AppPreferences {
 
     public AppPreferences(Context context) {
         ctx = context;
-        sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_STRING,Context.MODE_PRIVATE);
+        sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_STRING, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
     public String getStringPreference(String key) {
-        return sharedPreferences.getString(key,"");
+        return sharedPreferences.getString(key, "");
     }
 
     public void setStringPreference(String key, String value) {
-        editor.putString(key,value);
+        editor.putString(key, value);
         editor.commit();
     }
 
@@ -36,11 +36,11 @@ public class AppPreferences {
     }
 
     public boolean getBooleanPreference(String key) {
-        return sharedPreferences.getBoolean(key,true);
+        return sharedPreferences.getBoolean(key, true);
     }
 
     public void setBooleanPreference(String key, Boolean value) {
-        editor.putBoolean(key,value);
+        editor.putBoolean(key, value);
         editor.commit();
     }
 

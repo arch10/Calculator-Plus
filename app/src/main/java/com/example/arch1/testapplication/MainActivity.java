@@ -48,17 +48,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View mainLayout, slidingLayout;
     private AppPreferences preferences;
     private android.support.v7.widget.Toolbar toolbar;
-    private boolean firstLauch;
+    private boolean firstLaunch;
     private DecimalFormat df;
     private String precisionString, precision;
     private String errMsg = "Invalid Expression";
     private Menu menu;
     private boolean ifDegree;
     private History history;
-
-    private static final String EVALUATION_PATTERN = "[-+]?\\d+(\\.\\d+)?%?[-+\\/*÷x%]-?((\\d+(\\.\\d+)?%?[-+\\/*÷x%]?-?(\\d+(\\.\\d+)?)?%?)+)?";
-
-    //[-+]?\d+(\.\d+)?%?[-+\/*÷x%]-?((\d+(\.\d+)?%?[-+\/*÷x%]?-?(\d+(\.\d+)?)?%?)+)?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         history = new History(this);
 
         //checking if first Launch
-        firstLauch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
-        if (firstLauch) {
-            startTutorial();
+        firstLaunch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
+        if (firstLaunch) {
+            //startTutorial();
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
         }
@@ -121,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //checking if called by history intent
         Intent intent = getIntent();
-        if(intent !=null){
+        if (intent != null) {
             String historyEqu = intent.getStringExtra("equation");
-            if(historyEqu != null){
+            if (historyEqu != null) {
                 equ = historyEqu;
                 equation.setText(equ);
             }
@@ -145,8 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             equ = equ.replace("÷", "/");
             equ = equ.replace("\u00d7", "*");
 
-            //return getAnswer(equ);
-            //return df.format(getResult(equ));
             String ans = getTestAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
@@ -220,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (!res.equals("")) {
                         String historyEqu = equ;
                         String historyVal = res;
-                        history.addToHistory(historyEqu,historyVal,System.currentTimeMillis());
+                        history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
                         equ = "";
                         equation.setText(res);
                         result.setText("");
@@ -801,243 +795,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isEquationEmpty() {
-        String eq = equ;//equation.getText().toString().trim();
+        String eq = equ;
         if (eq.equals(""))
             return true;
         if (eq == null)
-            return true;
-        return false;
-    }
-
-    private String getAnswer(String equation) {
-
-        char c = equation.charAt(equation.length() - 1);
-
-        while (isOperator(c) && c != '%') {
-            equation = equation.substring(0, equation.length() - 1);
-            if (!equation.equals(""))
-                c = equation.charAt(equation.length() - 1);
-            else
-                return "";
-        }
-
-        Stack<String> stack = new Stack<>();
-        String temp = "";
-        for (int i = 0; i < equation.length(); i++) {
-            c = equation.charAt(i);
-            if (isOperator(c)) {
-                if (!temp.equals(""))
-                    stack.push(temp);
-                stack.push(c + "");
-                temp = "";
-            } else if (c == '(') {
-                if (!temp.equals("")) {
-                    stack.push(temp);
-                    temp = "";
-                }
-                stack.push("(");
-            } else if (c == ')') {
-                if (!temp.equals("")) {
-                    stack.push(temp);
-                    temp = "";
-                }
-                String abc = "";
-                while (!stack.peek().equals("(")) {
-                    abc = stack.pop() + abc;
-                }
-                stack.pop();
-                //stack.push(df.format(getResult(abc)));
-                stack.push(df.format(getValue(abc)));
-            } else {
-                temp = temp + c;
-            }
-        }
-
-        if (!temp.equals(""))
-            stack.push(temp);
-
-        String lll = "";
-        while (!stack.empty()) {
-            lll = stack.pop() + lll;
-        }
-
-        if (df == null) {
-            //setting app precision
-            precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-            setPrecision(precision);
-            df = new DecimalFormat(precisionString);
-        }
-        //return df.format(getResult(lll));
-        return df.format(getValue(lll));
-    }
-
-    private double getValue(String equation) {
-
-        char c = equation.charAt(equation.length() - 1);
-
-        while (isOperator(c) && c != '%') {
-            equation = equation.substring(0, equation.length() - 1);
-            if (!equation.equals(""))
-                c = equation.charAt(equation.length() - 1);
-        }
-
-        String temp = "";
-        Stack<String> stack = new Stack<>();
-        Stack<String> workingStack = new Stack<>();
-
-        equation = "0" + equation;
-        equation = equation.replaceAll("-", "+-");
-        equation = equation.replaceAll("(\\*\\+)", "*");
-        equation = equation.replaceAll("(\\/\\+)", "/");
-        equation = equation.replaceAll("(\\+\\+)", "+");
-
-
-        //tokenize
-        temp = "";
-        for (int i = 0; i < equation.length(); i++) {
-            c = equation.charAt(i);
-
-            if (isOp(c)) {
-                if (!temp.equals("")) {
-                    stack.push(temp);
-                    temp = "";
-                }
-                stack.push(c + "");
-            } else {
-                temp = temp + c;
-            }
-        }
-
-        if (!temp.equals(""))
-            stack.push(temp);
-
-        while (!stack.empty()) {
-            workingStack.push(stack.pop());
-        }
-
-        //check if operation is over
-        if (workingStack.size() == 1) {
-            String ans = workingStack.pop();
-            return Double.parseDouble(ans);
-        }
-
-        //unary operator
-        stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
-
-            if (temp.equals("%")) {
-                String val1 = stack.pop();
-                double num1 = Double.parseDouble(val1);
-                num1 = num1 / 100;
-                val1 = num1 + "";
-                stack.push(val1);
-            } else {
-                stack.push(temp);
-            }
-        }
-
-        while (!stack.empty()) {
-            workingStack.push(stack.pop());
-        }
-
-        //check if operation is over
-        if (workingStack.size() == 1) {
-            String ans = workingStack.pop();
-            return Double.parseDouble(ans);
-        }
-
-        //division
-        stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
-
-            if (temp.length() == 1 && temp.charAt(0) == '/') {
-                String val1 = stack.pop();
-                String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
-
-                num1 = num1 / num2;
-                val1 = num1 + "";
-                stack.push(val1);
-            } else {
-                stack.push(temp);
-            }
-        }
-
-        while (!stack.empty()) {
-            workingStack.push(stack.pop());
-        }
-
-        //check if operation is over
-        if (workingStack.size() == 1) {
-            String ans = workingStack.pop();
-            return Double.parseDouble(ans);
-        }
-
-        //multiplication
-        stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
-
-            if (temp.length() == 1 && temp.charAt(0) == '*') {
-                String val1 = stack.pop();
-                String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
-
-                num1 = num1 * num2;
-                val1 = num1 + "";
-                stack.push(val1);
-            } else {
-                stack.push(temp);
-            }
-        }
-
-        while (!stack.empty()) {
-            workingStack.push(stack.pop());
-        }
-
-        //check if operation is over
-        if (workingStack.size() == 1) {
-            String ans = workingStack.pop();
-            return Double.parseDouble(ans);
-        }
-
-        //addition
-        stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
-
-            if (temp.length() == 1 && temp.charAt(0) == '+') {
-                String val1 = stack.pop();
-                String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
-
-                num1 = num1 + num2;
-                val1 = num1 + "";
-                stack.push(val1);
-            } else {
-                stack.push(temp);
-            }
-        }
-
-        while (!stack.empty()) {
-            workingStack.push(stack.pop());
-        }
-
-        //check if operation is over
-        if (workingStack.size() == 1) {
-            String ans = workingStack.pop();
-            return Double.parseDouble(ans);
-        } else
-            return 0.0;
-    }
-
-    private boolean isOp(char c) {
-        if (c == '+' || c == '/' || c == '*' || c == '%')
             return true;
         return false;
     }
@@ -1072,8 +833,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             result.setTextColor(getTextColor());
             result.setText(calculateResult(equ));
         } else {
-            //trying to balance equation
-            // this is smart calculator
+            //trying to balance equation coz it's a smart calculator
             tryBalancingBrackets();
             //if could balance the equation, calculate the result
             if (balancedParenthesis(tempEqu)) {
@@ -1155,17 +915,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (balancedParenthesis(equ)) {
             result.setTextColor(getTextColor());
             result.setText(calculateResult(equ));
-            //result.setText(equ);
         } else {
-            //trying to balance equation
-            // this is smart calculator
+            //trying to balance equation coz it's a smart calculator
             tryBalancingBrackets();
             //if could balance the equation, calculate the result
             if (balancedParenthesis(tempEqu)) {
                 //calculate result
                 result.setTextColor(getTextColor());
                 result.setText(calculateResult(tempEqu));
-                //result.setText(tempEqu);
             } else {
                 result.setText("");
                 errMsg = "Invalid Expression";
@@ -1202,12 +959,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.history:
-                intent = new Intent(MainActivity.this,HistoryActivity.class);
+                intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
                 break;
 
             case R.id.history_icon:
-                intent = new Intent(MainActivity.this,HistoryActivity.class);
+                intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
                 break;
 
@@ -1255,25 +1012,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startTutorial() {
-//        TapTargetView.showFor(this,
-//                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
-//                        "menu. This will help you to change app settings and preferences. Click " +
-//                        "here to open the menu.")
-//                        .outerCircleColor(R.color.darkGray)
-//                        .outerCircleAlpha(0.70f)
-//                        .targetCircleColor(R.color.colorWhite)
-//                        .titleTextSize(28)
-//                        .titleTextColor(R.color.colorWhite)
-//                        .descriptionTextColor(R.color.colorWhite)
-//                        .descriptionTextSize(18)
-//                        .cancelable(false)
-//                , new TapTargetView.Listener() {
-//                    @Override
-//                    public void onTargetClick(TapTargetView view) {
-//                        super.onTargetClick(view);
-//                        openOptionsMenu();
-//                    }
-//                });
 
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
 
@@ -1283,6 +1021,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 "calculator screen")
                         .outerCircleColor(R.color.colorBluePrimary)
                         .outerCircleAlpha(0.90f)
+                        .targetCircleColor(R.color.colorWhite)
+                        .titleTextSize(28)
+                        .tintTarget(false)
+                        .titleTextColor(R.color.colorWhite)
+                        .descriptionTextColor(R.color.colorWhite)
+                        .descriptionTextSize(18)
+                        .cancelable(false),
+                TapTarget.forToolbarMenuItem(toolbar,R.id.deg,"Angle Button",
+                        "This is the angle button. Click here to change angle from " +
+                                "DEGREES to RADIANS and vice versa.")
+                        .outerCircleColor(R.color.colorBluePrimary)
+                        .outerCircleAlpha(0.9f)
                         .targetCircleColor(R.color.colorWhite)
                         .titleTextSize(28)
                         .tintTarget(false)
@@ -1324,10 +1074,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tempEqu = equ;
         int a = 0, b = 0;
 
-        if(tempEqu.charAt(tempEqu.length()-1)=='('){
-            while (tempEqu.charAt(tempEqu.length()-1)=='('){
-                tempEqu = tempEqu.substring(0,tempEqu.length()-1);
-                if(tempEqu.length()==0)
+        if (tempEqu.charAt(tempEqu.length() - 1) == '(') {
+            while (tempEqu.charAt(tempEqu.length() - 1) == '(') {
+                tempEqu = tempEqu.substring(0, tempEqu.length() - 1);
+                if (tempEqu.length() == 0)
                     return;
             }
         }
@@ -1341,7 +1091,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (c == '(') {
                 openBracketCount++;
             }
-            if (c == ')' && openBracketCount>0) {
+            if (c == ')' && openBracketCount > 0) {
                 openBracketCount--;
                 numOfPairs++;
             }
@@ -1358,66 +1108,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int reqOpen = b - numOfPairs;
         int reqClose = a - numOfPairs;
 
-        while (reqOpen>0){
+        while (reqOpen > 0) {
             tempEqu = "(" + tempEqu;
             reqOpen--;
         }
 
-        while (reqClose>0) {
+        while (reqClose > 0) {
             tempEqu = tempEqu + ")";
             reqClose--;
         }
-
-//        if (a != b) {
-//            int num = -1;
-//            if (a > b) {
-//                num = a - b;
-//                char c = tempEqu.charAt(tempEqu.length() - 1);
-//                if (isNumber(c + "") || c == ')' || c == '%') {
-//                    tempEqu = tempEqu + ")";
-//                    num--;
-//                } else if (c == '.') {
-//                    tempEqu = tempEqu + "0)";
-//                    num--;
-//                } else if (c == '(') {
-//                    return;
-//                }
-//
-//                while (num > 0) {
-//                    tempEqu = tempEqu + ")";
-//                    num--;
-//                }
-//            }
-//            if (a < b) {
-//                num = b - a;
-//                while (num > 0) {
-//                    tempEqu = "(" + tempEqu;
-//                    num--;
-//                }
-//            }
-//        } else if(a == b){
-//            //Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
-//            int numOfPairs = 0;
-//            int openBracketCount = 0;
-//
-//            for (int i = 0; i < tempEqu.length(); i++) {
-//                char c = tempEqu.charAt(i);
-//                if (c == '(') {
-//                    openBracketCount++;
-//                }
-//                if (c == ')' && openBracketCount>0) {
-//                    openBracketCount--;
-//                    numOfPairs++;
-//                }
-//            }
-//            int requiredPairs = a - numOfPairs;
-//
-//            while (requiredPairs>0){
-//                tempEqu = "("+tempEqu+")";
-//                requiredPairs--;
-//            }
-//        }
-
     }
 
     private int getTextColor() {
@@ -1632,6 +1331,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         equation = equation.replaceAll("\\-\\)", ")");
         equation = equation.replaceAll("\\/\\)", ")");
         equation = equation.replaceAll("\\*\\)", ")");
+        equation = equation.replaceAll("\\.\\)",")");
+        equation = equation.replaceAll("\\^\\)",")");
 
 
         char c = equation.charAt(equation.length() - 1);
@@ -1675,7 +1376,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     abc.push(stack.pop());
                 }
                 stack.pop();
-                Double dd = getTestValue(abc);
+                Double dd = null;
+                try {
+                    dd = getTestValue(abc);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    dd = null;
+                    errMsg = "Invalid Expression";
+                }
                 if (dd == null)
                     return "";
                 stack.push(dd + "");
@@ -1692,7 +1400,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             abc.push(stack.pop());
         }
 
-        Double dd = getTestValue(abc);
+        Double dd = null;
+        try {
+            dd = getTestValue(abc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dd = null;
+            errMsg = "Invalid Expression";
+        }
         if (dd != null) {
             if (df == null) {
                 //setting app precision
@@ -1705,7 +1420,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "";
     }
 
-    private Double getTestValue(Stack<String> token) {
+    private Double getTestValue(Stack<String> token) throws Exception{
         char c;
         String temp = "";
         Stack<String> stack = new Stack<>();
@@ -2127,13 +1842,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ifDegree = true;
         }
         afterTextChanged(equation.getText());
-        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,ifDegree);
+        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(menu != null){
-            if(ifDegree){
+        if (menu != null) {
+            if (ifDegree) {
                 menu.findItem(R.id.deg).setTitle("DEG");
             } else {
                 menu.findItem(R.id.deg).setTitle("RAD");
@@ -2142,9 +1857,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void setAngle(){
-        if(menu != null){
-            if(ifDegree){
+    private void setAngle() {
+        if (menu != null) {
+            if (ifDegree) {
                 menu.findItem(R.id.deg).setTitle("DEG");
             } else {
                 menu.findItem(R.id.deg).setTitle("RAD");
@@ -2155,7 +1870,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,ifDegree);
+        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
     }
 
     @Override

@@ -18,23 +18,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private HistoryAdapter.OnHistoryClickListener listener;
     private OnHistoryLongPressListener longPressListener;
 
-    public interface OnHistoryClickListener{
+    public interface OnHistoryClickListener {
         void onHistoryClick(Calculations data, int position);
     }
 
-    public interface OnHistoryLongPressListener{
+    public interface OnHistoryLongPressListener {
         void onHistoryLongPressed(Calculations data, int position);
     }
 
     public HistoryAdapter(Context context, ArrayList<Calculations> list, OnHistoryClickListener listener,
-                          OnHistoryLongPressListener longPressListener){
+                          OnHistoryLongPressListener longPressListener) {
         this.ctx = context;
         this.list = list;
         this.listener = listener;
         this.longPressListener = longPressListener;
     }
 
-    public void setList(ArrayList<Calculations> list){
+    public void setList(ArrayList<Calculations> list) {
         this.list = list;
     }
 
@@ -43,7 +43,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.history_item_layout,parent,false);
+        View view = inflater.inflate(R.layout.history_item_layout, parent, false);
         HistoryViewHolder holder = new HistoryViewHolder(view);
         return holder;
     }
@@ -55,7 +55,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.title.setText(calculations.equation);
         holder.body.setText(calculations.answer);
         holder.date.setText(calculations.date);
-        holder.bind(calculations,listener, longPressListener);
+        holder.bind(calculations, listener, longPressListener);
     }
 
     @Override
@@ -65,30 +65,31 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title,body,date;
+        TextView title, body, date;
 
-    public HistoryViewHolder(View itemView) {
-        super(itemView);
-        title = itemView.findViewById(R.id.tv_equation);
-        body = itemView.findViewById(R.id.tv_answer);
-        date = itemView.findViewById(R.id.tv_date);
-    }
+        public HistoryViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.tv_equation);
+            body = itemView.findViewById(R.id.tv_answer);
+            date = itemView.findViewById(R.id.tv_date);
+        }
 
-        public void bind(final Calculations data, final OnHistoryClickListener listener, final OnHistoryLongPressListener longPressListener) {
+        public void bind(final Calculations data, final OnHistoryClickListener listener,
+                         final OnHistoryLongPressListener longPressListener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onHistoryClick(data,getAdapterPosition());
+                    listener.onHistoryClick(data, getAdapterPosition());
                 }
             });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    longPressListener.onHistoryLongPressed(data,getAdapterPosition());
+                    longPressListener.onHistoryLongPressed(data, getAdapterPosition());
                     return false;
                 }
             });
         }
-}
+    }
 }

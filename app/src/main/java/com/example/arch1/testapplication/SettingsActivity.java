@@ -75,22 +75,22 @@ public class SettingsActivity extends AppCompatActivity {
                     //share
                     intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_SUBJECT,"Calculator Plus");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
                     String msg = "\nHey, checkout this cool Calculator app. It has ";
                     msg += "some very cool features. Go to this link to download this app now.\n\n";
-                    msg+= "https://play.google.com/store/apps/details?id=com.gigaworks.tech.calculator";
-                    intent.putExtra(Intent.EXTRA_TEXT,msg);
-                    startActivity(Intent.createChooser(intent,"Choose one"));
+                    msg += "https://play.google.com/store/apps/details?id=com.gigaworks.tech.calculator";
+                    intent.putExtra(Intent.EXTRA_TEXT, msg);
+                    startActivity(Intent.createChooser(intent, "Choose one"));
                 }
                 if (position == 4) {
                     intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setType("text/email");
                     intent.setData(Uri.parse("mailto:"));
-                    intent.putExtra(Intent.EXTRA_EMAIL,new String[] {"arch1824@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT,"Calculator Plus Feedback");
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Feedback");
                     startActivity(intent);
                 }
-                if (position == 5){
+                if (position == 5) {
                     intent = new Intent(SettingsActivity.this, AboutActivity.class);
                     startActivity(intent);
                 }
@@ -179,7 +179,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void showPrecisionDialog(){
+    private void showPrecisionDialog() {
         precisionDialog.setCanceledOnTouchOutside(true);
         precisionDialog.setContentView(R.layout.precision_popup);
 
@@ -256,33 +256,43 @@ public class SettingsActivity extends AppCompatActivity {
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
 
         switch (precision) {
-            case "two": return 2;
-            case "three": return 3;
-            case "four": return 4;
-            case "five": return 5;
-            case "six": return 6;
-            case "seven": return 7;
-            case "eight": return 8;
-            case "nine": return 9;
-            case "ten": return 10;
-            default: return 6;
+            case "two":
+                return 2;
+            case "three":
+                return 3;
+            case "four":
+                return 4;
+            case "five":
+                return 5;
+            case "six":
+                return 6;
+            case "seven":
+                return 7;
+            case "eight":
+                return 8;
+            case "nine":
+                return 9;
+            case "ten":
+                return 10;
+            default:
+                return 6;
         }
     }
 
-    private ArrayList<ListData> setListData(){
+    private ArrayList<ListData> setListData() {
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
         ListData data;
 
         ArrayList<ListData> list = new ArrayList<>();
         list.add(getThemeData(themeName));
         list.add(getPrecisionData());
-        data = new ListData("Angle",getAngle(),R.drawable.ic_track_changes_black_24dp);
+        data = new ListData("Angle", getAngle(), R.drawable.ic_track_changes_black_24dp);
         list.add(data);
-        data = new ListData("Share","Share this app",R.drawable.ic_share_black_24dp);
+        data = new ListData("Share", "Share this app", R.drawable.ic_share_black_24dp);
         list.add(data);
-        data = new ListData("Feedback","Send feedback",R.drawable.ic_feedback_black_24dp);
+        data = new ListData("Feedback", "Send feedback", R.drawable.ic_feedback_black_24dp);
         list.add(data);
-        data = new ListData("About","Version : "+ BuildConfig.VERSION_NAME, R.drawable.ic_info_black_24dp);
+        data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_info_black_24dp);
         list.add(data);
 
         return list;
@@ -292,7 +302,7 @@ public class SettingsActivity extends AppCompatActivity {
         ListData data = new ListData();
         data.setTitle("Answer Precision");
         data.setImg(R.drawable.ic_create_black_24dp);
-        data.setBody("Precision: "+getPrecision());
+        data.setBody("Precision: " + getPrecision());
         return data;
     }
 
@@ -338,7 +348,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String getAngle() {
         boolean ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
 
-        if (ifDegree){
+        if (ifDegree) {
             return "Degrees";
         } else {
             return "Radians";
@@ -357,7 +367,7 @@ public class SettingsActivity extends AppCompatActivity {
         RadioGroup radioGroup = precisionDialog.findViewById(R.id.rg_angle);
 
         boolean ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
-        if(ifDegree){
+        if (ifDegree) {
             radioGroup.check(R.id.ang_deg);
         } else {
             radioGroup.check(R.id.ang_rad);
@@ -366,12 +376,12 @@ public class SettingsActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.ang_deg:
-                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,true);
+                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
                         break;
                     case R.id.ang_rad:
-                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE,false);
+                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, false);
                         break;
                 }
                 mAdapter.setList(setListData());
