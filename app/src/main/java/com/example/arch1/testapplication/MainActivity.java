@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
     private Button open, close, percent;
     private EditText equation;
-    private String equ = "", tempEqu;
+    private String equ = "", tempEqu, tempResult="";
     private View view;
     private Animator anim;
     private View mainLayout, slidingLayout;
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "";
     }
 
-    private boolean isOneError(String string) {
+    private boolean isAnError(String string) {
         if (string.equals("Invalid Expression") || string.equals("Domain error") || string.equals("Cannot divide by 0"))
             return true;
         return false;
@@ -180,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("\u00d7");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7");
+                        break;
+                    }
                 }
                 break;
 
@@ -198,13 +205,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("÷");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("÷");
+                        break;
+                    }
                 }
                 break;
 
             case R.id.equal:
                 if (!isEquationEmpty()) {
                     String res = result.getText().toString().trim();
-                    if (res.equals("") || isOneError(res)) {
+                    if (res.equals("") || isAnError(res)) {
                         result.setText(errMsg);
                         result.setTextColor(getResources().getColor(R.color.colorRed));
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
@@ -215,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         String historyEqu = equ;
                         String historyVal = res;
                         history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
+                        tempResult = res;
                         equ = "";
                         equation.setText(res);
                         result.setText("");
@@ -238,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     equ = equ.substring(0, equ.length() - 1);
                     equation.setText(equ);
                 } else {
+                    tempResult = "";
                     equation.setText("");
                 }
                 break;
@@ -260,6 +276,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else if (isEquationEmpty()) {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        if(canPlaceDecimal()){
+                            add(".");
+                            break;
+                        }
+                        break;
+                    }
                     add("0.");
                 }
                 break;
@@ -283,6 +308,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("+");
                     }
                     break;
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("+");
+                        break;
+                    }
                 }
                 break;
 
@@ -314,6 +346,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     break;
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("-");
+                        break;
+                    }
                 }
                 if (!ifPrevOperator() || equ.equals("")) {
                     add("-");
@@ -326,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.one:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d71");
                     break;
@@ -334,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.two:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d72");
                     break;
@@ -342,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.three:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d73");
                     break;
@@ -350,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.four:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d74");
                     break;
@@ -358,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.five:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d75");
                     break;
@@ -366,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.six:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d76");
                     break;
@@ -374,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.seven:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d77");
                     break;
@@ -382,6 +428,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.eight:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d78");
                     break;
@@ -390,6 +437,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.nine:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d79");
                     break;
@@ -398,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.zero:
+                tempResult = "";
                 if (!isEquationEmpty() && testNumber()) {
                     add("\u00d70");
                     break;
@@ -431,6 +480,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (c == '.') {
                         add("0%");
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("%");
+                        break;
+                    }
                 }
                 break;
 
@@ -452,6 +508,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7(");
+                        break;
+                    }
                     add("(");
                 }
                 break;
@@ -482,6 +544,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add(")");
+                        break;
+                    }
                 }
                 break;
 
@@ -494,6 +563,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     if (c == '.') {
                         add("0\u00d7sin(");
+                        break;
+                    }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7sin(");
                         break;
                     }
                 }
@@ -510,6 +586,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7cos(");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7cos(");
+                        break;
+                    }
                 }
                 add("cos(");
                 break;
@@ -522,6 +605,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     if (c == '.') {
                         add("0\u00d7tan(");
+                        break;
+                    }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7tan(");
                         break;
                     }
                 }
@@ -538,6 +628,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7asin(");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7asin(");
+                        break;
+                    }
                 }
                 add("asin(");
                 break;
@@ -552,6 +649,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7acos(");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7acos(");
+                        break;
+                    }
                 }
                 add("acos(");
                 break;
@@ -564,6 +668,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     if (c == '.') {
                         add("0\u00d7atan(");
+                        break;
+                    }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7atan(");
                         break;
                     }
                 }
@@ -587,6 +698,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7e");
+                        break;
+                    }
                     add("e");
                     break;
                 }
@@ -602,6 +719,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7log(");
                         break;
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7log(");
+                        break;
+                    }
                 }
                 add("log(");
                 break;
@@ -614,6 +738,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     if (c == '.') {
                         add("0\u00d7ln(");
+                        break;
+                    }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7ln(");
                         break;
                     }
                 }
@@ -635,6 +766,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                         removeBackOperators();
+                        add("^");
+                        break;
+                    }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
                         add("^");
                         break;
                     }
@@ -666,6 +804,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (c == '.') {
                         add("0!");
                     }
+                } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("!");
+                        break;
+                    }
                 }
                 break;
             case R.id.sqroot:
@@ -685,6 +830,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7\u221a");
+                        break;
+                    }
                     add("\u221a");
                     break;
                 }
@@ -706,6 +857,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7\u221b");
+                        break;
+                    }
                     add("\u221b");
                     break;
                 }
@@ -727,6 +884,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 } else {
+                    if(!tempResult.equals("")){
+                        equ = tempResult;
+                        tempResult = "";
+                        add("\u00d7\u03c0");
+                        break;
+                    }
                     add("\u03c0");
                     break;
                 }
@@ -797,8 +960,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isEquationEmpty() {
         String eq = equ;
         if (eq.equals(""))
-            return true;
-        if (eq == null)
             return true;
         return false;
     }

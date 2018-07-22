@@ -2,6 +2,7 @@ package com.example.arch1.testapplication;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.text.format.Time;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,9 +67,12 @@ public class History {
                 JSONObject object = array.getJSONObject(i);
                 Date date = new Date(Long.parseLong(object.getString("date")));
                 boolean isToday = DateUtils.isToday(Long.parseLong(object.getString("date")));
+                boolean isYesterday = isYesterday(Long.parseLong(object.getString("date")));
                 String dateString;
                 if (isToday)
                     dateString = "Today";
+                else if (isYesterday)
+                    dateString = "Yesterday";
                 else
                     dateString = sdf.format(date);
 
@@ -79,6 +83,20 @@ public class History {
             e.printStackTrace();
         }
         return calcArray;
+    }
+
+    private boolean isYesterday(long when) {
+        Time time = new Time();
+        time.set(when);
+
+        int thenYear = time.year;
+        int thenMonth = time.month;
+        int thenMonthDay = time.monthDay;
+
+        time.set(System.currentTimeMillis());
+        return (thenYear == time.year)
+                && (thenMonth == time.month)
+                && (thenMonthDay == time.monthDay-1);
     }
 
 }
