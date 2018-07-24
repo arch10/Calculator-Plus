@@ -1801,6 +1801,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (temp) {
                 case "%":
                     num1 = Double.parseDouble(stack.pop());
+//                    if(!stack.isEmpty()){
+//                        if(stack.peek().equals("+")||stack.peek().equals("-")){
+//                            String op = stack.pop();
+//                            String num = stack.pop();
+//                        }
+//                    }
                     num1 = num1 / 100;
                     stack.push(num1 + "");
                     break;
