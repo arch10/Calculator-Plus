@@ -143,7 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isAnError(String string) {
-        if (string.equals("Invalid Expression") || string.equals("Domain error") || string.equals("Cannot divide by 0"))
+        if (string.equals("Invalid Expression") ||
+                string.equals("Domain error") ||
+                string.equals("Cannot divide by 0") ||
+                string.equals("Number too large"))
             return true;
         return false;
     }
@@ -1853,6 +1856,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
+                    if(a>=100){
+                        errMsg = "Number too large";
+                        return null;
+                    }
                     stack.push(factorial(a).toString());
                     break;
                 default:
