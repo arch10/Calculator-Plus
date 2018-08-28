@@ -29,6 +29,9 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,16 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //setting app precision
-        precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-        setPrecision(precision);
-        df = new DecimalFormat(precisionString);
-    }
-
     private String calculateResult(String equ) {
         if (!equ.equals("")) {
             equ = equ.replace("÷", "/");
@@ -158,10 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int id = v.getId();
-//        v.playSoundEffect(SoundEffectConstants.CLICK);
-//        Vibrator vb = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-//        vb.vibrate(50);
-
         char c;
 
         switch (id) {
@@ -1289,42 +1278,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return getResources().getColor(R.color.colorWhite);
     }
 
-    public void setPrecision(String precision) {
+//    public void setPrecision(String precision) {
+//        if (precision.equals("")) {
+//            precisionString = "#.######";
+//            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
+//        } else {
+//            switch (precision) {
+//                case "two":
+//                    precisionString = "#.##";
+//                    break;
+//                case "three":
+//                    precisionString = "#.###";
+//                    break;
+//                case "four":
+//                    precisionString = "#.####";
+//                    break;
+//                case "five":
+//                    precisionString = "#.#####";
+//                    break;
+//                case "six":
+//                    precisionString = "#.######";
+//                    break;
+//                case "seven":
+//                    precisionString = "#.#######";
+//                    break;
+//                case "eight":
+//                    precisionString = "#.########";
+//                    break;
+//                case "nine":
+//                    precisionString = "#.#########";
+//                    break;
+//                case "ten":
+//                    precisionString = "#.##########";
+//                    break;
+//                default:
+//                    precisionString = "#.######";
+//                    break;
+//            }
+//        }
+//    }
+
+    public int setPrecision(String precision) {
         if (precision.equals("")) {
-            precisionString = "#.######";
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
+            return 6;
         } else {
             switch (precision) {
                 case "two":
-                    precisionString = "#.##";
-                    break;
+                    return 2;
                 case "three":
-                    precisionString = "#.###";
-                    break;
+                    return 3;
                 case "four":
-                    precisionString = "#.####";
-                    break;
+                    return 4;
                 case "five":
-                    precisionString = "#.#####";
-                    break;
+                    return 5;
                 case "six":
-                    precisionString = "#.######";
-                    break;
+                    return 6;
                 case "seven":
-                    precisionString = "#.#######";
-                    break;
+                    return 7;
                 case "eight":
-                    precisionString = "#.########";
-                    break;
+                    return 8;
                 case "nine":
-                    precisionString = "#.#########";
-                    break;
+                    return 9;
                 case "ten":
-                    precisionString = "#.##########";
-                    break;
+                    return 10;
                 default:
-                    precisionString = "#.######";
-                    break;
+                    return 6;
             }
         }
     }
@@ -1441,6 +1460,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private static BigInteger factorial(int n)
+    {
+        BigInteger offset = new BigInteger("1");
+        if(n < 0){
+            offset = new BigInteger("-1");
+            n = -n;
+        }
+        // Initialize result
+        BigInteger f = new BigInteger("1"); // Or BigInteger.ONE
+
+        // Multiply f with 2, 3, ...N
+        for (int i = 2; i <= n; i++)
+            f = f.multiply(BigInteger.valueOf(i));
+
+        return f.multiply(offset);
+    }
+
     private static boolean isTestOperator(char c) {
         if (c == '+' || c == '/' || c == '*' || c == '%' || c == '!' || c == '^' || c == '\u221a' || c == '\u221b')
             return true;
@@ -1537,7 +1573,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     abc.push(stack.pop());
                 }
                 stack.pop();
-                Double dd = null;
+                String dd = null;
                 try {
                     dd = getTestValue(abc);
                 } catch (Exception e) {
@@ -1561,7 +1597,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             abc.push(stack.pop());
         }
 
-        Double dd = null;
+        String dd = null;
         try {
             dd = getTestValue(abc);
         } catch (Exception e) {
@@ -1570,18 +1606,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             errMsg = "Invalid Expression";
         }
         if (dd != null) {
-            if (df == null) {
-                //setting app precision
-                precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-                setPrecision(precision);
-                df = new DecimalFormat(precisionString);
-            }
-            return df.format(dd);
+//            if (df == null) {
+//                //setting app precision
+//                precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
+//                setPrecision(precision);
+//                df = new DecimalFormat(precisionString);
+//            }
+            //return df.format(dd);
+            return dd;
         } else
             return "";
     }
 
-    private Double getTestValue(Stack<String> token) throws Exception{
+    private String getTestValue(Stack<String> token) throws Exception{
         char c;
         String temp = "";
         Stack<String> stack = new Stack<>();
@@ -1606,7 +1643,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return tt;
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1785,7 +1822,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1816,7 +1853,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
-                    stack.push(fact(a) + "");
+                    stack.push(factorial(a).toString());
                     break;
                 default:
                     stack.push(temp);
@@ -1832,7 +1869,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1860,7 +1897,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1899,7 +1936,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1933,7 +1970,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1967,7 +2004,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return Double.parseDouble(tt);
+                return roundMyAnswer(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -1997,6 +2034,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return false;
+    }
+
+    private String roundMyAnswer(String ans) {
+        precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
+        BigDecimal num =  new BigDecimal(ans).setScale(setPrecision(precision), RoundingMode.HALF_UP).stripTrailingZeros();
+//        if(num.scale() >=10 || (num.precision() - num.scale()) >= 15)
+//            return num.toEngineeringString();
+        return num.toPlainString();
     }
 
     public void clickDeg(MenuItem item) {
