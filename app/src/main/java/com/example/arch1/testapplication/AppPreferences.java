@@ -15,6 +15,7 @@ public class AppPreferences {
     final static String APP_ANSWER_PRECISION = "precision";
     final static String APP_ANGLE = "angle";
     final static String APP_HISTORY = "history";
+    final static String APP_EQUATION_STRING = "app.equation.string";
 
     public AppPreferences(Context context) {
         ctx = context;

@@ -118,15 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //adding text change listener
         equation.addTextChangedListener(this);
 
-        //checking if called by history intent
-        Intent intent = getIntent();
-        if (intent != null) {
-            String historyEqu = intent.getStringExtra("equation");
-            if (historyEqu != null) {
-                equ = historyEqu;
-                equation.setText(equ);
-            }
-        }
     }
 
     private String calculateResult(String equ) {
@@ -1281,46 +1272,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return getResources().getColor(R.color.colorWhite);
     }
 
-//    public void setPrecision(String precision) {
-//        if (precision.equals("")) {
-//            precisionString = "#.######";
-//            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
-//        } else {
-//            switch (precision) {
-//                case "two":
-//                    precisionString = "#.##";
-//                    break;
-//                case "three":
-//                    precisionString = "#.###";
-//                    break;
-//                case "four":
-//                    precisionString = "#.####";
-//                    break;
-//                case "five":
-//                    precisionString = "#.#####";
-//                    break;
-//                case "six":
-//                    precisionString = "#.######";
-//                    break;
-//                case "seven":
-//                    precisionString = "#.#######";
-//                    break;
-//                case "eight":
-//                    precisionString = "#.########";
-//                    break;
-//                case "nine":
-//                    precisionString = "#.#########";
-//                    break;
-//                case "ten":
-//                    precisionString = "#.##########";
-//                    break;
-//                default:
-//                    precisionString = "#.######";
-//                    break;
-//            }
-//        }
-//    }
-
     public int setPrecision(String precision) {
         if (precision.equals("")) {
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
@@ -1452,19 +1403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private static Integer fact(Integer n) {
-        if (n >= 0) {
-            if (n == 0)
-                return 1;
-            else
-                return n * fact(n - 1);
-        } else {
-            return n * fact(-n - 1);
-        }
-    }
-
-    private static BigInteger factorial(int n)
-    {
+    private static BigInteger factorial(int n) {
         BigInteger offset = new BigInteger("1");
         if(n < 0){
             offset = new BigInteger("-1");
@@ -1645,12 +1584,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //check if solved
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
-            try {
-                return tt;
-            } catch (NumberFormatException e) {
-                errMsg = "Invalid Expression";
-                return null;
-            }
+            return tt;
         }
 
         //solve for pre unary operators
@@ -1856,7 +1790,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
-                    if(a>=100){
+                    if(a > 60){
                         errMsg = "Number too large";
                         return null;
                     }
@@ -1919,16 +1853,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (temp.length() == 1 && temp.charAt(0) == '/') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
+                BigDecimal num1 = new BigDecimal(val1);
+                BigDecimal num2 = new BigDecimal(val2);
 
-                if (num2 == 0) {
+                if (num2.compareTo(new BigDecimal("0")) == 0) {
                     errMsg = "Cannot divide by 0";
                     return null;
                 }
 
-                num1 = num1 / num2;
-                val1 = num1 + "";
+                num1 = num1.divide(num2,15,RoundingMode.HALF_UP);
+                val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -1958,11 +1892,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (temp.length() == 1 && temp.charAt(0) == '*') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
+                BigDecimal num1 = new BigDecimal(val1);
+                BigDecimal num2 = new BigDecimal(val2);
 
-                num1 = num1 * num2;
-                val1 = num1 + "";
+                num1 = num1.multiply(num2);
+                val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -1992,11 +1926,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (temp.length() == 1 && temp.charAt(0) == '+') {
                 String val1 = stack.pop();
                 String val2 = workingStack.pop();
-                double num1 = Double.parseDouble(val1);
-                double num2 = Double.parseDouble(val2);
+                BigDecimal num1 = new BigDecimal(val1);
+                BigDecimal num2 = new BigDecimal(val2);
 
-                num1 = num1 + num2;
-                val1 = num1 + "";
+                num1 = num1.add(num2);
+                val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
                 stack.push(temp);
@@ -2045,9 +1979,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String roundMyAnswer(String ans) {
         precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-        BigDecimal num =  new BigDecimal(ans).setScale(setPrecision(precision), RoundingMode.HALF_UP).stripTrailingZeros();
-//        if(num.scale() >=10 || (num.precision() - num.scale()) >= 15)
-//            return num.toEngineeringString();
+        BigDecimal num =  new BigDecimal(ans);
+
+        num = num.setScale(setPrecision(precision), RoundingMode.HALF_UP);
+        num = num.stripTrailingZeros();
+
+        if(num.compareTo(new BigDecimal("0")) == 0)
+            return "0";
+
         return num.toPlainString();
     }
 
@@ -2090,6 +2029,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
+        preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING,equation.getText().toString().trim());
     }
 
     @Override
@@ -2097,5 +2037,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
         setAngle();
+
+        //checking if called by history intent
+        Intent intent = getIntent();
+        if (intent != null) {
+            String historyEqu = intent.getStringExtra("equation");
+            if (historyEqu != null) {
+                equ = historyEqu;
+                equation.setText(equ);
+            } else {
+                equ = preferences.getStringPreference(AppPreferences.APP_EQUATION_STRING);
+                equation.setText(equ);
+            }
+        }
     }
 }
