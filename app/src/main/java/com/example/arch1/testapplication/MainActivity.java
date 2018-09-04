@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!equ.equals("")) {
             equ = equ.replace("÷", "/");
             equ = equ.replace("\u00d7", "*");
+            equ = equ.replace(",","");
 
             String ans = getTestAnswer(equ);
             if (ans.equals("-0"))
@@ -945,7 +946,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (isEquationEmpty()) {
             equ = "";
         }
+        equ = equ.replace(",","");
         equ += str;
+        equ = tokenize(equ);
         equation.setText(equ);
     }
 
@@ -961,12 +964,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         char c = equ.charAt(equ.length() - 1);
         return isOperator(c);
-    }
-
-    private boolean isOperator(char c) {
-        if (c == '+' || c == '-' || c == '/' || c == '*' || c == '÷' || c == '\u00d7' || c == '%' || c == '!' || c == '^')
-            return true;
-        return false;
     }
 
     @Override
@@ -1281,45 +1278,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return getResources().getColor(R.color.colorWhite);
     }
 
-//    public void setPrecision(String precision) {
-//        if (precision.equals("")) {
-//            precisionString = "#.######";
-//            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
-//        } else {
-//            switch (precision) {
-//                case "two":
-//                    precisionString = "#.##";
-//                    break;
-//                case "three":
-//                    precisionString = "#.###";
-//                    break;
-//                case "four":
-//                    precisionString = "#.####";
-//                    break;
-//                case "five":
-//                    precisionString = "#.#####";
-//                    break;
-//                case "six":
-//                    precisionString = "#.######";
-//                    break;
-//                case "seven":
-//                    precisionString = "#.#######";
-//                    break;
-//                case "eight":
-//                    precisionString = "#.########";
-//                    break;
-//                case "nine":
-//                    precisionString = "#.#########";
-//                    break;
-//                case "ten":
-//                    precisionString = "#.##########";
-//                    break;
-//                default:
-//                    precisionString = "#.######";
-//                    break;
-//            }
-//        }
-//    }
+    public void setPrecisionString(String precision) {
+        if (precision.equals("")) {
+            precisionString = "#,###.######";
+            preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
+        } else {
+            switch (precision) {
+                case "two":
+                    precisionString = "#,###.##";
+                    break;
+                case "three":
+                    precisionString = "#,###.###";
+                    break;
+                case "four":
+                    precisionString = "#,###.####";
+                    break;
+                case "five":
+                    precisionString = "#,###.#####";
+                    break;
+                case "six":
+                    precisionString = "#,###.######";
+                    break;
+                case "seven":
+                    precisionString = "#,###.#######";
+                    break;
+                case "eight":
+                    precisionString = "#,###.########";
+                    break;
+                case "nine":
+                    precisionString = "#,###.#########";
+                    break;
+                case "ten":
+                    precisionString = "#,###.##########";
+                    break;
+                default:
+                    precisionString = "#,###.######";
+                    break;
+            }
+        }
+    }
 
     public int setPrecision(String precision) {
         if (precision.equals("")) {
@@ -1480,8 +1477,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return f.multiply(offset);
     }
 
-    private static boolean isTestOperator(char c) {
-        if (c == '+' || c == '/' || c == '*' || c == '%' || c == '!' || c == '^' || c == '\u221a' || c == '\u221b')
+    private boolean isTestOperator(char c) {
+        if (c == '+' ||
+                c == '/' ||
+                c == '*' ||
+                c == '%' ||
+                c == '!' ||
+                c == '^' ||
+                c == '\u221a' ||
+                c == '\u221b')
+            return true;
+        return false;
+    }
+
+    private boolean isOperator(char c) {
+        if (c == '+' ||
+                c == '/' ||
+                c == '*' ||
+                c == '%' ||
+                c == '!' ||
+                c == '^' ||
+                c == '\u221a' ||
+                c == '\u221b' ||
+                c == '÷' ||
+                c == '\u00d7' ||
+                c == '-')
             return true;
         return false;
     }
@@ -1586,7 +1606,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (dd == null)
                     return "";
-                stack.push(dd + "");
+                stack.push(dd);
             } else {
                 temp = temp + c;
             }
@@ -1632,7 +1652,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 temp = workingStack.pop();
                 if (temp.equals("-")) {
                     temp = temp + workingStack.pop();
-
                 }
                 stack.push(temp);
             }
@@ -1646,7 +1665,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return tt;
+                return formatString(tt);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -2046,9 +2065,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String roundMyAnswer(String ans) {
         precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num =  new BigDecimal(ans).setScale(setPrecision(precision), RoundingMode.HALF_UP).stripTrailingZeros();
-//        if(num.scale() >=10 || (num.precision() - num.scale()) >= 15)
-//            return num.toEngineeringString();
-        return num.toPlainString();
+        setPrecisionString(precision);
+        df = new DecimalFormat(precisionString);
+        return df.format(num);
+    }
+
+    private String formatString(String str) {
+        int index = str.indexOf('.');
+        if(index == -1)
+            index = str.length();
+        int temp = 0;
+        for(int i = index-1; i>0; i--){
+            temp++;
+
+            if(temp%3 == 0){
+                temp = 0;
+                str = str.substring(0,i)+","+str.substring(i);
+            }
+        }
+        return str;
+    }
+
+    private String tokenize(String equation) {
+        Stack<String> stack = new Stack<>();
+        char c;
+        String temp = "";
+        for (int i = 0; i < equation.length(); i++) {
+            c = equation.charAt(i);
+            if (isOperator(c)) {
+                if (!temp.equals(""))
+                    stack.push(temp);
+                stack.push(c + "");
+                temp = "";
+            } else if (c == '(' || c == ')') {
+                if (!temp.equals("")) {
+                    stack.push(temp);
+                    temp = "";
+                }
+                stack.push(c + "");
+            } else {
+                temp = temp + c;
+            }
+        }
+
+        if (!temp.equals(""))
+            stack.push(temp);
+
+        Stack<String> abc = new Stack<>();
+        while (!stack.empty()){
+            abc.push(stack.pop());
+        }
+
+        StringBuilder builder = new StringBuilder();
+        while (!abc.empty()){
+            if(isNumber(abc.peek())){
+                builder = builder.append(formatString(abc.pop()));
+            }else {
+                builder = builder.append(abc.pop());
+            }
+        }
+
+        return builder.toString();
     }
 
     public void clickDeg(MenuItem item) {
