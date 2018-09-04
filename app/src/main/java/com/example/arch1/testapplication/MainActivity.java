@@ -1979,9 +1979,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String roundMyAnswer(String ans) {
         precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-        BigDecimal num =  new BigDecimal(ans).setScale(setPrecision(precision), RoundingMode.HALF_UP).stripTrailingZeros();
-//        if(num.scale() >=10 || (num.precision() - num.scale()) >= 15)
-//            return num.toEngineeringString();
+        BigDecimal num =  new BigDecimal(ans);
+
+        num = num.setScale(setPrecision(precision), RoundingMode.HALF_UP);
+        num = num.stripTrailingZeros();
+
+        if(num.compareTo(new BigDecimal("0")) == 0)
+            return "0";
+
         return num.toPlainString();
     }
 
