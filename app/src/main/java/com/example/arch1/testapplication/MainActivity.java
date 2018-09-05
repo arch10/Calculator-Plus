@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String ans = getTestAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
-            return ans;
+            return formatString(ans);
         }
         return "";
     }
@@ -238,12 +238,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             c = equ.charAt(equ.length() - 2);
                             if (isAlphabet(c)) {
                                 removeTrigo();
+                                equ = equ.replace(",","");
+                                equ = tokenize(equ);
                                 equation.setText(equ);
                                 break;
                             }
                         }
                     }
                     equ = equ.substring(0, equ.length() - 1);
+                    equ = equ.replace(",","");
+                    equ = tokenize(equ);
                     equation.setText(equ);
                 } else {
                     tempResult = "";
@@ -1460,8 +1464,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private static BigInteger factorial(int n)
-    {
+    private static BigInteger factorial(int n) {
         BigInteger offset = new BigInteger("1");
         if(n < 0){
             offset = new BigInteger("-1");
@@ -1665,7 +1668,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
             try {
-                return formatString(tt);
+                return tt;
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -2065,9 +2068,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String roundMyAnswer(String ans) {
         precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num =  new BigDecimal(ans).setScale(setPrecision(precision), RoundingMode.HALF_UP).stripTrailingZeros();
-        setPrecisionString(precision);
-        df = new DecimalFormat(precisionString);
-        return df.format(num);
+        return num.toPlainString();
     }
 
     private String formatString(String str) {

@@ -59,19 +59,19 @@ public class SettingsActivity extends AppCompatActivity {
         mAdapter = new ListAdapter(this, setListData(), new ListAdapter.OnSettingClickListener() {
             @Override
             public void OnSettingClick(ListData data, int position) {
-                if (position == 0) {
+                if (position == 1) {
                     intent = new Intent(SettingsActivity.this, ThemeActivity.class);
                     startActivity(intent);
                 }
-                if (position == 1) {
+                if (position == 2) {
                     //showPopUp
                     showPrecisionDialog();
                 }
-                if (position == 2) {
+                if (position == 3) {
                     //Angle
                     showAngleDialog();
                 }
-                if (position == 3) {
+                if (position == 4) {
                     //share
                     intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -82,7 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_TEXT, msg);
                     startActivity(Intent.createChooser(intent, "Choose one"));
                 }
-                if (position == 4) {
+                if (position == 5) {
                     intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setType("text/email");
                     intent.setData(Uri.parse("mailto:"));
@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Feedback");
                     startActivity(intent);
                 }
-                if (position == 5) {
+                if (position == 6) {
                     intent = new Intent(SettingsActivity.this, AboutActivity.class);
                     startActivity(intent);
                 }
@@ -284,6 +284,8 @@ public class SettingsActivity extends AppCompatActivity {
         ListData data;
 
         ArrayList<ListData> list = new ArrayList<>();
+        data = new ListData("General","General user preferences",R.drawable.ic_build_black_24dp);
+        list.add(data);
         list.add(getThemeData(themeName));
         list.add(getPrecisionData());
         data = new ListData("Angle", getAngle(), R.drawable.ic_track_changes_black_24dp);
