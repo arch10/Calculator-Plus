@@ -53,12 +53,26 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //setting toolbar style manually
+        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         precisionDialog = new Dialog(this);
         recyclerView = findViewById(R.id.rv);
         layoutManager = new LinearLayoutManager(this);
         mAdapter = new ListAdapter(this, setListData(), new ListAdapter.OnSettingClickListener() {
             @Override
             public void OnSettingClick(ListData data, int position) {
+                if (position == 0) {
+                    intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
+                    startActivity(intent);
+                }
                 if (position == 1) {
                     intent = new Intent(SettingsActivity.this, ThemeActivity.class);
                     startActivity(intent);
@@ -101,16 +115,6 @@ public class SettingsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
-
-        //setting toolbar style manually
-        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
     }
 

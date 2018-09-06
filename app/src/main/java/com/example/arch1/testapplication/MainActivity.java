@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String precisionString, precision;
     private String errMsg = "Invalid Expression";
     private Menu menu;
-    private boolean ifDegree;
+    private boolean ifDegree, enableNumberFormatter;
     private History history;
 
     @Override
@@ -138,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String ans = getTestAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
-            return formatString(ans);
+            if(enableNumberFormatter)
+                return formatString(ans);
+            return ans;
         }
         return "";
     }
@@ -239,7 +241,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (isAlphabet(c)) {
                                 removeTrigo();
                                 equ = equ.replace(",","");
-                                equ = tokenize(equ);
+                                if(enableNumberFormatter)
+                                    equ = tokenize(equ);
                                 equation.setText(equ);
                                 break;
                             }
@@ -247,7 +250,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     equ = equ.substring(0, equ.length() - 1);
                     equ = equ.replace(",","");
-                    equ = tokenize(equ);
+                    if(enableNumberFormatter)
+                        equ = tokenize(equ);
                     equation.setText(equ);
                 } else {
                     tempResult = "";
@@ -952,7 +956,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         equ = equ.replace(",","");
         equ += str;
-        equ = tokenize(equ);
+        if(enableNumberFormatter)
+            equ = tokenize(equ);
         equation.setText(equ);
     }
 
@@ -2175,5 +2180,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
         setAngle();
+        enableNumberFormatter = preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(enableNumberFormatter){
+            equ = equ.replaceAll(",","");
+            equ = tokenize(equ);
+            equation.setText(equ);
+        } else {
+            equ = equ.replaceAll(",","");
+            equation.setText(equ);
+        }
     }
 }
