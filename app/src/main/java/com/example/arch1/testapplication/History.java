@@ -18,10 +18,8 @@ public class History {
 
     private String jsonString;
     private AppPreferences preferences;
-    private Context context;
 
     public History(Context context) {
-        this.context = context;
         preferences = AppPreferences.getInstance(context);
         jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
     }
@@ -32,13 +30,13 @@ public class History {
     }
 
     public void addToHistory(String title, String body, Long date) {
+        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
         JSONArray array;
         if (jsonString.equals("")) {
             array = new JSONArray();
         } else {
 
             if (jsonString.contains("\"title\":\"" + title + "\"")) {
-                //Toast.makeText(context, "Not Added", Toast.LENGTH_SHORT).show();
                 String js = jsonString;
                 try {
                     updateHistory(title);
@@ -75,6 +73,7 @@ public class History {
 
     public ArrayList<Calculations> showHistory() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
 
         ArrayList<Calculations> calcArray = new ArrayList<>();
         try {
