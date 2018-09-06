@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String precisionString, precision;
     private String errMsg = "Invalid Expression";
     private Menu menu;
-    private boolean ifDegree, enableNumberFormatter;
+    private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
     private History history;
 
     @Override
@@ -994,8 +994,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             //trying to balance equation coz it's a smart calculator
             tryBalancingBrackets();
+            //get the value of enableSmartCalculation from user preference. By default the value is true
+            enableSmartCalculation = preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
             //if could balance the equation, calculate the result
-            if (balancedParenthesis(tempEqu)) {
+            if (balancedParenthesis(tempEqu) && enableSmartCalculation) {
                 //calculate result
                 result.setTextColor(getTextColor());
                 result.setText(calculateResult(tempEqu));
@@ -1078,7 +1080,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //trying to balance equation coz it's a smart calculator
             tryBalancingBrackets();
             //if could balance the equation, calculate the result
-            if (balancedParenthesis(tempEqu)) {
+            enableSmartCalculation = preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
+            if (balancedParenthesis(tempEqu) && enableSmartCalculation) {
                 //calculate result
                 result.setTextColor(getTextColor());
                 result.setText(calculateResult(tempEqu));

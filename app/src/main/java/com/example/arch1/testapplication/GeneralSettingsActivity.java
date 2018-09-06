@@ -1,5 +1,6 @@
 package com.example.arch1.testapplication;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +12,7 @@ public class GeneralSettingsActivity extends AppCompatActivity {
 
     private AppPreferences preferences;
     private Toolbar toolbar;
-    private Switch numberFormatterSwitch;
+    private Switch numberFormatterSwitch, smartCalculationSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +37,36 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         });
 
         numberFormatterSwitch = findViewById(R.id.switch1);
+        smartCalculationSwitch = findViewById(R.id.switch2);
 
 
         //setting preference values
         numberFormatterSwitch.setChecked(preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER));
+        smartCalculationSwitch.setChecked(preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS));
 
 
         numberFormatterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER,isChecked);
+            }
+        });
+
+        smartCalculationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked){
+                    //show warning
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GeneralSettingsActivity.this);
+                    builder.setTitle("Warning")
+                            .setMessage("This action will disable smart calculations. Calculator Plus" +
+                                    " will no longer be able to auto-complete or auto-correct " +
+                                    "your equations. We recommend to enable this feature for faster and " +
+                                    "easy usage of Calculator Plus.")
+                    .setPositiveButton("Ok",null);
+                    builder.show();
+                }
+                preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS,isChecked);
             }
         });
 

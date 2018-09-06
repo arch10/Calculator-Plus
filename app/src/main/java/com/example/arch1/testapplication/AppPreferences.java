@@ -16,6 +16,7 @@ public class AppPreferences {
     final static String APP_ANGLE = "angle";
     final static String APP_HISTORY = "history";
     final static String APP_NUMBER_FORMATTER = "app.number.formatter";
+    final static String APP_SMART_CALCULATIONS = "app.smart.calculations";
 
     public AppPreferences(Context context) {
         ctx = context;
