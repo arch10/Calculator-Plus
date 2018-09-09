@@ -40,7 +40,7 @@ public class AboutActivity extends AppCompatActivity {
         });
 
         Date buildDate = BuildConfig.buildTime;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy hh:mm a z");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         build.setText("Build Date: " + sdf.format(buildDate));
         version.setText("Version: " + BuildConfig.VERSION_NAME);
     }

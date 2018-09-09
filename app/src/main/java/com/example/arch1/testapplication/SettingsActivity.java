@@ -101,7 +101,9 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.setType("text/email");
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Feedback");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus "+BuildConfig.VERSION_NAME
+                    +" // "+Build.MANUFACTURER+" "+Build.MODEL +"("+Build.DEVICE+")"+
+                    " // " + getResources().getDisplayMetrics().densityDpi);
                     startActivity(intent);
                 }
                 if (position == 6) {
@@ -296,7 +298,7 @@ public class SettingsActivity extends AppCompatActivity {
         list.add(data);
         data = new ListData("Share", "Share this app", R.drawable.ic_share_black_24dp);
         list.add(data);
-        data = new ListData("Feedback", "Send feedback", R.drawable.ic_feedback_black_24dp);
+        data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_feedback_black_24dp);
         list.add(data);
         data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_info_black_24dp);
         list.add(data);
