@@ -53,6 +53,16 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //setting toolbar style manually
+        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         precisionDialog = new Dialog(this);
         recyclerView = findViewById(R.id.rv);
         layoutManager = new LinearLayoutManager(this);
@@ -60,18 +70,22 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void OnSettingClick(ListData data, int position) {
                 if (position == 0) {
-                    intent = new Intent(SettingsActivity.this, ThemeActivity.class);
+                    intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
                     startActivity(intent);
                 }
                 if (position == 1) {
+                    intent = new Intent(SettingsActivity.this, ThemeActivity.class);
+                    startActivity(intent);
+                }
+                if (position == 2) {
                     //showPopUp
                     showPrecisionDialog();
                 }
-                if (position == 2) {
+                if (position == 3) {
                     //Angle
                     showAngleDialog();
                 }
-                if (position == 3) {
+                if (position == 4) {
                     //share
                     intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -82,15 +96,17 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_TEXT, msg);
                     startActivity(Intent.createChooser(intent, "Choose one"));
                 }
-                if (position == 4) {
+                if (position == 5) {
                     intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setType("text/email");
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Feedback");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus "+BuildConfig.VERSION_NAME
+                    +" // "+Build.MANUFACTURER+" "+Build.MODEL +"("+Build.DEVICE+")"+
+                    " // " + getResources().getDisplayMetrics().densityDpi);
                     startActivity(intent);
                 }
-                if (position == 5) {
+                if (position == 6) {
                     intent = new Intent(SettingsActivity.this, AboutActivity.class);
                     startActivity(intent);
                 }
@@ -101,16 +117,6 @@ public class SettingsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
-
-        //setting toolbar style manually
-        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
     }
 
@@ -284,13 +290,15 @@ public class SettingsActivity extends AppCompatActivity {
         ListData data;
 
         ArrayList<ListData> list = new ArrayList<>();
+        data = new ListData("General","General user preferences",R.drawable.ic_build_black_24dp);
+        list.add(data);
         list.add(getThemeData(themeName));
         list.add(getPrecisionData());
         data = new ListData("Angle", getAngle(), R.drawable.ic_track_changes_black_24dp);
         list.add(data);
         data = new ListData("Share", "Share this app", R.drawable.ic_share_black_24dp);
         list.add(data);
-        data = new ListData("Feedback", "Send feedback", R.drawable.ic_feedback_black_24dp);
+        data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_feedback_black_24dp);
         list.add(data);
         data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_info_black_24dp);
         list.add(data);

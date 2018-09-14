@@ -26,10 +26,15 @@
             android:name=".ThemeActivity"
             android:label="@string/title_activity_theme"
             android:parentActivityName=".SettingsActivity" />
-        <activity android:name=".AboutActivity"
-            android:label="About"/>
-        <activity android:name=".HistoryActivity"
-            android:label="History"/>
+        <activity
+            android:name=".AboutActivity"
+            android:label="About" />
+        <activity
+            android:name=".HistoryActivity"
+            android:label="History" />
+        <activity
+            android:name=".GeneralSettingsActivity"
+            android:label="General Settings"/>
     </application>
 
 </manifest>
