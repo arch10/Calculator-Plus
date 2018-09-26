@@ -1852,6 +1852,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                            String num = stack.pop();
 //                        }
 //                    }
+                    if(stack.size() >=2 && (stack.peek().equals("+") || stack.peek().equals("-"))) {
+                        String op = stack.pop();
+                        Double num = Double.parseDouble(stack.pop());
+
+                        num1 = (num1/100) * num;
+
+                        if(op.equals("+"))
+                            num+=num1;
+                        else if(op.equals("-"))
+                            num-=num1;
+
+                        stack.push(num + "");
+                        break;
+                    }
                     num1 = num1 / 100;
                     stack.push(num1 + "");
                     break;
@@ -2070,6 +2084,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if(temp%3 == 0){
                 temp = 0;
+                if(i==1 && str.charAt(0) == '-')
+                    break;
                 str = str.substring(0,i)+","+str.substring(i);
             }
         }
