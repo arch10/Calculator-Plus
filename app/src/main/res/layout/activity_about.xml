@@ -7,6 +7,22 @@
     tools:context="com.example.arch1.testapplication.AboutActivity">
 
     <TextView
+        android:id="@+id/privacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/build"
+        android:text="@string/privacy_policy" />
+
+    <TextView
         android:id="@+id/build"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/version" />
+
 
     <ImageView
         android:id="@+id/imageView"
@@ -45,7 +62,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:fontFamily="sans-serif-condensed"
-        android:text="Calculator Plus"
+        android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textSize="30sp"
         android:textStyle="bold"

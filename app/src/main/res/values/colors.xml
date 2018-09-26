@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Primary Colors-->
     <color name="colorPrimary">#fc964d</color>
-    <color name="colorPrimaryDark">#c46a0f</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="gray">#757575</color>
-    <color name="colorTransparent">#77fc964d</color>
-    <color name="lightGray">#C5C5C5</color>
-    <color name="darkGray">#454545</color>
-    <color name="colorWhite">#FFF</color>
-    <color name="ic_launcher_background">#FFFFFF</color>
-    <color name="colorBlack">#000000</color>
-
-    <color name="colorGreenPrimary">#22CBA0</color>
-    <color name="colorGreenDark">#0d5442</color>
-
-    <color name="colorBluePrimary">#389BFF</color>
-    <color name="colorBlueDark">#18426d</color>
-
-    <color name="colorLightGreenPrimary">#7ABC02</color>
-    <color name="colorLightGreenDark">#406300</color>
-
     <color name="colorPinkPrimary">#EE50D9</color>
+    <color name="colorBluePrimary">#389BFF</color>
+    <color name="colorGreenPrimary">#22CBA0</color>
+    <color name="colorLightGreenPrimary">#7ABC02</color>
+
+
+    <!--Primary Dark Colors-->
+    <color name="colorPrimaryDark">#c46a0f</color>
+    <color name="colorGreenDark">#0d5442</color>
+    <color name="colorBlueDark">#18426d</color>
+    <color name="colorLightGreenDark">#406300</color>
     <color name="colorPinkDark">#722768</color>
 
-    <color name="colorRed">#ff0000</color>
 
+    <!--Material Colors -->
     <color name="colorMaterialGreen">#4caf50</color>
     <color name="colorMaterialRed">#f44336</color>
     <color name="colorMaterialBlue">#448aff</color>
@@ -33,7 +26,16 @@
     <color name="colorMaterialYellow">#ffc107</color>
     <color name="colorMaterialLGreen">#8bc34a</color>
     <color name="colorMaterialPink">#e91e63</color>
-
     <color name="colorMaterialDarkGrey">#455A64</color>
+
+
+    <!--Extra Colors-->
+    <color name="gray">#757575</color>
+    <color name="lightGray">#C5C5C5</color>
+    <color name="darkGray">#454545</color>
+    <color name="colorWhite">#FFF</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorRed">#ff0000</color>
 
 </resources>

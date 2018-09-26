@@ -7,7 +7,6 @@
     android:background="@color/colorWhite">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         style="?displayStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"

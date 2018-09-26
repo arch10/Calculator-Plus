@@ -1,19 +1,29 @@
 package com.example.arch1.testapplication;
 
+import android.content.Context;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import saschpe.android.customtabs.CustomTabsHelper;
+import saschpe.android.customtabs.WebViewFallback;
 
 public class AboutActivity extends AppCompatActivity {
 
     private AppPreferences preferences;
     private Toolbar toolbar;
-    private TextView version, build;
+    private TextView version, build, privacy;
+    private Context context;
+
+    private static final String PRIVACY_URL = "https://github.com/arch10/Calculator/blob/master/docs/en/privacy_policy.md";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +38,8 @@ public class AboutActivity extends AppCompatActivity {
 
         version = findViewById(R.id.version);
         build = findViewById(R.id.build);
+        privacy = findViewById(R.id.privacy);
+        context = this;
 
         //setting toolbar style manually
         setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
@@ -43,6 +55,21 @@ public class AboutActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         build.setText("Build Date: " + sdf.format(buildDate));
         version.setText("Version: " + BuildConfig.VERSION_NAME);
+
+
+        //privacy policy link
+        privacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                        .addDefaultShareMenuItem()
+                        .setToolbarColor(getThemeColor(preferences.getStringPreference(AppPreferences.APP_THEME)))
+                        .setShowTitle(true)
+                        .build();
+                CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
+                CustomTabsHelper.openCustomTab(context, customTabsIntent, Uri.parse(PRIVACY_URL), new WebViewFallback());
+            }
+        });
     }
 
     private void setTheme(String themeName) {
@@ -107,6 +134,18 @@ public class AboutActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorMaterialSteelGrey));
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        }
+    }
+
+    private int getThemeColor(String themeName) {
+        switch (themeName){
+            case "green": return getResources().getColor(R.color.colorGreenPrimary);
+            case "orange": return getResources().getColor(R.color.colorPrimary);
+            case "blue": return getResources().getColor(R.color.colorBluePrimary);
+            case "lgreen": return getResources().getColor(R.color.colorLightGreenPrimary);
+            case "pink": return getResources().getColor(R.color.colorPinkPrimary);
+            case "default": return getResources().getColor(R.color.colorMaterialSteelGrey);
+            default: return getResources().getColor(R.color.colorMaterialSteelGrey);
         }
     }
 }
