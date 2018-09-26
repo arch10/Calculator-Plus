@@ -1620,13 +1620,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             errMsg = "Invalid Expression";
         }
         if (dd != null) {
-//            if (df == null) {
-//                //setting app precision
-//                precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-//                setPrecision(precision);
-//                df = new DecimalFormat(precisionString);
-//            }
-            //return df.format(dd);
             return dd;
         } else
             return "";
@@ -1846,24 +1839,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (temp) {
                 case "%":
                     num1 = Double.parseDouble(stack.pop());
-//                    if(!stack.isEmpty()){
-//                        if(stack.peek().equals("+")||stack.peek().equals("-")){
-//                            String op = stack.pop();
-//                            String num = stack.pop();
-//                        }
-//                    }
+
                     if(stack.size() >=2 && (stack.peek().equals("+") || stack.peek().equals("-"))) {
+
                         String op = stack.pop();
-                        Double num = Double.parseDouble(stack.pop());
+                        Stack<String> tempStack = new Stack<>();
+                        while (!stack.empty()){
+                            tempStack.push(stack.pop());
+                        }
 
-                        num1 = (num1/100) * num;
+                        String tempAns = getTestValue(tempStack);
+                        if(tempAns == null) {
+                            errMsg = "Invalid Expression";
+                            return null;
+                        }
 
-                        if(op.equals("+"))
+                        Double num = Double.parseDouble(tempAns);
+                        num1 = ((num1/100) * num);
+
+                        if(op.equals("+")){
                             num+=num1;
-                        else if(op.equals("-"))
+                        } else if(op.equals("-")) {
                             num-=num1;
+                        }
 
-                        stack.push(num + "");
+                        stack.push(num+"");
                         break;
                     }
                     num1 = num1 / 100;
