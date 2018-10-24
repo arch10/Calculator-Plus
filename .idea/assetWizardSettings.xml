@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="78" />
+                                                <entry key="scalingPercent" value="102" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -35,7 +35,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="C:\Users\rajarchi\Desktop\app_icon\GooglePlayStore.png" />
+                                      <entry key="foregroundImage" value="C:\Users\rajarchi\Desktop\res\mipmap-xxxhdpi\ic_launcher.png" />
                                       <entry key="showSafeZone" value="false" />
                                     </map>
                                   </option>
