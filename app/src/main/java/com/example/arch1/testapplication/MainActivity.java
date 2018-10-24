@@ -2,11 +2,13 @@ package com.example.arch1.testapplication;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
+
         if (savedInstanceState != null)
             equ = savedInstanceState.getString("equ");
 
@@ -83,8 +87,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
         }
 
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = this.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        int color = a.getColor(0, 0);
+
         //setting toolbar style manually
-        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        toolbar.setBackgroundColor(color);
 
         //avoiding keyboard input
         equation.setShowSoftInputOnFocus(false);
@@ -1337,25 +1347,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 default:
                     return 6;
             }
-        }
-    }
-
-    private void setToolBarStyle(String themeName) {
-        if (themeName.equals("green")) {
-            toolbar.setBackground(getDrawable(R.drawable.green_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        } else if (themeName.equals("orange")) {
-            toolbar.setBackground(getDrawable(R.drawable.orange_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        } else if (themeName.equals("blue")) {
-            toolbar.setBackground(getDrawable(R.drawable.blue_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        } else if (themeName.equals("lgreen")) {
-            toolbar.setBackground(getDrawable(R.drawable.lightgreen_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        } else if (themeName.equals("pink")) {
-            toolbar.setBackground(getDrawable(R.drawable.pink_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         }
     }
 

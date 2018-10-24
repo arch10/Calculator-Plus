@@ -13,183 +13,43 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
     </style>
 
-    <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="DisplayStyle">
-        <item name="android:background">@drawable/orange_body</item>
-    </style>
-
-    <style name="DisplayTextStyle">
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="DisplayClearStyle">
-        <item name="android:background">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="MyActionBar">
-        <item name="background">@drawable/orange_title</item>
-        <item name="android:titleTextAppearance">@color/colorWhite</item>
-        <item name="android:colorControlNormal">@color/colorWhite</item>
-        <item name="android:navigationIcon">@drawable/ic_arrow_back_white_24dp</item>
-        <item name="android:actionMenuTextColor">@color/colorWhite</item>
-    </style>
-
-
-
     <!-- Green Theme-->
     <style name="GreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorGreenPrimary</item>
         <item name="colorPrimaryDark">@color/colorGreenDark</item>
         <item name="colorAccent">@color/colorMaterialYellow</item>
-        <item name="actionBarStyle">@style/GreenMyActionBar</item>
-        <item name="buttonPrimary">@style/GreenButtonStyle</item>
-        <item name="buttonSecondary">@style/GreenSecondaryButtonStyle</item>
-        <item name="displayStyle">@style/GreenDisplayStyle</item>
-        <item name="displayTextStyle">@style/GreenDisplayTextStyle</item>
-        <item name="clearStyle">@style/GreenDisplayClearStyle</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
     </style>
-
-    <style name="GreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="GreenSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="GreenDisplayStyle">
-        <item name="android:background">@drawable/green_body</item>
-    </style>
-
-    <style name="GreenDisplayTextStyle">
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="GreenDisplayClearStyle">
-        <item name="android:background">@color/colorGreenDark</item>
-    </style>
-
-    <style name="GreenMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="elevation">0dp</item>
-        <item name="background">@drawable/green_title</item>
-        <item name="android:titleTextAppearance">@color/colorWhite</item>
-        <item name="android:colorControlNormal">@color/colorWhite</item>
-        <item name="android:actionMenuTextColor">@color/colorWhite</item>
-    </style>
-
 
     <!-- Blue Theme-->
     <style name="BlueAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorBluePrimary</item>
         <item name="colorPrimaryDark">@color/colorBlueDark</item>
         <item name="colorAccent">@color/colorMaterialLGreen</item>
-        <item name="actionBarStyle">@style/BlueMyActionBar</item>
-        <item name="buttonPrimary">@style/BlueButtonStyle</item>
-        <item name="buttonSecondary">@style/BlueSecondaryButtonStyle</item>
-        <item name="displayStyle">@style/BlueDisplayStyle</item>
-        <item name="displayTextStyle">@style/BlueDisplayTextStyle</item>
-        <item name="clearStyle">@style/BlueDisplayClearStyle</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
     </style>
-
-    <style name="BlueButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="BlueSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="BlueDisplayStyle">
-        <item name="android:background">@drawable/blue_body</item>
-    </style>
-
-    <style name="BlueDisplayTextStyle">
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="BlueDisplayClearStyle">
-        <item name="android:background">@color/colorBlueDark</item>
-    </style>
-
-    <style name="BlueMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="elevation">0dp</item>
-        <item name="background">@drawable/blue_title</item>
-        <item name="android:titleTextAppearance">@color/colorWhite</item>
-        <item name="android:colorControlNormal">@color/colorWhite</item>
-        <item name="android:actionMenuTextColor">@color/colorWhite</item>
-    </style>
-
 
     <!-- Light Green Theme-->
     <style name="LightGreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorLightGreenPrimary</item>
         <item name="colorPrimaryDark">@color/colorLightGreenDark</item>
         <item name="colorAccent">@color/colorMaterialRed</item>
-        <item name="actionBarStyle">@style/LightGreenMyActionBar</item>
-        <item name="buttonPrimary">@style/LightGreenButtonStyle</item>
-        <item name="buttonSecondary">@style/LightGreenSecondaryButtonStyle</item>
-        <item name="displayStyle">@style/LightGreenDisplayStyle</item>
-        <item name="displayTextStyle">@style/LightGreenDisplayTextStyle</item>
-        <item name="clearStyle">@style/LightGreenDisplayClearStyle</item>
-    </style>
-
-    <style name="LightGreenButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="LightGreenSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="LightGreenDisplayStyle">
-        <item name="android:background">@drawable/lightgreen_body</item>
-    </style>
-
-    <style name="LightGreenDisplayTextStyle">
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="LightGreenDisplayClearStyle">
-        <item name="android:background">@color/colorLightGreenDark</item>
-    </style>
-
-    <style name="LightGreenMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="elevation">0dp</item>
-        <item name="background">@drawable/lightgreen_title</item>
-        <item name="android:titleTextAppearance">@color/colorWhite</item>
-        <item name="android:colorControlNormal">@color/colorWhite</item>
-        <item name="android:actionMenuTextColor">@color/colorWhite</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
     </style>
 
     <!-- Pink Theme-->
@@ -197,46 +57,12 @@
         <item name="colorPrimary">@color/colorPinkPrimary</item>
         <item name="colorPrimaryDark">@color/colorPinkDark</item>
         <item name="colorAccent">@color/colorMaterialLGreen</item>
-        <item name="actionBarStyle">@style/PinkMyActionBar</item>
-        <item name="buttonPrimary">@style/PinkButtonStyle</item>
-        <item name="buttonSecondary">@style/PinkSecondaryButtonStyle</item>
-        <item name="displayStyle">@style/PinkDisplayStyle</item>
-        <item name="displayTextStyle">@style/PinkDisplayTextStyle</item>
-        <item name="clearStyle">@style/PinkDisplayClearStyle</item>
-    </style>
-
-    <style name="PinkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="PinkSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
-        <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">serif-monospace</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="PinkDisplayStyle">
-        <item name="android:background">@drawable/pink_body</item>
-    </style>
-
-    <style name="PinkDisplayTextStyle">
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="PinkDisplayClearStyle">
-        <item name="android:background">@color/colorPinkDark</item>
-    </style>
-
-    <style name="PinkMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="elevation">0dp</item>
-        <item name="background">@drawable/pink_title</item>
-        <item name="android:titleTextAppearance">@color/colorWhite</item>
-        <item name="android:colorControlNormal">@color/colorWhite</item>
-        <item name="android:actionMenuTextColor">@color/colorWhite</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
     </style>
 
     <!-- Default Theme-->
@@ -247,7 +73,7 @@
         <item name="actionBarStyle">@style/DefMyActionBar</item>
         <item name="buttonPrimary">@style/DefButtonStyle</item>
         <item name="buttonSecondary">@style/DefSecondaryButtonStyle</item>
-        <item name="displayStyle">@style/DefDisplayStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DefDisplayTextStyle</item>
         <item name="clearStyle">@style/DefDisplayClearStyle</item>
     </style>
@@ -255,18 +81,15 @@
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:background">@color/darkGray</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">serif-monospace</item>
+        <item name="android:fontFamily">@font/liberation</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DefSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:background">@color/gray</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">serif-monospace</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:fontFamily">@font/liberation</item>
         <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="DefDisplayStyle">
     </style>
 
     <style name="DefDisplayTextStyle">
@@ -278,13 +101,57 @@
     </style>
 
     <style name="DefMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="elevation">0dp</item>
         <item name="background">@color/colorWhite</item>
     </style>
+
+
+    <!-- End of Themes-->
+
+
+    <!-- Common Themes -->
 
     <style name="WindowTransition">
         <item name="android:windowEnterAnimation">@anim/slide_in_up</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+    <style name="actionMenuTextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/liberation</item>
+    </style>
+
+    <style name="MyActionBar">
+        <item name="background">?colorPrimary</item>
+        <item name="android:titleTextAppearance">@color/colorWhite</item>
+        <item name="android:colorControlNormal">@color/colorWhite</item>
+        <item name="android:actionMenuTextColor">@color/colorWhite</item>
+        <item name="android:actionMenuTextAppearance">@style/actionMenuTextStyle</item>
+    </style>
+
+    <style name="DisplayStyle">
+        <item name="android:background">?colorPrimary</item>
+    </style>
+
+    <style name="DisplayTextStyle">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="DisplayClearStyle">
+        <item name="android:background">?colorPrimaryDark</item>
+    </style>
+
+    <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 </resources>

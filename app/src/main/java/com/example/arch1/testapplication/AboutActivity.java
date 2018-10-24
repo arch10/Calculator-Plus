@@ -1,11 +1,13 @@
 package com.example.arch1.testapplication;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,8 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
+        String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -41,8 +45,19 @@ public class AboutActivity extends AppCompatActivity {
         privacy = findViewById(R.id.privacy);
         context = this;
 
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        int color = a.getColor(0, 0);
+        if(themeName.equals("default") || themeName.equals(""))
+            color = getResources().getColor(R.color.colorMaterialSteelGrey);
+
+
         //setting toolbar style manually
-        setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setBackgroundColor(color);
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,38 +117,6 @@ public class AboutActivity extends AppCompatActivity {
             setTheme(R.style.DefAppTheme);
             preferences.setStringPreference(AppPreferences.APP_THEME, "default");
 
-        }
-    }
-
-    private void setToolBarStyle(String themeName) {
-        if (themeName.equals("green")) {
-            toolbar.setBackground(getDrawable(R.drawable.green_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("orange")) {
-            toolbar.setBackground(getDrawable(R.drawable.orange_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("blue")) {
-            toolbar.setBackground(getDrawable(R.drawable.blue_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("lgreen")) {
-            toolbar.setBackground(getDrawable(R.drawable.lightgreen_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("pink")) {
-            toolbar.setBackground(getDrawable(R.drawable.pink_title));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("default")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorMaterialSteelGrey));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals("")) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorMaterialSteelGrey));
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
     }
 
