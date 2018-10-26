@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
-
+        a.recycle();
 
         //setting toolbar style manually
         //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));

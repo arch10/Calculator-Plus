@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,6 +13,8 @@
         android:layout_height="wrap_content"
         tools:text="Today"
         android:paddingStart="24dp"
+        android:paddingEnd="8dp"
+        android:fontFamily="@font/liberation"
         android:textColor="?colorAccent"
         android:textStyle="bold"
         android:textSize="18sp"
@@ -25,6 +26,8 @@
         android:layout_height="wrap_content"
         tools:text="5+5"
         android:paddingEnd="24dp"
+        android:paddingStart="8dp"
+        android:fontFamily="@font/liberation"
         android:textColor="@color/colorBlack"
         android:textSize="45sp"
         android:gravity="end"/>
@@ -33,7 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="10"
+        android:fontFamily="@font/liberation"
         android:paddingEnd="24dp"
+        android:paddingStart="8dp"
         android:textSize="35sp"
         android:gravity="end"/>
     <View

@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class HistoryActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private Toolbar toolbar;
     private History history;
+    private FrameLayout noHistoryLayout;
+    private MenuItem delItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+        noHistoryLayout = findViewById(R.id.fl_no_history);
         history = new History(this);
         recyclerView = findViewById(R.id.rv_history);
         mLayoutManager = new LinearLayoutManager(this);
@@ -84,6 +88,7 @@ public class HistoryActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
 
+        checkHistoryStatus();
     }
 
     private void setTheme(String themeName) {
@@ -132,6 +137,12 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.history_menu, menu);
+        delItem = menu.getItem(0);
+
+        if(mAdapter.getItemCount() == 0){
+            menu.getItem(0).setVisible(false);
+        }
+
         return true;
     }
 
@@ -141,7 +152,19 @@ public class HistoryActivity extends AppCompatActivity {
             history.setJsonString("");
             mAdapter.setList(reverseHistory(history.showHistory()));
             recyclerView.setAdapter(mAdapter);
+            checkHistoryStatus();
         }
         return true;
+    }
+
+    private void checkHistoryStatus() {
+        if(mAdapter.getItemCount() == 0){
+            recyclerView.setVisibility(View.GONE);
+            noHistoryLayout.setVisibility(View.VISIBLE);
+
+            if(delItem!=null){
+                delItem.setVisible(false);
+            }
+        }
     }
 }
