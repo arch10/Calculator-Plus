@@ -24,6 +24,7 @@ public class AboutActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView version, build, privacy;
     private Context context;
+    private int color;
 
     private static final String PRIVACY_URL = "https://github.com/arch10/Calculator/blob/master/docs/en/privacy_policy.md";
 
@@ -47,7 +48,7 @@ public class AboutActivity extends AppCompatActivity {
 
         TypedValue typedValue = new TypedValue();
         TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
-        int color = a.getColor(0, 0);
+        color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
 
@@ -78,7 +79,7 @@ public class AboutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                         .addDefaultShareMenuItem()
-                        .setToolbarColor(getThemeColor(preferences.getStringPreference(AppPreferences.APP_THEME)))
+                        .setToolbarColor(color)
                         .setShowTitle(true)
                         .build();
                 CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
@@ -100,6 +101,10 @@ public class AboutActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
+        } else if (themeName.equals("red")) {
+
+            setTheme(R.style.RedAppTheme);
+
         } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
@@ -107,6 +112,10 @@ public class AboutActivity extends AppCompatActivity {
         } else if (themeName.equals("pink")) {
 
             setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("purple")) {
+
+            setTheme(R.style.PurpleAppTheme);
 
         } else if (themeName.equals("default")) {
 

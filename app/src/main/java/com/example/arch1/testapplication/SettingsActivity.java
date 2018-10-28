@@ -147,6 +147,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
+        } else if (themeName.equals("red")) {
+
+            setTheme(R.style.RedAppTheme);
+
         } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
@@ -154,6 +158,10 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (themeName.equals("pink")) {
 
             setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("purple")) {
+
+            setTheme(R.style.PurpleAppTheme);
 
         } else if (themeName.equals("default")) {
 
@@ -272,17 +280,17 @@ public class SettingsActivity extends AppCompatActivity {
         ListData data;
 
         ArrayList<ListData> list = new ArrayList<>();
-        data = new ListData("General","General user preferences",R.drawable.ic_build_black_24dp);
+        data = new ListData("General","General user preferences",R.drawable.ic_outline_build_24px);
         list.add(data);
         list.add(getThemeData(themeName));
         list.add(getPrecisionData());
-        data = new ListData("Angle", getAngle(), R.drawable.ic_track_changes_black_24dp);
+        data = new ListData("Angle", getAngle(), R.drawable.ic_outline_track_changes_24px);
         list.add(data);
-        data = new ListData("Share", "Share this app", R.drawable.ic_share_black_24dp);
+        data = new ListData("Share", "Share this app", R.drawable.ic_outline_share_24px);
         list.add(data);
-        data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_feedback_black_24dp);
+        data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_outline_feedback_24px);
         list.add(data);
-        data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_info_black_24dp);
+        data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
         list.add(data);
 
         return list;
@@ -291,7 +299,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ListData getPrecisionData() {
         ListData data = new ListData();
         data.setTitle("Answer Precision");
-        data.setImg(R.drawable.ic_create_black_24dp);
+        data.setImg(R.drawable.ic_outline_create_24px);
         data.setBody("Precision: " + getPrecision());
         return data;
     }
@@ -299,7 +307,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ListData getThemeData(String themeName) {
         ListData data = new ListData();
         data.setTitle("Themes");
-        data.setImg(R.drawable.ic_color_lens_black_24dp);
+        data.setImg(R.drawable.ic_outline_color_lens_24px);
 
         if (themeName.equals("green")) {
 
@@ -313,6 +321,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             data.setBody("Blue");
 
+        } else if (themeName.equals("red")) {
+
+            data.setBody("Red");
+
         } else if (themeName.equals("lgreen")) {
 
             data.setBody("Light Green");
@@ -320,6 +332,10 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (themeName.equals("pink")) {
 
             data.setBody("Pink");
+
+        }  else if (themeName.equals("purple")) {
+
+            data.setBody("Purple");
 
         } else if (themeName.equals("default")) {
 

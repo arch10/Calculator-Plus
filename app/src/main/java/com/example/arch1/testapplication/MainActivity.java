@@ -1138,6 +1138,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             setTheme(R.style.BlueAppTheme);
 
+        } else if (themeName.equals("red")) {
+
+            setTheme(R.style.RedAppTheme);
+
         } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
@@ -1145,6 +1149,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (themeName.equals("pink")) {
 
             setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("purple")) {
+
+            setTheme(R.style.PurpleAppTheme);
 
         } else if (themeName.equals("default")) {
 

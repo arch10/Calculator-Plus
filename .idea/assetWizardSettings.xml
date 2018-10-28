@@ -77,8 +77,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_history_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\Archit" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_trash_can_outline" />
+                            <entry key="sourceFile" value="C:\Users\Archit\Desktop\trash-can-outline.svg" />
                           </map>
                         </option>
                       </PersistentState>

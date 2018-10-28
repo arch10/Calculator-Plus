@@ -15,9 +15,9 @@
 
     <!-- Green Theme-->
     <style name="GreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorGreenPrimary</item>
-        <item name="colorPrimaryDark">@color/colorGreenDark</item>
-        <item name="colorAccent">@color/colorMaterialYellow</item>
+        <item name="colorPrimary">@color/colorMaterialGreen</item>
+        <item name="colorPrimaryDark">@color/colorGreenDark2</item>
+        <item name="colorAccent">@color/colorMaterialLightOrange</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
@@ -57,6 +57,33 @@
         <item name="colorPrimary">@color/colorPinkPrimary</item>
         <item name="colorPrimaryDark">@color/colorPinkDark</item>
         <item name="colorAccent">@color/colorMaterialLGreen</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
+    </style>
+
+
+    <!-- Red Theme-->
+    <style name="RedAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorMaterialRed</item>
+        <item name="colorPrimaryDark">@color/colorRedDark</item>
+        <item name="colorAccent">@color/colorMaterialYellow</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/DisplayTextStyle</item>
+        <item name="clearStyle">@style/DisplayClearStyle</item>
+    </style>
+
+    <!-- Purple Theme-->
+    <style name="PurpleAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorMaterialPurple</item>
+        <item name="colorPrimaryDark">@color/colorPurpleDark</item>
+        <item name="colorAccent">@color/colorMaterialYellow</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>

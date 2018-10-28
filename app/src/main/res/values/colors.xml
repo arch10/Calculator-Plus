@@ -15,6 +15,9 @@
     <color name="colorBlueDark">#18426d</color>
     <color name="colorLightGreenDark">#406300</color>
     <color name="colorPinkDark">#722768</color>
+    <color name="colorRedDark">#D32F2F</color>
+    <color name="colorPurpleDark">#7B1FA2</color>
+    <color name="colorGreenDark2">#388E3C</color>
 
 
     <!--Material Colors -->
@@ -27,6 +30,8 @@
     <color name="colorMaterialLGreen">#8bc34a</color>
     <color name="colorMaterialPink">#e91e63</color>
     <color name="colorMaterialDarkGrey">#455A64</color>
+    <color name="colorMaterialPurple">#9C27B0</color>
+    <color name="colorMaterialLightOrange">#FF9800</color>
 
 
     <!--Extra Colors-->

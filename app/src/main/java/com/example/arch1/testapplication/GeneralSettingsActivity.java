@@ -99,6 +99,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
+        } else if (themeName.equals("red")) {
+
+            setTheme(R.style.RedAppTheme);
+
         } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
@@ -106,6 +110,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         } else if (themeName.equals("pink")) {
 
             setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("purple")) {
+
+            setTheme(R.style.PurpleAppTheme);
 
         } else if (themeName.equals("default")) {
 
@@ -119,4 +127,11 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         }
     }
 
+    public void smartCalClick(View view) {
+        smartCalculationSwitch.setChecked(!smartCalculationSwitch.isChecked());
+    }
+
+    public void numFormatClick(View view) {
+        numberFormatterSwitch.setChecked(!numberFormatterSwitch.isChecked());
+    }
 }

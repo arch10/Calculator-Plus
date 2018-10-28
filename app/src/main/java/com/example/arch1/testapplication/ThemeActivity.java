@@ -68,11 +68,17 @@ public class ThemeActivity extends AppCompatActivity {
                     case R.id.rb_theme_blue:
                         changeTheme("blue");
                         break;
+                    case R.id.rb_theme_red:
+                        changeTheme("red");
+                        break;
                     case R.id.rb_theme_lightgreen:
                         changeTheme("lgreen");
                         break;
                     case R.id.rb_theme_pink:
                         changeTheme("pink");
+                        break;
+                    case R.id.rb_theme_purple:
+                        changeTheme("purple");
                         break;
                     case R.id.rb_theme_default:
                         changeTheme("default");
@@ -85,68 +91,30 @@ public class ThemeActivity extends AppCompatActivity {
     private void changeTheme(String themeName) {
 
         if (themeName.equals("green")) {
-
             preferences.setStringPreference(AppPreferences.APP_THEME, "green");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
-
         } else if (themeName.equals("orange")) {
-
             preferences.setStringPreference(AppPreferences.APP_THEME, "orange");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
         } else if (themeName.equals("blue")) {
-
             preferences.setStringPreference(AppPreferences.APP_THEME, "blue");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
-        }else if (themeName.equals("lgreen")) {
-
+        } else if(themeName.equals("red")) {
+            preferences.setStringPreference(AppPreferences.APP_THEME, "red");
+        } else if (themeName.equals("lgreen")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "lgreen");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
-        }else if (themeName.equals("pink")) {
-
+        } else if (themeName.equals("pink")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "pink");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
+        } else if (themeName.equals("purple")) {
+            preferences.setStringPreference(AppPreferences.APP_THEME, "purple");
         } else if (themeName.equals("default")) {
-
             preferences.setStringPreference(AppPreferences.APP_THEME, "default");
-            Intent intent[] = new Intent[3];
-            intent[2] = new Intent(this, ThemeActivity.class);
-            intent[1] = new Intent(this, SettingsActivity.class);
-            intent[0] = new Intent(this, MainActivity.class);
-            startActivities(intent);
-            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-            finish();
         }
+
+        Intent intent[] = new Intent[3];
+        intent[2] = new Intent(this, ThemeActivity.class);
+        intent[1] = new Intent(this, SettingsActivity.class);
+        intent[0] = new Intent(this, MainActivity.class);
+        startActivities(intent);
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        finish();
 
     }
 
@@ -154,7 +122,6 @@ public class ThemeActivity extends AppCompatActivity {
         if (themeName.equals("green")) {
 
             setTheme(R.style.GreenAppTheme);
-
 
         } else if (themeName.equals("orange")) {
 
@@ -164,13 +131,21 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
-        } else if (themeName.equals("lgreen")) {
+        } else if(themeName.equals("red")) {
+
+            setTheme(R.style.RedAppTheme);
+
+        }else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
 
         } else if (themeName.equals("pink")) {
 
             setTheme(R.style.PinkAppTheme);
+
+        } else if (themeName.equals("purple")) {
+
+            setTheme(R.style.PurpleAppTheme);
 
         } else if (themeName.equals("default")) {
 
@@ -199,6 +174,10 @@ public class ThemeActivity extends AppCompatActivity {
 
             themeGroup.check(R.id.rb_theme_blue);
 
+        } else if(themeName.equals("red")) {
+
+            themeGroup.check(R.id.rb_theme_red);
+
         } else if (themeName.equals("lgreen")) {
 
             themeGroup.check(R.id.rb_theme_lightgreen);
@@ -206,6 +185,10 @@ public class ThemeActivity extends AppCompatActivity {
         } else if (themeName.equals("pink")) {
 
             themeGroup.check(R.id.rb_theme_pink);
+
+        } else if (themeName.equals("purple")) {
+
+            themeGroup.check(R.id.rb_theme_purple);
 
         } else if (themeName.equals("default")) {
 
