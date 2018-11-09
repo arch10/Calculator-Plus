@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 18
-        versionName "1.7.2"
+        versionName "1.8.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
