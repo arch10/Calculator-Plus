@@ -14,6 +14,7 @@ public class Evaluate {
     private static AppPreferences preferences = null;
     private static Boolean ifDegree = true;
 
+    //called from activity to get result
     public static String calculateResult(String equ, Boolean enableNumberFormatter, Context context) {
 
         preferences = AppPreferences.getInstance(context);
@@ -23,7 +24,7 @@ public class Evaluate {
             equ = equ.replace("\u00d7", "*");
             equ = equ.replace(",","");
 
-            String ans = new Evaluate().getTestAnswer(equ);
+            String ans = new Evaluate().getAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
             if(enableNumberFormatter)
@@ -33,6 +34,7 @@ public class Evaluate {
         return "";
     }
 
+    //checks if the equation is balanced or not
     public static boolean balancedParenthesis(String s) {
         Stack<Character> stack = new Stack<Character>();
         for (int i = 0; i < s.length(); i++) {
@@ -48,6 +50,7 @@ public class Evaluate {
         return stack.isEmpty();
     }
 
+    //tries to balance the equations with smart balancing
     public static String tryBalancingBrackets(String equ) {
         String tempEqu = equ;
         int a = 0, b = 0;
@@ -99,6 +102,7 @@ public class Evaluate {
         return tempEqu;
     }
 
+    //adds thousand separator
     private static String formatString(String str) {
         int index = str.indexOf('.');
         if(index == -1)
@@ -117,10 +121,12 @@ public class Evaluate {
         return str;
     }
 
+    //checks if the string provided is a number
     private static boolean isNumber(String string) {
         return Pattern.matches("-?\\d+(\\.\\d+)?", string);
     }
 
+    //checks if the string provided is a sqroot or cbroot
     private boolean isRoot(String string) {
         if (string.equals("\u221a") || string.equals("\u221b")) {
             return true;
@@ -128,12 +134,13 @@ public class Evaluate {
         return false;
     }
 
+    //rounds the provided number to user preference digits
     private String roundMyAnswer(String ans) {
 
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num =  new BigDecimal(ans);
 
-        num = num.setScale(setPrecision(precision), RoundingMode.HALF_UP);
+        num = num.setScale(getPrecision(precision), RoundingMode.HALF_UP);
         num = num.stripTrailingZeros();
 
         if(num.compareTo(new BigDecimal("0")) == 0)
@@ -141,7 +148,8 @@ public class Evaluate {
         return num.toPlainString();
     }
 
-    public int setPrecision(String precision) {
+    //get user defined number precision
+    private int getPrecision(String precision) {
 
         if (precision.equals("")) {
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
@@ -172,6 +180,7 @@ public class Evaluate {
         }
     }
 
+    //solves sqroots and cbroots
     private Double solveRoot(Stack<String> gg) {
         Double num = Double.parseDouble(gg.pop());
         while (!gg.empty()) {
@@ -186,6 +195,7 @@ public class Evaluate {
         return num;
     }
 
+    //returns factorial of a number
     private static BigInteger factorial(int n) {
         BigInteger offset = new BigInteger("1");
         if(n < 0){
@@ -202,6 +212,11 @@ public class Evaluate {
         return f.multiply(offset);
     }
 
+    //checks if the character is an operator
+    //it doesnot include '-' sign as it is handled
+    //in the methods as '+-' sign, where '-' is a
+    //part of the number
+    //eg: '500' - '400' = '500' + '-400'
     private boolean isTestOperator(char c) {
         if (c == '+' ||
                 c == '/' ||
@@ -215,6 +230,7 @@ public class Evaluate {
         return false;
     }
 
+    //checks if the char can be a last character in a valid equation
     private boolean canBeLastChar(char c) {
         if (isNumber(c))
             return true;
@@ -223,6 +239,7 @@ public class Evaluate {
         return false;
     }
 
+    //checks if the given char is a number or a constant
     private boolean isNumber(char c) {
         switch (c) {
             case '1':
@@ -242,8 +259,8 @@ public class Evaluate {
         return false;
     }
 
-    //Test Methods
-    private String getTestAnswer(String equation) {
+    //you provide the equation, it will give the result
+    private String getAnswer(String equation) {
 
         equation = equation.replaceAll("e", Math.E + "");
         equation = equation.replaceAll("\u03c0", "" + Math.PI);
@@ -303,7 +320,7 @@ public class Evaluate {
                 stack.pop();
                 String dd = null;
                 try {
-                    dd = getTestValue(abc);
+                    dd = getValue(abc);
                 } catch (Exception e) {
                     e.printStackTrace();
                     dd = null;
@@ -327,7 +344,7 @@ public class Evaluate {
 
         String dd = null;
         try {
-            dd = getTestValue(abc);
+            dd = getValue(abc);
         } catch (Exception e) {
             e.printStackTrace();
             dd = null;
@@ -339,7 +356,9 @@ public class Evaluate {
             return "";
     }
 
-    private String getTestValue(Stack<String> token) throws Exception{
+    //solves sub-equations without brackets
+    //this is the method where actual calculations happen
+    private String getValue(Stack<String> token) throws Exception{
         char c;
         String temp = "";
         Stack<String> stack = new Stack<>();
@@ -562,7 +581,7 @@ public class Evaluate {
                             tempStack.push(stack.pop());
                         }
 
-                        String tempAns = getTestValue(tempStack);
+                        String tempAns = getValue(tempStack);
                         if(tempAns == null) {
                             errMsg = "Invalid Expression";
                             return null;
