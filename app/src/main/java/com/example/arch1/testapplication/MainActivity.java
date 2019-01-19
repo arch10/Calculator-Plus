@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sub:
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (c == '%' || c == ')' || c == '!') {
+                    if (c == '%' || c == ')' || c == '!' || c == '(') {
                         add("-");
                         break;
                     }
