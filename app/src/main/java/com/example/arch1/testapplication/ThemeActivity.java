@@ -37,10 +37,10 @@ public class ThemeActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
-
+        if(themeName.equals("material"))
+            color = getResources().getColor(R.color.colorMaterialDarkBlue);
 
         //setting toolbar style manually
-        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
