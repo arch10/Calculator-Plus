@@ -35,6 +35,8 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
+        if(themeName.equals("material"))
+            color = getResources().getColor(R.color.colorMaterialDarkBlue);
 
 
         //setting toolbar style manually
@@ -114,6 +116,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         } else if (themeName.equals("purple")) {
 
             setTheme(R.style.PurpleAppTheme);
+
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
 
         } else if (themeName.equals("default")) {
 

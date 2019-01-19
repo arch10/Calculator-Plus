@@ -120,6 +120,10 @@ public class HistoryActivity extends AppCompatActivity {
 
             setTheme(R.style.PurpleAppTheme);
 
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
+
         } else if (themeName.equals("default")) {
 
             setTheme(R.style.DefAppTheme);

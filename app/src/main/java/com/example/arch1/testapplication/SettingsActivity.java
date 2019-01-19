@@ -62,6 +62,8 @@ public class SettingsActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
+        if(themeName.equals("material"))
+            color = getResources().getColor(R.color.colorMaterialDarkBlue);
         a.recycle();
 
         //setting toolbar style manually
@@ -162,6 +164,10 @@ public class SettingsActivity extends AppCompatActivity {
         } else if (themeName.equals("purple")) {
 
             setTheme(R.style.PurpleAppTheme);
+
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
 
         } else if (themeName.equals("default")) {
 
@@ -336,6 +342,10 @@ public class SettingsActivity extends AppCompatActivity {
         }  else if (themeName.equals("purple")) {
 
             data.setBody("Purple");
+
+        }  else if (themeName.equals("material")) {
+
+            data.setBody("Material Design");
 
         } else if (themeName.equals("default")) {
 

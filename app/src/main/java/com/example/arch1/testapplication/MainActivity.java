@@ -2,12 +2,14 @@ package com.example.arch1.testapplication;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +19,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import java.util.Stack;
@@ -89,6 +94,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.setBackgroundColor(color);
+
+        int orientation = getResources().getConfiguration().orientation;
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                metrics.densityDpi >= DisplayMetrics.DENSITY_560) {
+            FrameLayout arrowLayout = slidingLayout.findViewById(R.id.fl_arrow);
+            arrowLayout.setVisibility(View.GONE);
+        }
 
         //avoiding keyboard input
         equation.setShowSoftInputOnFocus(false);
@@ -183,7 +196,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String res = result.getText().toString().trim();
                     if (res.equals("") || isAnError(res)) {
                         result.setText(Evaluate.errMsg);
-                        result.setTextColor(getResources().getColor(R.color.colorRed));
+                        if(preferences.getStringPreference(AppPreferences.APP_THEME).equals("red")) {
+                            result.setTextColor(getResources().getColor(R.color.colorMaterialYellow));
+                        } else {
+                            result.setTextColor(getResources().getColor(R.color.colorRed));
+                        }
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
                         break;
@@ -1122,6 +1139,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             setTheme(R.style.PurpleAppTheme);
 
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
+
         } else if (themeName.equals("default")) {
 
             setTheme(R.style.DefAppTheme);
@@ -1186,7 +1207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int getTextColor() {
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        if (theme.equals("default") || theme.equals("")) {
+        if (theme.equals("default") || theme.equals("material") || theme.equals("")) {
             return getResources().getColor(R.color.colorBlack);
         }
         return getResources().getColor(R.color.colorWhite);

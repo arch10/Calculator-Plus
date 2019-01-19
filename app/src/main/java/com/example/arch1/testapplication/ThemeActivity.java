@@ -80,6 +80,9 @@ public class ThemeActivity extends AppCompatActivity {
                     case R.id.rb_theme_purple:
                         changeTheme("purple");
                         break;
+                    case R.id.rb_theme_material2:
+                        changeTheme("material");
+                        break;
                     case R.id.rb_theme_default:
                         changeTheme("default");
                 }
@@ -104,6 +107,8 @@ public class ThemeActivity extends AppCompatActivity {
             preferences.setStringPreference(AppPreferences.APP_THEME, "pink");
         } else if (themeName.equals("purple")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "purple");
+        } else if (themeName.equals("material")) {
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
         } else if (themeName.equals("default")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "default");
         }
@@ -147,6 +152,10 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.PurpleAppTheme);
 
+        }  else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
+
         } else if (themeName.equals("default")) {
 
             setTheme(R.style.DefAppTheme);
@@ -189,6 +198,10 @@ public class ThemeActivity extends AppCompatActivity {
         } else if (themeName.equals("purple")) {
 
             themeGroup.check(R.id.rb_theme_purple);
+
+        } else if (themeName.equals("material")) {
+
+            themeGroup.check(R.id.rb_theme_material2);
 
         } else if (themeName.equals("default")) {
 
