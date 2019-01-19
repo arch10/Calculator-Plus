@@ -55,7 +55,6 @@ public class AboutActivity extends AppCompatActivity {
             color = getResources().getColor(R.color.colorMaterialDarkBlue);
 
         //setting toolbar style manually
-        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
@@ -128,8 +127,8 @@ public class AboutActivity extends AppCompatActivity {
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }

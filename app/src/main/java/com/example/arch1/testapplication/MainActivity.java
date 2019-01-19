@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //set app default preferences
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
-            preferences.setStringPreference(AppPreferences.APP_THEME,"default");
+            preferences.setStringPreference(AppPreferences.APP_THEME,"material");
             preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
             preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER,true);
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS,true);
@@ -1149,8 +1149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }

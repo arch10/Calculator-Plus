@@ -130,8 +130,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }

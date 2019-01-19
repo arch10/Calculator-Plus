@@ -67,7 +67,6 @@ public class SettingsActivity extends AppCompatActivity {
         a.recycle();
 
         //setting toolbar style manually
-        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
@@ -175,8 +174,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }

@@ -136,11 +136,11 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
-        } else if(themeName.equals("red")) {
+        } else if (themeName.equals("red")) {
 
             setTheme(R.style.RedAppTheme);
 
-        }else if (themeName.equals("lgreen")) {
+        } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
 
@@ -152,7 +152,7 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.PurpleAppTheme);
 
-        }  else if (themeName.equals("material")) {
+        } else if (themeName.equals("material")) {
 
             setTheme(R.style.Material2);
 
@@ -162,8 +162,8 @@ public class ThemeActivity extends AppCompatActivity {
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }
