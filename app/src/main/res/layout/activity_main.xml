@@ -62,16 +62,17 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    <com.example.arch1.testapplication.CalculatorPadViewPager
+        android:id="@+id/pad_pager"
+        android:layout_weight="1"
+        android:overScrollMode="never"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="bottom"
-        sothree:layout_constraintBottom_toBottomOf="parent"
-        sothree:layout_constraintEnd_toEndOf="parent"
-        sothree:layout_constraintStart_toStartOf="parent"
-        sothree:layout_constraintTop_toTopOf="@+id/guideline"
-        sothree:umanoPanelHeight="40dp"
-        sothree:umanoShadowHeight="4dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
 
         <include layout="@layout/one"
             android:id="@+id/mainLayout"/>
@@ -79,7 +80,7 @@
         <include layout="@layout/two"
             android:id="@+id/slidingLayout"/>
 
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </com.example.arch1.testapplication.CalculatorPadViewPager>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

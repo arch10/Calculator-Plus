@@ -2,7 +2,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/fl_arrow"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        style="?buttonAdv"
+        android:visibility="visible">
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,7 +29,7 @@
         android:orientation="horizontal">
 
         <Button
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:id="@+id/sin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -21,7 +39,7 @@
 
         <Button
             android:id="@+id/cos"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -30,7 +48,7 @@
 
         <Button
             android:id="@+id/tan"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -46,7 +64,7 @@
 
         <Button
             android:id="@+id/asin"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -55,7 +73,7 @@
 
         <Button
             android:id="@+id/acos"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -64,7 +82,7 @@
 
         <Button
             android:id="@+id/atan"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -80,7 +98,7 @@
 
         <Button
             android:id="@+id/exp"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -89,7 +107,7 @@
 
         <Button
             android:id="@+id/log"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -98,7 +116,7 @@
 
         <Button
             android:id="@+id/ln"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -106,7 +124,7 @@
             android:textSize="26sp" />
         <Button
             android:id="@+id/pow"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -122,7 +140,7 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/fact"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -131,7 +149,7 @@
             android:textSize="36sp" />
         <Button
             android:id="@+id/sqroot"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -140,7 +158,7 @@
 
         <Button
             android:id="@+id/cuberoot"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -148,11 +166,12 @@
             android:textSize="28sp" />
         <Button
             android:id="@+id/pi"
-            style="?buttonSecondary"
+            style="?buttonAdv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="\u03c0"
             android:textSize="28sp" />
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

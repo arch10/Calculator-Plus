@@ -55,6 +55,14 @@ public class Evaluate {
         String tempEqu = equ;
         int a = 0, b = 0;
 
+        //special case of '(-'
+        if(tempEqu.substring(tempEqu.length() - 2).equals("(-")) {
+            tempEqu = tempEqu.substring(0,tempEqu.length()-2);
+            if(balancedParenthesis(tempEqu)) {
+                return tempEqu;
+            }
+        }
+
         if (tempEqu.charAt(tempEqu.length() - 1) == '(') {
             while (tempEqu.charAt(tempEqu.length() - 1) == '(') {
                 tempEqu = tempEqu.substring(0, tempEqu.length() - 1);
@@ -265,6 +273,8 @@ public class Evaluate {
         equation = equation.replaceAll("e", Math.E + "");
         equation = equation.replaceAll("\u03c0", "" + Math.PI);
         equation = equation.replaceAll("-", "+-");
+        equation = equation.replaceAll("\\^\\+-","^-");
+        equation = equation.replaceAll("\\(\\+-","(-");
         equation = equation.replaceAll("(\\*\\+)", "*");
         equation = equation.replaceAll("(\\/\\+)", "/");
         equation = equation.replaceAll("(\\+\\+)", "+");
@@ -318,7 +328,7 @@ public class Evaluate {
                     abc.push(stack.pop());
                 }
                 stack.pop();
-                String dd = null;
+                String dd;
                 try {
                     dd = getValue(abc);
                 } catch (Exception e) {
@@ -342,7 +352,7 @@ public class Evaluate {
             abc.push(stack.pop());
         }
 
-        String dd = null;
+        String dd;
         try {
             dd = getValue(abc);
         } catch (Exception e) {
@@ -359,8 +369,7 @@ public class Evaluate {
     //solves sub-equations without brackets
     //this is the method where actual calculations happen
     private String getValue(Stack<String> token) throws Exception{
-        char c;
-        String temp = "";
+        String temp;
         Stack<String> stack = new Stack<>();
         Stack<String> workingStack = token;
 

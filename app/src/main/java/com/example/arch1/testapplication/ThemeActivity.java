@@ -37,10 +37,10 @@ public class ThemeActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
-
+        if(themeName.equals("material"))
+            color = getResources().getColor(R.color.colorMaterialDarkBlue);
 
         //setting toolbar style manually
-        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
@@ -80,6 +80,9 @@ public class ThemeActivity extends AppCompatActivity {
                     case R.id.rb_theme_purple:
                         changeTheme("purple");
                         break;
+                    case R.id.rb_theme_material2:
+                        changeTheme("material");
+                        break;
                     case R.id.rb_theme_default:
                         changeTheme("default");
                 }
@@ -104,6 +107,8 @@ public class ThemeActivity extends AppCompatActivity {
             preferences.setStringPreference(AppPreferences.APP_THEME, "pink");
         } else if (themeName.equals("purple")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "purple");
+        } else if (themeName.equals("material")) {
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
         } else if (themeName.equals("default")) {
             preferences.setStringPreference(AppPreferences.APP_THEME, "default");
         }
@@ -131,11 +136,11 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.BlueAppTheme);
 
-        } else if(themeName.equals("red")) {
+        } else if (themeName.equals("red")) {
 
             setTheme(R.style.RedAppTheme);
 
-        }else if (themeName.equals("lgreen")) {
+        } else if (themeName.equals("lgreen")) {
 
             setTheme(R.style.LightGreenAppTheme);
 
@@ -147,14 +152,18 @@ public class ThemeActivity extends AppCompatActivity {
 
             setTheme(R.style.PurpleAppTheme);
 
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
+
         } else if (themeName.equals("default")) {
 
             setTheme(R.style.DefAppTheme);
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }
@@ -189,6 +198,10 @@ public class ThemeActivity extends AppCompatActivity {
         } else if (themeName.equals("purple")) {
 
             themeGroup.check(R.id.rb_theme_purple);
+
+        } else if (themeName.equals("material")) {
+
+            themeGroup.check(R.id.rb_theme_material2);
 
         } else if (themeName.equals("default")) {
 

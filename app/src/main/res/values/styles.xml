@@ -2,12 +2,13 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorMaterialLightOrange</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorMaterialBlue</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -21,6 +22,7 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -34,6 +36,7 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -47,6 +50,7 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -60,6 +64,7 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -70,10 +75,11 @@
     <style name="RedAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorMaterialRed</item>
         <item name="colorPrimaryDark">@color/colorRedDark</item>
-        <item name="colorAccent">@color/colorMaterialYellow</item>
+        <item name="colorAccent">@color/colorMaterialGreen</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
@@ -87,9 +93,43 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
         <item name="buttonSecondary">@style/SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+    </style>
+
+    <!-- Material 2 Theme-->
+    <style name="Material2" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorMaterialDarkBlue</item>
+        <item name="colorAccent">@color/colorMaterialBlue</item>
+        <item name="actionBarStyle">@style/DefMyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/Material2SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="displayTextStyle">@style/Material2DisplayTextStyle</item>
+        <item name="clearStyle">@style/Material2DisplayClearStyle</item>
+    </style>
+
+    <style name="Material2SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorOffWhite</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Material2DisplayTextStyle">
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="Material2DisplayClearStyle">
+        <item name="android:background">@color/lightGray</item>
+    </style>
+
+    <style name="Material2MyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="background">@color/colorWhite</item>
     </style>
 
     <!-- Default Theme-->
@@ -100,6 +140,7 @@
         <item name="actionBarStyle">@style/DefMyActionBar</item>
         <item name="buttonPrimary">@style/DefButtonStyle</item>
         <item name="buttonSecondary">@style/DefSecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/DefAdvButtonStyle</item>
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DefDisplayTextStyle</item>
         <item name="clearStyle">@style/DefDisplayClearStyle</item>
@@ -108,14 +149,21 @@
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:background">@color/darkGray</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DefSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:background">@color/gray</item>
         <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DefAdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorMaterialBlue</item>
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -144,7 +192,7 @@
 
     <style name="actionMenuTextStyle">
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:fontFamily">@font/productsans</item>
     </style>
 
     <style name="MyActionBar">
@@ -168,16 +216,23 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
+        <item name="android:background">@color/colorOffWhite</item>
         <item name="android:textColor">@color/gray</item>
-        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorWhite</item>
+        <item name="android:background">@color/colorOffWhite</item>
         <item name="android:textColor">?colorPrimary</item>
-        <item name="android:fontFamily">@font/liberation</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?colorAccent</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 

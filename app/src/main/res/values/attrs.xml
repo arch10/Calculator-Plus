@@ -5,4 +5,5 @@
     <attr name="displayStyle" format="reference"/>
     <attr name="displayTextStyle" format="reference"/>
     <attr name="clearStyle" format="reference"/>
+    <attr name="buttonAdv" format="reference"/>
 </resources>
