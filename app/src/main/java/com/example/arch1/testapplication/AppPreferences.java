@@ -18,6 +18,8 @@ public class AppPreferences {
     final static String APP_EQUATION_STRING = "app.equation.string";
     final static String APP_NUMBER_FORMATTER = "app.number.formatter";
     final static String APP_SMART_CALCULATIONS = "app.smart.calculations";
+    final static String APP_HISTORY_SET = "app.is.history.set";
+    final static String APP_HISTORY_EQUATION = "app.history.equation";
 
     public AppPreferences(Context context) {
         ctx = context;
