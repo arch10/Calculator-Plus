@@ -56,7 +56,7 @@ public class Evaluate {
         int a = 0, b = 0;
 
         //special case of '(-'
-        if(tempEqu.substring(tempEqu.length() - 2).equals("(-")) {
+        if(tempEqu.length() >= 2 && tempEqu.substring(tempEqu.length() - 2).equals("(-")) {
             tempEqu = tempEqu.substring(0,tempEqu.length()-2);
             if(balancedParenthesis(tempEqu)) {
                 return tempEqu;
