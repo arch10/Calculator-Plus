@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
     implementation 'com.sothree.slidinguppanel:library:3.4.0@aar'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.2'
-    implementation 'saschpe.android:customtabs:2.0.0'
+    implementation 'saschpe.android:customtabs:1.1.2'
     testImplementation 'junit:junit:4.12'
 }
 
