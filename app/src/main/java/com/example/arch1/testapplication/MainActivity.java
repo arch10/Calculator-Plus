@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Menu menu;
     private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
     private History history;
+    private ViewPager mPadViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1155,7 +1157,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        finishAffinity();
+        if (mPadViewPager == null || mPadViewPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first pad (or the pad is not paged),
+            // allow the system to handle the Back button.
+            finishAffinity();
+        } else {
+            // Otherwise, select the previous pad.
+            mPadViewPager.setCurrentItem(mPadViewPager.getCurrentItem() - 1);
+        }
     }
 
     private void startTutorial() {
@@ -1215,6 +1224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Initialisations
         mainLayout = findViewById(R.id.mainLayout);
         slidingLayout = findViewById(R.id.slidingLayout);
+        mPadViewPager = findViewById(R.id.pad_pager);
         equation = findViewById(R.id.et_display1);
         result = findViewById(R.id.tv_display);
         b1 = mainLayout.findViewById(R.id.one);

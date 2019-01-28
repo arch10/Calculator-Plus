@@ -7,8 +7,8 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 20
-        versionName "1.8.1"
+        versionCode 21
+        versionName "1.8.2"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -23,7 +23,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
     implementation 'com.sothree.slidinguppanel:library:3.4.0@aar'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.2'
-    implementation 'saschpe.android:customtabs:1.1.2'
+    implementation 'saschpe.android:customtabs:2.0.0'
     testImplementation 'junit:junit:4.12'
 }
 

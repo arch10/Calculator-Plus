@@ -286,6 +286,14 @@ public class Evaluate {
         equation = equation.replaceAll("\\.\\)",")");
         equation = equation.replaceAll("\\^\\)",")");
 
+        equation = equation.replaceAll("-sin", "-1*sin");
+        equation = equation.replaceAll("-cos", "-1*cos");
+        equation = equation.replaceAll("-tan", "-1*tan");
+        equation = equation.replaceAll("-a", "-1*a");
+        equation = equation.replaceAll("-l", "-1*l");
+        equation = equation.replaceAll("-√", "-1*√");
+        equation = equation.replaceAll("-∛", "-1*∛");
+
 
         char c = equation.charAt(equation.length() - 1);
 
