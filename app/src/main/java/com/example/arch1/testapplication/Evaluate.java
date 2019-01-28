@@ -286,15 +286,6 @@ public class Evaluate {
         equation = equation.replaceAll("\\.\\)",")");
         equation = equation.replaceAll("\\^\\)",")");
 
-        equation = equation.replaceAll("-sin", "-1*sin");
-        equation = equation.replaceAll("-cos", "-1*cos");
-        equation = equation.replaceAll("-tan", "-1*tan");
-        equation = equation.replaceAll("-a", "-1*a");
-        equation = equation.replaceAll("-l", "-1*l");
-        equation = equation.replaceAll("-√", "-1*√");
-        equation = equation.replaceAll("-∛", "-1*∛");
-
-
         char c = equation.charAt(equation.length() - 1);
 
         while (!canBeLastChar(c)) {
@@ -418,6 +409,16 @@ public class Evaluate {
                         num1 = Math.toRadians(num1);
                     stack.push(Math.sin(num1) + "");
                     break;
+                case "-sin":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (ifDegree)
+                        num1 = Math.toRadians(num1);
+                    stack.push("-" + Math.sin(num1) + "");
+                    break;
                 case "cos":
                     if (!isNumber(workingStack.peek())) {
                         errMsg = "Invalid Expression";
@@ -427,6 +428,16 @@ public class Evaluate {
                     if (ifDegree)
                         num1 = Math.toRadians(num1);
                     stack.push(Math.cos(num1) + "");
+                    break;
+                case "-cos":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (ifDegree)
+                        num1 = Math.toRadians(num1);
+                    stack.push("-" + Math.cos(num1) + "");
                     break;
                 case "tan":
                     if (!isNumber(workingStack.peek())) {
@@ -448,6 +459,26 @@ public class Evaluate {
                     }
                     stack.push(Math.tan(num1) + "");
                     break;
+                case "-tan":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (ifDegree) {
+                        if (num1 % 90 == 0) {
+                            errMsg = "Domain error";
+                            return null;
+                        }
+                        num1 = Math.toRadians(num1);
+                    } else {
+                        if (num1 % (Math.PI / 2) == 0) {
+                            errMsg = "Domain error";
+                            return null;
+                        }
+                    }
+                    stack.push("-" + Math.tan(num1) + "");
+                    break;
                 case "asin":
                     if (!isNumber(workingStack.peek())) {
                         errMsg = "Invalid Expression";
@@ -462,6 +493,21 @@ public class Evaluate {
                         stack.push(Math.toDegrees(Math.asin(num1)) + "");
                     else
                         stack.push(Math.asin(num1) + "");
+                    break;
+                case "-asin":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 > 1 || num1 < -1) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    if (ifDegree)
+                        stack.push("-" + Math.toDegrees(Math.asin(num1)) + "");
+                    else
+                        stack.push("-" + Math.asin(num1) + "");
                     break;
                 case "acos":
                     if (!isNumber(workingStack.peek())) {
@@ -478,6 +524,21 @@ public class Evaluate {
                     else
                         stack.push(Math.acos(num1) + "");
                     break;
+                case "-acos":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 > 1 || num1 < -1) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    if (ifDegree)
+                        stack.push("-" + Math.toDegrees(Math.acos(num1)) + "");
+                    else
+                        stack.push("-" + Math.acos(num1) + "");
+                    break;
                 case "atan":
                     if (!isNumber(workingStack.peek())) {
                         errMsg = "Invalid Expression";
@@ -488,6 +549,17 @@ public class Evaluate {
                         stack.push(Math.toDegrees(Math.atan(num1)) + "");
                     else
                         stack.push(Math.atan(num1) + "");
+                    break;
+                case "-atan":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (ifDegree)
+                        stack.push("-" + Math.toDegrees(Math.atan(num1)) + "");
+                    else
+                        stack.push("-" + Math.atan(num1) + "");
                     break;
                 case "log":
                     if (!isNumber(workingStack.peek())) {
@@ -501,6 +573,18 @@ public class Evaluate {
                     }
                     stack.push(Math.log10(num1) + "");
                     break;
+                case "-log":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 < 0) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push("-" + Math.log10(num1) + "");
+                    break;
                 case "ln":
                     if (!isNumber(workingStack.peek())) {
                         errMsg = "Invalid Expression";
@@ -512,6 +596,18 @@ public class Evaluate {
                         return null;
                     }
                     stack.push(Math.log(num1) + "");
+                    break;
+                case "-ln":
+                    if (!isNumber(workingStack.peek())) {
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    if (num1 < 0) {
+                        errMsg = "Domain error";
+                        return null;
+                    }
+                    stack.push("-" + Math.log(num1) + "");
                     break;
                 case "\u221a":
                     if (!isNumber(workingStack.peek())) {
@@ -536,6 +632,29 @@ public class Evaluate {
                     num1 = Double.parseDouble(workingStack.pop());
                     stack.push(Math.sqrt(num1) + "");
                     break;
+                case "-\u221a":
+                    if (!isNumber(workingStack.peek())) {
+                        String ll = workingStack.peek();
+                        if (ll.equals("\u221a") || ll.equals("\u221b")) {
+                            Stack<String> gg = new Stack<>();
+                            while (!workingStack.empty() && isRoot(ll)) {
+                                gg.push(workingStack.pop());
+                                if (!workingStack.empty())
+                                    ll = workingStack.peek();
+                            }
+                            if (isNumber(workingStack.peek())) {
+                                gg.push(workingStack.pop());
+                            }
+                            num1 = solveRoot(gg);
+                            stack.push("-" + Math.sqrt(num1) + "");
+                            break;
+                        }
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    stack.push("-" + Math.sqrt(num1) + "");
+                    break;
                 case "\u221b":
                     if (!isNumber(workingStack.peek())) {
                         String ll = workingStack.peek();
@@ -558,6 +677,29 @@ public class Evaluate {
                     }
                     num1 = Double.parseDouble(workingStack.pop());
                     stack.push(Math.cbrt(num1) + "");
+                    break;
+                case "-\u221b":
+                    if (!isNumber(workingStack.peek())) {
+                        String ll = workingStack.peek();
+                        if (ll.equals("\u221a") || ll.equals("\u221b")) {
+                            Stack<String> gg = new Stack<>();
+                            while (!workingStack.empty() && isRoot(ll)) {
+                                gg.push(workingStack.pop());
+                                if (!workingStack.empty())
+                                    ll = workingStack.peek();
+                            }
+                            if (isNumber(workingStack.peek())) {
+                                gg.push(workingStack.pop());
+                            }
+                            num1 = solveRoot(gg);
+                            stack.push("-" + Math.cbrt(num1) + "");
+                            break;
+                        }
+                        errMsg = "Invalid Expression";
+                        return null;
+                    }
+                    num1 = Double.parseDouble(workingStack.pop());
+                    stack.push("-" + Math.cbrt(num1) + "");
                     break;
                 default:
                     stack.push(temp);
