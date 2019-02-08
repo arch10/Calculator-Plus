@@ -1,16 +1,162 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Calculator Plus</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
-    <script src="main.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+    
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+    <title>Calculator Plus App | Calculator Plus</title>
+    <meta name="generator" content="Jekyll v3.7.4">
+    <meta property="og:title" content="Calculator Plus App">
+    <meta property="og:locale" content="en_US">
+    <meta name="description" content="A Simple Calculator App with some extra features">
+    <meta property="og:description" content="A Simple Calculator App with some extra features">
+    <link rel="canonical" href="https://arch10.github.io/Calculator/">
+    <meta property="og:url" content="https://arch10.github.io/Calculator/">
+    <meta property="og:site_name" content="Calculator Plus">
+    <script type="application/json">
+    {"headline":"Calculator App","@type":"WebSite","url":"https://arch10.github.io/Calculator-Plus/","name":"Calculator Plus","description":"A Simple Calculator App with some extra features","@context":"http://schema.org"}</script>
+    <!-- End Jekyll SEO tag -->
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#157878">
+        <link rel="stylesheet" href="/Calculator/assets/css/style.css?v=7ccb5753231fc4159672f92c6f3ac82b621eab60">
+      </head>
 <body>
-    <div>
-        <h2>Calculator Plus</h2>
-    </div>
+    <section class="page-header">
+      <h1 class="project-name">Calculator Plus</h1>
+      <h2 class="project-tagline">A Simple Calculator App with some extra features</h2>
+      
+        <a href="https://github.com/arch10/Calculator" class="btn">View on GitHub</a>
+      
+      
+        <a href="https://github.com/arch10/Calculator/zipball/master" class="btn">Download .zip</a>
+        <a href="https://github.com/arch10/Calculator/tarball/master" class="btn">Download .tar.gz</a>
+      
+    </section>
+
+    <section class="main-content">
+      <h1 id="calculator-app">Calculator App</h1>
+<p>A Simple Calculator with rich features for daily use.</p>
+
+<p>The Calculator Plus provides simple and advanced mathematical functions for day to day use. It is packed with different themes and designs for everyone. Its design is inspired by Google’s Material Design. It is very efficient calculator with advanced error handling. It is designed to handle errors intelligently.</p>
+
+<h2 id="why-use-calculator-plus">Why use Calculator Plus</h2>
+<ol>
+  <li>
+    <p><strong>Light weight</strong><br>
+It is very light app, only 2.5 MB of size.</p>
+  </li>
+  <li>
+    <p><strong>User friendly design</strong><br>
+Inspired by Google’s material design.</p>
+  </li>
+  <li>
+    <p><strong>No Ads whatsoever</strong><br>
+Free to use with no hidden charges or ads.</p>
+  </li>
+  <li>
+    <p><strong>Smart calculations</strong><br>
+It uses smart calculations to figure out what you are typing and automatically finds the result.</p>
+  </li>
+  <li>
+    <p><strong>Smart corrections</strong><br>
+It tries to correct the equations if they are not valid.</p>
+  </li>
+  <li>
+    <p><strong>Very flexible</strong><br>
+Very flexible design and can be easily used on any display size or even in multi-window mode.</p>
+  </li>
+  <li>
+    <p><strong>Very precise</strong><br>
+It gives you precise results up to 10 decimal places</p>
+  </li>
+  <li>
+    <p><strong>Updated regularly</strong><br>
+It is updated regularly with new designs and features, adapting new android versions.</p>
+  </li>
+  <li>
+    <p><strong>Very robust</strong><br>
+It has a strong error handling methods which doesn’t allow it it fail easily.</p>
+  </li>
+  <li>
+    <p><strong>Battery friendly</strong><br>
+It is very efficient battery wise. It uses about 20% less battery compared to a normal calculator
+<br><br></p>
+    <blockquote>
+      <p>Uses <strong>Smart Brackets resolution</strong> to solve all types of equations</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>Here is the java code snippet for balancing the equation.
+The code here tries to balance the user equation by checking the brackets pairs and then adding the rest open or close bracket to balance the equation.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span>  <span class="kt">void</span>  <span class="nf">tryBalancingBrackets</span><span class="o">(</span><span class="n">String</span> <span class="n">equ</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">tempEqu</span> <span class="o">=</span> <span class="n">equ</span><span class="o">;</span>
+	<span class="kt">int</span>  <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	
+	<span class="k">if</span> <span class="o">(</span><span class="n">tempEqu</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'('</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">while</span> <span class="o">(</span><span class="n">tempEqu</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'('</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">tempEqu</span> <span class="o">=</span>  <span class="n">tempEqu</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+					<span class="k">return</span><span class="o">;</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="kt">int</span>  <span class="n">numOfPairs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="kt">int</span>  <span class="n">openBracketCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span>  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="kt">char</span>  <span class="n">c</span> <span class="o">=</span> <span class="n">tempEqu</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+		
+		<span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'('</span><span class="o">)</span> 
+			<span class="n">openBracketCount</span><span class="o">++;</span>
+		
+		<span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">')'</span>  <span class="o">&amp;&amp;</span> <span class="n">openBracketCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">openBracketCount</span><span class="o">--;</span>
+			<span class="n">numOfPairs</span><span class="o">++;</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span>  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">tempEqu</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="kt">char</span>  <span class="n">c</span> <span class="o">=</span> <span class="n">tempEqu</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+		
+		<span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">'('</span><span class="o">)</span>
+			<span class="n">a</span><span class="o">++;</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">==</span> <span class="sc">')'</span><span class="o">)</span>
+			<span class="n">b</span><span class="o">++;</span>
+	<span class="o">}</span>
+
+	<span class="kt">int</span>  <span class="n">reqOpen</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">numOfPairs</span><span class="o">;</span>
+
+	<span class="kt">int</span>  <span class="n">reqClose</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">numOfPairs</span><span class="o">;</span>
+
+	<span class="k">while</span> <span class="o">(</span><span class="n">reqOpen</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">tempEqu</span> <span class="o">=</span> <span class="s">"("</span> <span class="o">+</span> <span class="n">tempEqu</span><span class="o">;</span>
+		<span class="n">reqOpen</span><span class="o">--;</span>
+	<span class="o">}</span>
+
+	<span class="k">while</span> <span class="o">(</span><span class="n">reqClose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">tempEqu</span> <span class="o">=</span> <span class="n">tempEqu</span> <span class="o">+</span> <span class="s">")"</span><span class="o">;</span>
+		<span class="n">reqClose</span><span class="o">--;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="download">Download</h2>
+<p>Download the latest Version of the app from the play store.<br>
+<a href="https://play.google.com/store/apps/details?id=com.gigaworks.tech.calculator&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="100" width="250"></a></p>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/arch10/Calculator">Calculator</a> is maintained by <a href="https://github.com/arch10">arch10</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </section>
+
+    
+  
+
 </body>
 </html>
