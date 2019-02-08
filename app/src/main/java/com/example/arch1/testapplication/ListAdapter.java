@@ -102,6 +102,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
                 return R.color.colorMaterialPink;
             case "purple":
                 return R.color.colorMaterialPurple;
+            case "material":
+                return R.color.colorMaterialDarkBlue;
             default:
                 return R.color.colorMaterialSteelGrey;
         }

@@ -45,7 +45,8 @@ public class HistoryActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         if(themeName.equals("default") || themeName.equals(""))
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
-
+        if(themeName.equals("material"))
+            color = getResources().getColor(R.color.colorMaterialDarkBlue);
 
         //setting toolbar style manually
         //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
@@ -70,9 +71,10 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             public void onHistoryClick(Calculations data, int position) {
                 //History Clicked
+                preferences.setBooleanPreference(AppPreferences.APP_HISTORY_SET, true);
+                preferences.setStringPreference(AppPreferences.APP_HISTORY_EQUATION, data.getEquation());
                 Intent intent = new Intent(HistoryActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("equation", data.getEquation());
                 startActivity(intent);
                 finish();
             }
@@ -120,14 +122,18 @@ public class HistoryActivity extends AppCompatActivity {
 
             setTheme(R.style.PurpleAppTheme);
 
+        } else if (themeName.equals("material")) {
+
+            setTheme(R.style.Material2);
+
         } else if (themeName.equals("default")) {
 
             setTheme(R.style.DefAppTheme);
 
         } else if (themeName.equals("")) {
 
-            setTheme(R.style.DefAppTheme);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
+            setTheme(R.style.Material2);
+            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
 
         }
     }
