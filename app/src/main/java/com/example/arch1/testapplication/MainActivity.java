@@ -1394,8 +1394,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             item.setTitle("DEG");
             ifDegree = true;
         }
-        afterTextChanged(equation.getText());
         preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
+        afterTextChanged(equation.getText());
     }
 
     @Override

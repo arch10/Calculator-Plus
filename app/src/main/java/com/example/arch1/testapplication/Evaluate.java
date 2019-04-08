@@ -55,9 +55,9 @@ public class Evaluate {
         String tempEqu = equ;
         int a = 0, b = 0;
 
-        //special case of '(-'
-        if(tempEqu.length() >= 2 && tempEqu.substring(tempEqu.length() - 2).equals("(-")) {
-            tempEqu = tempEqu.substring(0,tempEqu.length()-2);
+        //if (-) appears in the end, remove it
+        if(tempEqu.endsWith("-")) {
+            tempEqu = tempEqu.substring(0,tempEqu.length()-1);
             if(balancedParenthesis(tempEqu)) {
                 return tempEqu;
             }
@@ -376,7 +376,8 @@ public class Evaluate {
             while (!workingStack.empty()) {
                 temp = workingStack.pop();
                 if (temp.equals("-")) {
-                    temp = temp + workingStack.pop();
+                    Double negative = -Double.parseDouble(workingStack.pop());
+                    temp = negative.toString();
                 }
                 stack.push(temp);
             }
@@ -389,7 +390,7 @@ public class Evaluate {
         //check if solved
         if (workingStack.size() == 1) {
             String tt = workingStack.peek();
-            return tt;
+            return roundMyAnswer(tt);
         }
 
         //solve for pre unary operators

@@ -88,7 +88,7 @@
         android:layout_height="?attr/actionBarSize"
         android:clickable="true"
         android:elevation="4dp"
-        android:theme="?actionBarStyle"
+        android:focusable="true" android:theme="?actionBarStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
