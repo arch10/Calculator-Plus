@@ -12,6 +12,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <!-- Green Theme-->
@@ -26,6 +27,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <!-- Blue Theme-->
@@ -40,6 +42,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <!-- Light Green Theme-->
@@ -54,6 +57,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <!-- Pink Theme-->
@@ -68,6 +72,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
 
@@ -83,6 +88,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <!-- Purple Theme-->
@@ -97,10 +103,11 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DisplayTextStyle</item>
         <item name="clearStyle">@style/DisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
-    <!-- Material 2 Theme-->
-    <style name="Material2" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Material Light Theme-->
+    <style name="MaterialLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/lightGray</item>
         <item name="colorAccent">@color/colorMaterialBlue</item>
@@ -111,6 +118,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/Material2DisplayTextStyle</item>
         <item name="clearStyle">@style/Material2DisplayClearStyle</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="Material2SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -132,6 +140,54 @@
         <item name="background">@color/colorWhite</item>
     </style>
 
+    <!-- Material Dark Theme-->
+    <style name="MaterialDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorDarkPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDarkPrimary</item>
+        <item name="colorAccent">@color/colorMaterialBlue</item>
+        <item name="actionBarStyle">@style/DefMyActionBar</item>
+        <item name="buttonPrimary">@style/DarkButtonStyle</item>
+        <item name="buttonSecondary">@style/DarkSecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/DarkAdvButtonStyle</item>
+        <item name="displayStyle">@style/DarkDisplayStyle</item>
+        <item name="displayTextStyle">@style/DarkDisplayTextStyle</item>
+        <item name="clearStyle">@style/DarkDisplayClearStyle</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="DarkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorDarkBackground</item>
+        <item name="android:textColor">@color/colorOffWhite</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DarkSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorDarkBackground</item>
+        <item name="android:textColor">@color/colorOffWhite</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DarkAdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?colorAccent</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/productsans</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DarkDisplayStyle">
+        <item name="android:background">?colorPrimary</item>
+    </style>
+
+    <style name="DarkDisplayTextStyle">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="DarkDisplayClearStyle">
+        <item name="android:background">@color/colorDarkPrimaryDark</item>
+    </style>
+
     <!-- Default Theme-->
     <style name="DefAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorWhite</item>
@@ -144,6 +200,7 @@
         <item name="displayStyle">@style/DisplayStyle</item>
         <item name="displayTextStyle">@style/DefDisplayTextStyle</item>
         <item name="clearStyle">@style/DefDisplayClearStyle</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">

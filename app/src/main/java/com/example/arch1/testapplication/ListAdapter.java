@@ -86,24 +86,28 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
         switch (theme) {
-            case "green":
+            case Theme.GREEN :
                 return R.color.colorMaterialGreen;
-            case "orange":
+            case Theme.ORANGE :
                 return R.color.colorMaterialOrange;
-            case "blue":
+            case Theme.BLUE :
                 return R.color.colorMaterialBlue;
-            case "red":
+            case Theme.RED :
                 return R.color.colorMaterialRed;
-            case "lgreen":
+            case Theme.LIGHT_GREEN :
                 return R.color.colorMaterialLGreen;
-            case "pink":
+            case Theme.PINK :
                 return R.color.colorMaterialPink;
-            case "purple":
+            case Theme.PURPLE :
                 return R.color.colorMaterialPurple;
-            case "material":
+            case Theme.MATERIAL_LIGHT :
                 return R.color.colorMaterialBlue;
-            default:
+            case Theme.MATERIAL_DARK :
+                return R.color.colorMaterialBlue;
+            case Theme.DEFAULT :
                 return R.color.colorMaterialSteelGrey;
+            default :
+                return R.color.colorMaterialBlue;
         }
     }
 }

@@ -130,7 +130,18 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
-                android:text="Material Design"
+                android:text="Material Light"
+                android:fontFamily="@font/liberation"
+                android:textSize="28sp" />
+
+            <RadioButton
+                android:id="@+id/rb_theme_material_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16sp"
+                android:layout_weight="1"
+                android:text="Material Dark"
                 android:fontFamily="@font/liberation"
                 android:textSize="28sp" />
 

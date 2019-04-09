@@ -9,24 +9,24 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class ThemeActivity extends AppCompatActivity {
 
     private RadioGroup themeGroup;
     private AppPreferences preferences;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = AppPreferences.getInstance(this);
-        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+        setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theme);
 
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         TypedValue typedValue = new TypedValue();
@@ -34,11 +34,11 @@ public class ThemeActivity extends AppCompatActivity {
         int color = a.getColor(0, 0);
         a.recycle();
 
-        if(themeName.equals("default")) {
+        if(themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if(themeName.equals("material") || themeName.equals("")) {
+        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         } else {
@@ -64,31 +64,34 @@ public class ThemeActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_theme_green:
-                        changeTheme("green");
+                        changeTheme(Theme.GREEN);
                         break;
                     case R.id.rb_theme_orange:
-                        changeTheme("orange");
+                        changeTheme(Theme.ORANGE);
                         break;
                     case R.id.rb_theme_blue:
-                        changeTheme("blue");
+                        changeTheme(Theme.BLUE);
                         break;
                     case R.id.rb_theme_red:
-                        changeTheme("red");
+                        changeTheme(Theme.RED);
                         break;
                     case R.id.rb_theme_lightgreen:
-                        changeTheme("lgreen");
+                        changeTheme(Theme.LIGHT_GREEN);
                         break;
                     case R.id.rb_theme_pink:
-                        changeTheme("pink");
+                        changeTheme(Theme.PINK);
                         break;
                     case R.id.rb_theme_purple:
-                        changeTheme("purple");
+                        changeTheme(Theme.PURPLE);
                         break;
                     case R.id.rb_theme_material2:
-                        changeTheme("material");
+                        changeTheme(Theme.MATERIAL_LIGHT);
+                        break;
+                    case R.id.rb_theme_material_dark:
+                        changeTheme(Theme.MATERIAL_DARK);
                         break;
                     case R.id.rb_theme_default:
-                        changeTheme("default");
+                        changeTheme(Theme.DEFAULT);
                 }
             }
         });
@@ -96,27 +99,8 @@ public class ThemeActivity extends AppCompatActivity {
     }
 
     private void changeTheme(String themeName) {
-
-        if (themeName.equals("green")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "green");
-        } else if (themeName.equals("orange")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "orange");
-        } else if (themeName.equals("blue")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "blue");
-        } else if(themeName.equals("red")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "red");
-        } else if (themeName.equals("lgreen")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "lgreen");
-        } else if (themeName.equals("pink")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "pink");
-        } else if (themeName.equals("purple")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "purple");
-        } else if (themeName.equals("material")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-        } else if (themeName.equals("default")) {
-            preferences.setStringPreference(AppPreferences.APP_THEME, "default");
-        }
-
+        Theme.changeTheme(themeName, preferences);
+        Toast.makeText(this, preferences.getStringPreference(AppPreferences.APP_THEME), Toast.LENGTH_SHORT).show();
         Intent intent[] = new Intent[3];
         intent[2] = new Intent(this, ThemeActivity.class);
         intent[1] = new Intent(this, SettingsActivity.class);
@@ -124,97 +108,43 @@ public class ThemeActivity extends AppCompatActivity {
         startActivities(intent);
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         finish();
-
-    }
-
-    private void setTheme(String themeName) {
-        if (themeName.equals("green")) {
-
-            setTheme(R.style.GreenAppTheme);
-
-        } else if (themeName.equals("orange")) {
-
-            setTheme(R.style.AppTheme);
-
-        } else if (themeName.equals("blue")) {
-
-            setTheme(R.style.BlueAppTheme);
-
-        } else if (themeName.equals("red")) {
-
-            setTheme(R.style.RedAppTheme);
-
-        } else if (themeName.equals("lgreen")) {
-
-            setTheme(R.style.LightGreenAppTheme);
-
-        } else if (themeName.equals("pink")) {
-
-            setTheme(R.style.PinkAppTheme);
-
-        } else if (themeName.equals("purple")) {
-
-            setTheme(R.style.PurpleAppTheme);
-
-        } else if (themeName.equals("material")) {
-
-            setTheme(R.style.Material2);
-
-        } else if (themeName.equals("default")) {
-
-            setTheme(R.style.DefAppTheme);
-
-        } else if (themeName.equals("")) {
-
-            setTheme(R.style.Material2);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-
-        }
     }
 
     private void checkSelectedTheme() {
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        if (themeName.equals("green")) {
-
-            themeGroup.check(R.id.rb_theme_green);
-
-        } else if (themeName.equals("orange")) {
-
-            themeGroup.check(R.id.rb_theme_orange);
-
-        } else if (themeName.equals("blue")) {
-
-            themeGroup.check(R.id.rb_theme_blue);
-
-        } else if(themeName.equals("red")) {
-
-            themeGroup.check(R.id.rb_theme_red);
-
-        } else if (themeName.equals("lgreen")) {
-
-            themeGroup.check(R.id.rb_theme_lightgreen);
-
-        } else if (themeName.equals("pink")) {
-
-            themeGroup.check(R.id.rb_theme_pink);
-
-        } else if (themeName.equals("purple")) {
-
-            themeGroup.check(R.id.rb_theme_purple);
-
-        } else if (themeName.equals("material")) {
-
-            themeGroup.check(R.id.rb_theme_material2);
-
-        } else if (themeName.equals("default")) {
-
-            themeGroup.check(R.id.rb_theme_default);
-
-        } else if (themeName.equals("")) {
-
-            themeGroup.check(R.id.rb_theme_default);
-
+        switch (themeName) {
+            case Theme.GREEN :
+                themeGroup.check(R.id.rb_theme_green);
+                break;
+            case Theme.ORANGE :
+                themeGroup.check(R.id.rb_theme_orange);
+                break;
+            case Theme.BLUE :
+                themeGroup.check(R.id.rb_theme_blue);
+                break;
+            case Theme.RED :
+                themeGroup.check(R.id.rb_theme_red);
+                break;
+            case Theme.LIGHT_GREEN :
+                themeGroup.check(R.id.rb_theme_lightgreen);
+                break;
+            case Theme.PINK :
+                themeGroup.check(R.id.rb_theme_pink);
+                break;
+            case Theme.PURPLE :
+                themeGroup.check(R.id.rb_theme_purple);
+                break;
+            case Theme.MATERIAL_LIGHT :
+                themeGroup.check(R.id.rb_theme_material2);
+                break;
+            case Theme.MATERIAL_DARK :
+                themeGroup.check(R.id.rb_theme_material_dark);
+                break;
+            case Theme.DEFAULT :
+                themeGroup.check(R.id.rb_theme_default);
+            default :
+                themeGroup.check(R.id.rb_theme_material2);
         }
     }
 

@@ -30,7 +30,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = AppPreferences.getInstance(this);
-        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+        setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
@@ -50,11 +50,11 @@ public class AboutActivity extends AppCompatActivity {
         color = a.getColor(0, 0);
         a.recycle();
 
-        if(themeName.equals("default")) {
+        if(themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if(themeName.equals("material") || themeName.equals("")) {
+        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         } else {
@@ -64,7 +64,6 @@ public class AboutActivity extends AppCompatActivity {
 
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
-
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,48 +93,4 @@ public class AboutActivity extends AppCompatActivity {
         });
     }
 
-    private void setTheme(String themeName) {
-        if (themeName.equals("green")) {
-
-            setTheme(R.style.GreenAppTheme);
-
-        } else if (themeName.equals("orange")) {
-
-            setTheme(R.style.AppTheme);
-
-        } else if (themeName.equals("blue")) {
-
-            setTheme(R.style.BlueAppTheme);
-
-        } else if (themeName.equals("red")) {
-
-            setTheme(R.style.RedAppTheme);
-
-        } else if (themeName.equals("lgreen")) {
-
-            setTheme(R.style.LightGreenAppTheme);
-
-        } else if (themeName.equals("pink")) {
-
-            setTheme(R.style.PinkAppTheme);
-
-        } else if (themeName.equals("purple")) {
-
-            setTheme(R.style.PurpleAppTheme);
-
-        } else if (themeName.equals("material")) {
-
-            setTheme(R.style.Material2);
-
-        } else if (themeName.equals("default")) {
-
-            setTheme(R.style.DefAppTheme);
-
-        } else if (themeName.equals("")) {
-
-            setTheme(R.style.Material2);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-
-        }
-    }
 }

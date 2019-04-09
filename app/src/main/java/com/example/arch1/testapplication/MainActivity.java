@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //set Activity Theme
         preferences = AppPreferences.getInstance(this);
-        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+        setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //set app default preferences
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
+            preferences.setStringPreference(AppPreferences.APP_THEME, Theme.MATERIAL_LIGHT);
             preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
             preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER, true);
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
@@ -895,7 +895,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                 if(!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if(equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith("\u03c0")) {
+                    if(equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
                         add(mulSymbol + memory);
                         break;
                     }
@@ -1154,51 +1154,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void setTheme(String themeName) {
-        if (themeName.equals("green")) {
-
-            setTheme(R.style.GreenAppTheme);
-
-        } else if (themeName.equals("orange")) {
-
-            setTheme(R.style.AppTheme);
-
-        } else if (themeName.equals("blue")) {
-
-            setTheme(R.style.BlueAppTheme);
-
-        } else if (themeName.equals("red")) {
-
-            setTheme(R.style.RedAppTheme);
-
-        } else if (themeName.equals("lgreen")) {
-
-            setTheme(R.style.LightGreenAppTheme);
-
-        } else if (themeName.equals("pink")) {
-
-            setTheme(R.style.PinkAppTheme);
-
-        } else if (themeName.equals("purple")) {
-
-            setTheme(R.style.PurpleAppTheme);
-
-        } else if (themeName.equals("material")) {
-
-            setTheme(R.style.Material2);
-
-        } else if (themeName.equals("default")) {
-
-            setTheme(R.style.DefAppTheme);
-
-        } else if (themeName.equals("")) {
-
-            setTheme(R.style.Material2);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (mPadViewPager == null || mPadViewPager.getCurrentItem() == 0) {
@@ -1258,7 +1213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int getTextColor() {
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        if (theme.equals("default") || theme.equals("material") || theme.equals("")) {
+        if (theme.equals(Theme.DEFAULT) || theme.equals(Theme.MATERIAL_LIGHT)) {
             return getResources().getColor(R.color.colorBlack);
         }
         return getResources().getColor(R.color.colorWhite);
