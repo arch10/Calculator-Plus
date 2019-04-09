@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.arch1.testapplication.ThemeActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?colorPrimary"
         android:theme="?actionBarStyle"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
@@ -29,11 +30,10 @@
         <RadioGroup
             android:id="@+id/rg_theme_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp">
+            android:paddingBottom="32dp">
 
             <RadioButton
                 android:id="@+id/rb_theme_default"
@@ -43,7 +43,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Classic"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
             <RadioButton
                 android:id="@+id/rb_theme_orange"
@@ -53,7 +54,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Orange"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -64,7 +66,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Green"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -75,7 +78,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Blue"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -86,7 +90,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Red"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
 
@@ -98,7 +103,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Light Green"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -109,7 +115,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Purple"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -120,7 +127,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Pink"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -130,10 +138,23 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
-                android:text="Material Design"
-                android:fontFamily="@font/liberation"
+                android:text="Material Light"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
+                android:textSize="28sp" />
+
+            <RadioButton
+                android:id="@+id/rb_theme_material_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16sp"
+                android:layout_weight="1"
+                android:text="Material Dark"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
         </RadioGroup>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,17 +2,16 @@ package com.example.arch1.testapplication;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,7 +29,7 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferences = AppPreferences.getInstance(this);
-        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+        setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
@@ -43,15 +42,21 @@ public class HistoryActivity extends AppCompatActivity {
         TypedValue typedValue = new TypedValue();
         TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
         int color = a.getColor(0, 0);
-        if(themeName.equals("default") || themeName.equals(""))
+        a.recycle();
+
+        if(themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
-        if(themeName.equals("material"))
-            color = getResources().getColor(R.color.colorMaterialDarkBlue);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
+            toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        } else {
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        }
 
         //setting toolbar style manually
-        //setToolBarStyle(preferences.getStringPreference(AppPreferences.APP_THEME));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -92,52 +97,6 @@ public class HistoryActivity extends AppCompatActivity {
 
         checkHistoryStatus();
     }
-
-    private void setTheme(String themeName) {
-        if (themeName.equals("green")) {
-
-            setTheme(R.style.GreenAppTheme);
-
-        } else if (themeName.equals("orange")) {
-
-            setTheme(R.style.AppTheme);
-
-        } else if (themeName.equals("blue")) {
-
-            setTheme(R.style.BlueAppTheme);
-
-        } else if (themeName.equals("red")) {
-
-            setTheme(R.style.RedAppTheme);
-
-        } else if (themeName.equals("lgreen")) {
-
-            setTheme(R.style.LightGreenAppTheme);
-
-        } else if (themeName.equals("pink")) {
-
-            setTheme(R.style.PinkAppTheme);
-
-        } else if (themeName.equals("purple")) {
-
-            setTheme(R.style.PurpleAppTheme);
-
-        } else if (themeName.equals("material")) {
-
-            setTheme(R.style.Material2);
-
-        } else if (themeName.equals("default")) {
-
-            setTheme(R.style.DefAppTheme);
-
-        } else if (themeName.equals("")) {
-
-            setTheme(R.style.Material2);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-
-        }
-    }
-
 
     private ArrayList<Calculations> reverseHistory(ArrayList<Calculations> calculations) {
         ArrayList<Calculations> list = new ArrayList<>();

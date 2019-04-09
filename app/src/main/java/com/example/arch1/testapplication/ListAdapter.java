@@ -1,14 +1,12 @@
 package com.example.arch1.testapplication;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,24 +86,28 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
         switch (theme) {
-            case "green":
+            case Theme.GREEN :
                 return R.color.colorMaterialGreen;
-            case "orange":
+            case Theme.ORANGE :
                 return R.color.colorMaterialOrange;
-            case "blue":
+            case Theme.BLUE :
                 return R.color.colorMaterialBlue;
-            case "red":
+            case Theme.RED :
                 return R.color.colorMaterialRed;
-            case "lgreen":
+            case Theme.LIGHT_GREEN :
                 return R.color.colorMaterialLGreen;
-            case "pink":
+            case Theme.PINK :
                 return R.color.colorMaterialPink;
-            case "purple":
+            case Theme.PURPLE :
                 return R.color.colorMaterialPurple;
-            case "material":
-                return R.color.colorMaterialDarkBlue;
-            default:
+            case Theme.MATERIAL_LIGHT :
+                return R.color.colorMaterialBlue;
+            case Theme.MATERIAL_DARK :
+                return R.color.colorMaterialBlue;
+            case Theme.DEFAULT :
                 return R.color.colorMaterialSteelGrey;
+            default :
+                return R.color.colorMaterialBlue;
         }
     }
 }
