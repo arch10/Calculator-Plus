@@ -143,7 +143,7 @@ public class Evaluate {
     }
 
     //rounds the provided number to user preference digits
-    private String roundMyAnswer(String ans) {
+    public static String roundMyAnswer(String ans) {
 
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num =  new BigDecimal(ans);
@@ -157,7 +157,7 @@ public class Evaluate {
     }
 
     //get user defined number precision
-    private int getPrecision(String precision) {
+    private static int getPrecision(String precision) {
 
         if (precision.equals("")) {
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
