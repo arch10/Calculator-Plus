@@ -1,9 +1,9 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Orange theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorMaterialLightOrange</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorMaterialLightOrange</item>
         <item name="colorAccent">@color/colorMaterialBlue</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -17,7 +17,7 @@
     <!-- Green Theme-->
     <style name="GreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorMaterialGreen</item>
-        <item name="colorPrimaryDark">@color/colorGreenDark2</item>
+        <item name="colorPrimaryDark">@color/colorMaterialGreen</item>
         <item name="colorAccent">@color/colorMaterialLightOrange</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -31,7 +31,7 @@
     <!-- Blue Theme-->
     <style name="BlueAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorBluePrimary</item>
-        <item name="colorPrimaryDark">@color/colorBlueDark</item>
+        <item name="colorPrimaryDark">@color/colorBluePrimary</item>
         <item name="colorAccent">@color/colorMaterialLGreen</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -45,7 +45,7 @@
     <!-- Light Green Theme-->
     <style name="LightGreenAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorLightGreenPrimary</item>
-        <item name="colorPrimaryDark">@color/colorLightGreenDark</item>
+        <item name="colorPrimaryDark">@color/colorLightGreenPrimary</item>
         <item name="colorAccent">@color/colorMaterialRed</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -59,7 +59,7 @@
     <!-- Pink Theme-->
     <style name="PinkAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPinkPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPinkDark</item>
+        <item name="colorPrimaryDark">@color/colorPinkPrimary</item>
         <item name="colorAccent">@color/colorMaterialLGreen</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -74,7 +74,7 @@
     <!-- Red Theme-->
     <style name="RedAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorMaterialRed</item>
-        <item name="colorPrimaryDark">@color/colorRedDark</item>
+        <item name="colorPrimaryDark">@color/colorMaterialRed</item>
         <item name="colorAccent">@color/colorMaterialGreen</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -88,7 +88,7 @@
     <!-- Purple Theme-->
     <style name="PurpleAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorMaterialPurple</item>
-        <item name="colorPrimaryDark">@color/colorPurpleDark</item>
+        <item name="colorPrimaryDark">@color/colorMaterialPurple</item>
         <item name="colorAccent">@color/colorMaterialYellow</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>
@@ -102,7 +102,7 @@
     <!-- Material 2 Theme-->
     <style name="Material2" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorWhite</item>
-        <item name="colorPrimaryDark">@color/colorMaterialDarkBlue</item>
+        <item name="colorPrimaryDark">@color/lightGray</item>
         <item name="colorAccent">@color/colorMaterialBlue</item>
         <item name="actionBarStyle">@style/DefMyActionBar</item>
         <item name="buttonPrimary">@style/ButtonStyle</item>

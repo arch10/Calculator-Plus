@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Material2" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorMaterialBlue</item>
+        <item name="actionBarStyle">@style/DefMyActionBar</item>
+        <item name="buttonPrimary">@style/ButtonStyle</item>
+        <item name="buttonSecondary">@style/Material2SecondaryButtonStyle</item>
+        <item name="buttonAdv">@style/AdvButtonStyle</item>
+        <item name="displayStyle">@style/DisplayStyle</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="displayTextStyle">@style/Material2DisplayTextStyle</item>
+        <item name="clearStyle">@style/Material2DisplayClearStyle</item>
+    </style>
+</resources>

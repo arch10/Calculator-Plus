@@ -49,15 +49,21 @@ public class SettingsActivity extends AppCompatActivity {
         TypedValue typedValue = new TypedValue();
         TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
         int color = a.getColor(0, 0);
-        if(themeName.equals("default") || themeName.equals(""))
-            color = getResources().getColor(R.color.colorMaterialSteelGrey);
-        if(themeName.equals("material"))
-            color = getResources().getColor(R.color.colorMaterialDarkBlue);
         a.recycle();
 
+        if(themeName.equals("default")) {
+            color = getResources().getColor(R.color.colorMaterialSteelGrey);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        } else if(themeName.equals("material") || themeName.equals("")) {
+            toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        } else {
+            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        }
+
         //setting toolbar style manually
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setBackgroundColor(color);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
