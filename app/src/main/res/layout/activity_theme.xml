@@ -43,7 +43,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Classic"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
             <RadioButton
                 android:id="@+id/rb_theme_orange"
@@ -53,7 +54,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Orange"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -64,7 +66,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Green"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -75,7 +78,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Blue"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -86,7 +90,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Red"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
 
@@ -98,7 +103,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Light Green"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -109,7 +115,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Purple"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -120,7 +127,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Pink"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -131,7 +139,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Material Light"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
             <RadioButton
@@ -142,7 +151,8 @@
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
                 android:text="Material Dark"
-                android:fontFamily="@font/liberation"
+                android:textColor="?android:textColorSecondary"
+                android:fontFamily="@font/productsans"
                 android:textSize="28sp" />
 
         </RadioGroup>

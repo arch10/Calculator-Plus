@@ -12,6 +12,7 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="displayTextStyle">@style/Material2DisplayTextStyle</item>
         <item name="clearStyle">@style/Material2DisplayClearStyle</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColorSecondary">@color/gray</item>
     </style>
 </resources>

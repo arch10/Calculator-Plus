@@ -40,8 +40,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/productsans"
                 android:text="No History"
                 android:textSize="18dp"
+                android:textColor="?android:textColor"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"/>
         </LinearLayout>

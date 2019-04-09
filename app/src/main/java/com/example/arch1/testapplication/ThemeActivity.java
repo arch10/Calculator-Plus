@@ -100,7 +100,6 @@ public class ThemeActivity extends AppCompatActivity {
 
     private void changeTheme(String themeName) {
         Theme.changeTheme(themeName, preferences);
-        Toast.makeText(this, preferences.getStringPreference(AppPreferences.APP_THEME), Toast.LENGTH_SHORT).show();
         Intent intent[] = new Intent[3];
         intent[2] = new Intent(this, ThemeActivity.class);
         intent[1] = new Intent(this, SettingsActivity.class);
@@ -143,6 +142,7 @@ public class ThemeActivity extends AppCompatActivity {
                 break;
             case Theme.DEFAULT :
                 themeGroup.check(R.id.rb_theme_default);
+                break;
             default :
                 themeGroup.check(R.id.rb_theme_material2);
         }
