@@ -2,7 +2,7 @@
 <resources>
 
     <!--Primary Colors-->
-    <color name="colorPrimary">#fc964d</color>
+    <color name="colorOrangePrimary">#fc964d</color>
     <color name="colorPinkPrimary">#EE50D9</color>
     <color name="colorBluePrimary">#389BFF</color>
     <color name="colorGreenPrimary">#22CBA0</color>
@@ -11,7 +11,7 @@
 
 
     <!--Primary Dark Colors-->
-    <color name="colorPrimaryDark">#c46a0f</color>
+    <color name="colorOrangeDark">#c46a0f</color>
     <color name="colorGreenDark">#0d5442</color>
     <color name="colorBlueDark">#18426d</color>
     <color name="colorLightGreenDark">#406300</color>

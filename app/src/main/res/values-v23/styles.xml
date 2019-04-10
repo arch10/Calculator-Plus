@@ -14,5 +14,6 @@
         <item name="clearStyle">@style/Material2DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorMaterialBlue</item>
     </style>
 </resources>

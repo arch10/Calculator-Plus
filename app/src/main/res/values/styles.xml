@@ -14,6 +14,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorOrangeDark</item>
     </style>
 
     <!-- Green Theme-->
@@ -30,6 +32,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorGreenDark2</item>
     </style>
 
     <!-- Blue Theme-->
@@ -46,6 +50,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorBlueDark</item>
     </style>
 
     <!-- Light Green Theme-->
@@ -62,6 +68,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorLightGreenDark</item>
     </style>
 
     <!-- Pink Theme-->
@@ -78,6 +86,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorPinkDark</item>
     </style>
 
 
@@ -95,6 +105,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorRedDark</item>
     </style>
 
     <!-- Purple Theme-->
@@ -111,6 +123,8 @@
         <item name="clearStyle">@style/DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
+        <item name="clearColor">@color/colorPurpleDark</item>
     </style>
 
     <!-- Material Light Theme-->
@@ -127,6 +141,7 @@
         <item name="clearStyle">@style/Material2DisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorMaterialBlue</item>
     </style>
 
     <style name="Material2SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -162,6 +177,7 @@
         <item name="clearStyle">@style/DarkDisplayClearStyle</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textColorSecondary">@color/colorOffWhite</item>
+        <item name="iconColor">@color/colorMaterialBlue</item>
     </style>
 
     <style name="DarkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -211,6 +227,7 @@
         <item name="clearStyle">@style/DefDisplayClearStyle</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textColorSecondary">@color/gray</item>
+        <item name="iconColor">@color/colorWhite</item>
     </style>
 
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
@@ -279,7 +296,7 @@
     </style>
 
     <style name="DisplayClearStyle">
-        <item name="android:background">?colorPrimaryDark</item>
+        <item name="android:background">?clearColor</item>
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">

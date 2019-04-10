@@ -6,4 +6,6 @@
     <attr name="displayTextStyle" format="reference"/>
     <attr name="clearStyle" format="reference"/>
     <attr name="buttonAdv" format="reference"/>
+    <attr name="iconColor" format="color"/>
+    <attr name="clearColor" format="color"/>
 </resources>
