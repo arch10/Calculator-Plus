@@ -6,8 +6,10 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -34,26 +36,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView result;
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
     private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
-    private Button open, close, percent;
+    private Button open, close, percent, ms, mr, mPlus, mMinus;
     private EditText equation;
     private String equ = "", tempEqu, tempResult = "";
     private View view;
     private Animator anim;
     private View mainLayout, slidingLayout;
     private AppPreferences preferences;
-    private android.support.v7.widget.Toolbar toolbar;
+    private androidx.appcompat.widget.Toolbar toolbar;
     private boolean firstLaunch;
     private Menu menu;
     private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
     private History history;
     private ViewPager mPadViewPager;
 
+    private static final String mulSymbol = "\u00d7";
+    private static final String piSymbol = "\u03c0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //set Activity Theme
         preferences = AppPreferences.getInstance(this);
-        setTheme(preferences.getStringPreference(AppPreferences.APP_THEME));
+        setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //set app default preferences
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
+            preferences.setStringPreference(AppPreferences.APP_THEME, Theme.MATERIAL_LIGHT);
             preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
             preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER, true);
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
@@ -880,6 +885,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 }
                 break;
+
+            case R.id.ms:
+                if (!result.getText().toString().isEmpty()) {
+                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
+                }
+                break;
+            case R.id.mr:
+                String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                if(!isEquationEmpty()) {
+                    c = equ.charAt(equ.length() - 1);
+                    if(equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
+                        add(mulSymbol + memory);
+                        break;
+                    }
+                    if(!isNumber(c)) {
+                        add(memory);
+                        break;
+                    }
+                } else {
+                    add(memory);
+                }
+                break;
+            case R.id.mplus:
+                if (!result.getText().toString().isEmpty()) {
+                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
+                        Double res = Double.parseDouble(result.getText().toString());
+                        res = init + res;
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    }
+                }
+                break;
+            case R.id.mminus:
+                if (!result.getText().toString().isEmpty()) {
+                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
+                        Double res = Double.parseDouble(result.getText().toString());
+                        res = init - res;
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    }
+                }
+                break;
+
         }
     }
 
@@ -1110,51 +1158,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void setTheme(String themeName) {
-        if (themeName.equals("green")) {
-
-            setTheme(R.style.GreenAppTheme);
-
-        } else if (themeName.equals("orange")) {
-
-            setTheme(R.style.AppTheme);
-
-        } else if (themeName.equals("blue")) {
-
-            setTheme(R.style.BlueAppTheme);
-
-        } else if (themeName.equals("red")) {
-
-            setTheme(R.style.RedAppTheme);
-
-        } else if (themeName.equals("lgreen")) {
-
-            setTheme(R.style.LightGreenAppTheme);
-
-        } else if (themeName.equals("pink")) {
-
-            setTheme(R.style.PinkAppTheme);
-
-        } else if (themeName.equals("purple")) {
-
-            setTheme(R.style.PurpleAppTheme);
-
-        } else if (themeName.equals("material")) {
-
-            setTheme(R.style.Material2);
-
-        } else if (themeName.equals("default")) {
-
-            setTheme(R.style.DefAppTheme);
-
-        } else if (themeName.equals("")) {
-
-            setTheme(R.style.Material2);
-            preferences.setStringPreference(AppPreferences.APP_THEME, "material");
-
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (mPadViewPager == null || mPadViewPager.getCurrentItem() == 0) {
@@ -1214,7 +1217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int getTextColor() {
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        if (theme.equals("default") || theme.equals("material") || theme.equals("")) {
+        if (theme.equals(Theme.DEFAULT) || theme.equals(Theme.MATERIAL_LIGHT)) {
             return getResources().getColor(R.color.colorBlack);
         }
         return getResources().getColor(R.color.colorWhite);
@@ -1262,6 +1265,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sqrt = slidingLayout.findViewById(R.id.sqroot);
         cbrt = slidingLayout.findViewById(R.id.cuberoot);
         pi = slidingLayout.findViewById(R.id.pi);
+        ms = slidingLayout.findViewById(R.id.ms);
+        mr = slidingLayout.findViewById(R.id.mr);
+        mPlus = slidingLayout.findViewById(R.id.mplus);
+        mMinus = slidingLayout.findViewById(R.id.mminus);
 
         view = findViewById(R.id.view2);
         toolbar = findViewById(R.id.toolbar);
@@ -1304,6 +1311,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sqrt.setOnClickListener(this);
         cbrt.setOnClickListener(this);
         pi.setOnClickListener(this);
+        ms.setOnClickListener(this);
+        mr.setOnClickListener(this);
+        mPlus.setOnClickListener(this);
+        mMinus.setOnClickListener(this);
 
     }
 
@@ -1394,8 +1405,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             item.setTitle("DEG");
             ifDegree = true;
         }
-        afterTextChanged(equation.getText());
         preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
+        afterTextChanged(equation.getText());
     }
 
     @Override
