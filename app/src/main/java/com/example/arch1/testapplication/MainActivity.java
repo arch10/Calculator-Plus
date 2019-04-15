@@ -29,7 +29,10 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
 import java.util.Stack;
-import java.util.regex.Pattern;
+
+import static com.example.arch1.testapplication.Evaluate.formatString;
+import static com.example.arch1.testapplication.Evaluate.isAnError;
+import static com.example.arch1.testapplication.Evaluate.isNumber;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
 
@@ -129,15 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //adding text change listener
         equation.addTextChangedListener(this);
 
-    }
-
-    private boolean isAnError(String string) {
-        if (string.equals("Invalid Expression") ||
-                string.equals("Domain error") ||
-                string.equals("Cannot divide by 0") ||
-                string.equals("Number too large"))
-            return true;
-        return false;
     }
 
     @Override
@@ -1330,25 +1324,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    //adds number formatter (,) to the number string
-    private String formatString(String str) {
-        int index = str.indexOf('.');
-        if (index == -1)
-            index = str.length();
-        int temp = 0;
-        for (int i = index - 1; i > 0; i--) {
-            temp++;
-
-            if (temp % 3 == 0) {
-                temp = 0;
-                if (i == 1 && str.charAt(0) == '-')
-                    break;
-                str = str.substring(0, i) + "," + str.substring(i);
-            }
-        }
-        return str;
-    }
-
     //adds number formatter (,) to the equation
     private String formatEquation(String equation) {
         Stack<String> stack = new Stack<>();
@@ -1415,29 +1390,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    private static boolean isNumber(String string) {
-        return Pattern.matches("-?\\d+(\\.\\d+)?", string);
-    }
-
-    private boolean isNumber(char c) {
-        switch (c) {
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-            case '0':
-            case 'e':
-            case '\u03c0':
-                return true;
-        }
-        return false;
     }
 
     @Override

@@ -111,7 +111,7 @@ public class Evaluate {
     }
 
     //adds thousand separator
-    private static String formatString(String str) {
+    static String formatString(String str) {
         int index = str.indexOf('.');
         if(index == -1)
             index = str.length();
@@ -130,7 +130,7 @@ public class Evaluate {
     }
 
     //checks if the string provided is a number
-    private static boolean isNumber(String string) {
+    static boolean isNumber(String string) {
         return Pattern.matches("-?\\d+(\\.\\d+)?", string);
     }
 
@@ -248,7 +248,7 @@ public class Evaluate {
     }
 
     //checks if the given char is a number or a constant
-    private boolean isNumber(char c) {
+    static boolean isNumber(char c) {
         switch (c) {
             case '1':
             case '2':
@@ -932,6 +932,13 @@ public class Evaluate {
 
         errMsg = "Invalid Expression";
         return null;
+    }
+
+    static boolean isAnError(String string) {
+        return  (string.equals("Invalid Expression") ||
+                string.equals("Domain error") ||
+                string.equals("Cannot divide by 0") ||
+                string.equals("Number too large"));
     }
 
 }
