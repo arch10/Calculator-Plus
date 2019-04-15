@@ -903,18 +903,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.mplus:
                 if (!result.getText().toString().isEmpty()) {
-                    Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                    Double res = Double.parseDouble(result.getText().toString());
-                    res = init + res;
-                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
+                        Double res = Double.parseDouble(result.getText().toString());
+                        res = init + res;
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    }
                 }
                 break;
             case R.id.mminus:
                 if (!result.getText().toString().isEmpty()) {
-                    Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                    Double res = Double.parseDouble(result.getText().toString());
-                    res = init - res;
-                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
+                        Double res = Double.parseDouble(result.getText().toString());
+                        res = init - res;
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                    }
                 }
                 break;
 
