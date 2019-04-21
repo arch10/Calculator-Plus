@@ -22,12 +22,12 @@ public class Evaluate {
         if (!equ.equals("")) {
             equ = equ.replace("÷", "/");
             equ = equ.replace("\u00d7", "*");
-            equ = equ.replace(",","");
+            equ = equ.replace(",", "");
 
             String ans = new Evaluate().getAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
-            if(enableNumberFormatter)
+            if (enableNumberFormatter)
                 return formatString(ans);
             return ans;
         }
@@ -56,9 +56,9 @@ public class Evaluate {
         int a = 0, b = 0;
 
         //if (-) appears in the end, remove it
-        if(tempEqu.endsWith("-")) {
-            tempEqu = tempEqu.substring(0,tempEqu.length()-1);
-            if(balancedParenthesis(tempEqu)) {
+        if (tempEqu.endsWith("-")) {
+            tempEqu = tempEqu.substring(0, tempEqu.length() - 1);
+            if (balancedParenthesis(tempEqu)) {
                 return tempEqu;
             }
         }
@@ -111,26 +111,26 @@ public class Evaluate {
     }
 
     //adds thousand separator
-    private static String formatString(String str) {
+    static String formatString(String str) {
         int index = str.indexOf('.');
-        if(index == -1)
+        if (index == -1)
             index = str.length();
         int temp = 0;
-        for(int i = index-1; i>0; i--){
+        for (int i = index - 1; i > 0; i--) {
             temp++;
 
-            if(temp%3 == 0){
+            if (temp % 3 == 0) {
                 temp = 0;
-                if(i==1 && str.charAt(0) == '-')
+                if (i == 1 && str.charAt(0) == '-')
                     break;
-                str = str.substring(0,i)+","+str.substring(i);
+                str = str.substring(0, i) + "," + str.substring(i);
             }
         }
         return str;
     }
 
     //checks if the string provided is a number
-    private static boolean isNumber(String string) {
+    static boolean isNumber(String string) {
         return Pattern.matches("-?\\d+(\\.\\d+)?", string);
     }
 
@@ -146,12 +146,12 @@ public class Evaluate {
     public static String roundMyAnswer(String ans) {
 
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
-        BigDecimal num =  new BigDecimal(ans);
+        BigDecimal num = new BigDecimal(ans);
 
         num = num.setScale(getPrecision(precision), RoundingMode.HALF_UP);
         num = num.stripTrailingZeros();
 
-        if(num.compareTo(new BigDecimal("0")) == 0)
+        if (num.compareTo(new BigDecimal("0")) == 0)
             return "0";
         return num.toPlainString();
     }
@@ -206,7 +206,7 @@ public class Evaluate {
     //returns factorial of a number
     private static BigInteger factorial(int n) {
         BigInteger offset = new BigInteger("1");
-        if(n < 0){
+        if (n < 0) {
             offset = new BigInteger("-1");
             n = -n;
         }
@@ -248,7 +248,7 @@ public class Evaluate {
     }
 
     //checks if the given char is a number or a constant
-    private boolean isNumber(char c) {
+    static boolean isNumber(char c) {
         switch (c) {
             case '1':
             case '2':
@@ -273,8 +273,8 @@ public class Evaluate {
         equation = equation.replaceAll("e", Math.E + "");
         equation = equation.replaceAll("\u03c0", "" + Math.PI);
         equation = equation.replaceAll("-", "+-");
-        equation = equation.replaceAll("\\^\\+-","^-");
-        equation = equation.replaceAll("\\(\\+-","(-");
+        equation = equation.replaceAll("\\^\\+-", "^-");
+        equation = equation.replaceAll("\\(\\+-", "(-");
         equation = equation.replaceAll("(\\*\\+)", "*");
         equation = equation.replaceAll("(\\/\\+)", "/");
         equation = equation.replaceAll("(\\+\\+)", "+");
@@ -283,8 +283,8 @@ public class Evaluate {
         equation = equation.replaceAll("\\-\\)", ")");
         equation = equation.replaceAll("\\/\\)", ")");
         equation = equation.replaceAll("\\*\\)", ")");
-        equation = equation.replaceAll("\\.\\)",")");
-        equation = equation.replaceAll("\\^\\)",")");
+        equation = equation.replaceAll("\\.\\)", ")");
+        equation = equation.replaceAll("\\^\\)", ")");
 
         char c = equation.charAt(equation.length() - 1);
 
@@ -367,7 +367,7 @@ public class Evaluate {
 
     //solves sub-equations without brackets
     //this is the method where actual calculations happen
-    private String getValue(Stack<String> token) throws Exception{
+    private String getValue(Stack<String> token) throws Exception {
         String temp;
         Stack<String> stack = new Stack<>();
         Stack<String> workingStack = token;
@@ -733,30 +733,30 @@ public class Evaluate {
                 case "%":
                     num1 = Double.parseDouble(stack.pop());
 
-                    if(stack.size() >=2 && (stack.peek().equals("+") || stack.peek().equals("-"))) {
+                    if (stack.size() >= 2 && (stack.peek().equals("+") || stack.peek().equals("-"))) {
 
                         String op = stack.pop();
                         Stack<String> tempStack = new Stack<>();
-                        while (!stack.empty()){
+                        while (!stack.empty()) {
                             tempStack.push(stack.pop());
                         }
 
                         String tempAns = getValue(tempStack);
-                        if(tempAns == null) {
+                        if (tempAns == null) {
                             errMsg = "Invalid Expression";
                             return null;
                         }
 
                         Double num = Double.parseDouble(tempAns);
-                        num1 = ((num1/100) * num);
+                        num1 = ((num1 / 100) * num);
 
-                        if(op.equals("+")){
-                            num+=num1;
-                        } else if(op.equals("-")) {
-                            num-=num1;
+                        if (op.equals("+")) {
+                            num += num1;
+                        } else if (op.equals("-")) {
+                            num -= num1;
                         }
 
-                        stack.push(num+"");
+                        stack.push(num + "");
                         break;
                     }
                     num1 = num1 / 100;
@@ -768,7 +768,7 @@ public class Evaluate {
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
-                    if(a > 50){
+                    if (a > 50) {
                         errMsg = "Number too large";
                         return null;
                     }
@@ -839,7 +839,7 @@ public class Evaluate {
                     return null;
                 }
 
-                num1 = num1.divide(num2,15,RoundingMode.HALF_UP);
+                num1 = num1.divide(num2, 15, RoundingMode.HALF_UP);
                 val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
@@ -932,6 +932,13 @@ public class Evaluate {
 
         errMsg = "Invalid Expression";
         return null;
+    }
+
+    static boolean isAnError(String string) {
+        return (string.equals("Invalid Expression") ||
+                string.equals("Domain error") ||
+                string.equals("Cannot divide by 0") ||
+                string.equals("Number too large"));
     }
 
 }

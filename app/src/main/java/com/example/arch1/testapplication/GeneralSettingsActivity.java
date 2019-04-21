@@ -1,10 +1,14 @@
 package com.example.arch1.testapplication;
 
 import android.content.res.TypedArray;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -30,15 +34,15 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
         TypedValue typedValue = new TypedValue();
-        TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         int color = a.getColor(0, 0);
         a.recycle();
 
-        if(themeName.equals(Theme.DEFAULT)) {
+        if (themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
+        } else if (themeName.equals(Theme.MATERIAL_LIGHT)) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         } else {
@@ -68,14 +72,14 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         numberFormatterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER,isChecked);
+                preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER, isChecked);
             }
         });
 
         smartCalculationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!isChecked){
+                if (!isChecked) {
                     //show warning
                     AlertDialog.Builder builder = new AlertDialog.Builder(GeneralSettingsActivity.this);
                     builder.setTitle("Warning")
@@ -83,10 +87,10 @@ public class GeneralSettingsActivity extends AppCompatActivity {
                                     " will no longer be able to auto-complete or auto-correct " +
                                     "your equations. We recommend to enable this feature for faster and " +
                                     "easy usage of Calculator Plus.")
-                    .setPositiveButton("Ok",null);
+                            .setPositiveButton("Ok", null);
                     builder.show();
                 }
-                preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS,isChecked);
+                preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, isChecked);
             }
         });
 

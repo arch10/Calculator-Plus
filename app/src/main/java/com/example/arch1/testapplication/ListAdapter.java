@@ -1,9 +1,11 @@
 package com.example.arch1.testapplication;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,27 +88,27 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         String theme = preferences.getStringPreference(AppPreferences.APP_THEME);
 
         switch (theme) {
-            case Theme.GREEN :
+            case Theme.GREEN:
                 return R.color.colorMaterialGreen;
-            case Theme.ORANGE :
+            case Theme.ORANGE:
                 return R.color.colorMaterialOrange;
-            case Theme.BLUE :
+            case Theme.BLUE:
                 return R.color.colorMaterialBlue;
-            case Theme.RED :
+            case Theme.RED:
                 return R.color.colorMaterialRed;
-            case Theme.LIGHT_GREEN :
+            case Theme.LIGHT_GREEN:
                 return R.color.colorMaterialLGreen;
-            case Theme.PINK :
+            case Theme.PINK:
                 return R.color.colorMaterialPink;
-            case Theme.PURPLE :
+            case Theme.PURPLE:
                 return R.color.colorMaterialPurple;
-            case Theme.MATERIAL_LIGHT :
+            case Theme.MATERIAL_LIGHT:
                 return R.color.colorMaterialBlue;
-            case Theme.MATERIAL_DARK :
+            case Theme.MATERIAL_DARK:
                 return R.color.colorMaterialBlue;
-            case Theme.DEFAULT :
+            case Theme.DEFAULT:
                 return R.color.colorMaterialSteelGrey;
-            default :
+            default:
                 return R.color.colorMaterialBlue;
         }
     }

@@ -2,11 +2,15 @@ package com.example.arch1.testapplication;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,15 +44,15 @@ public class HistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TypedValue typedValue = new TypedValue();
-        TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         int color = a.getColor(0, 0);
         a.recycle();
 
-        if(themeName.equals(Theme.DEFAULT)) {
+        if (themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
+        } else if (themeName.equals(Theme.MATERIAL_LIGHT)) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         } else {
@@ -112,7 +116,7 @@ public class HistoryActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.history_menu, menu);
         delItem = menu.getItem(0);
 
-        if(mAdapter.getItemCount() == 0){
+        if (mAdapter.getItemCount() == 0) {
             menu.getItem(0).setVisible(false);
         }
 
@@ -131,11 +135,11 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void checkHistoryStatus() {
-        if(mAdapter.getItemCount() == 0){
+        if (mAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             noHistoryLayout.setVisibility(View.VISIBLE);
 
-            if(delItem!=null){
+            if (delItem != null) {
                 delItem.setVisible(false);
             }
         }

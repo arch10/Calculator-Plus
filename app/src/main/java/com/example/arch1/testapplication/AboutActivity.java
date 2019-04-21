@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -46,15 +47,15 @@ public class AboutActivity extends AppCompatActivity {
         context = this;
 
         TypedValue typedValue = new TypedValue();
-        TypedArray a = obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         color = a.getColor(0, 0);
         a.recycle();
 
-        if(themeName.equals(Theme.DEFAULT)) {
+        if (themeName.equals(Theme.DEFAULT)) {
             color = getResources().getColor(R.color.colorMaterialSteelGrey);
             toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if(themeName.equals(Theme.MATERIAL_LIGHT)) {
+        } else if (themeName.equals(Theme.MATERIAL_LIGHT)) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         } else {
