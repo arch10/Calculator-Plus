@@ -17,8 +17,10 @@ package com.example.arch1.testapplication;
  */
 
 import android.content.Context;
+
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;

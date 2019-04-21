@@ -887,13 +887,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.mr:
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
-                if(!isEquationEmpty()) {
+                if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if(equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
+                    if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
                         add(mulSymbol + memory);
                         break;
                     }
-                    if(!isNumber(c)) {
+                    if (!isNumber(c)) {
                         add(memory);
                         break;
                     }
@@ -903,7 +903,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.mplus:
                 if (!result.getText().toString().isEmpty()) {
-                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                    if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
                         Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
                         Double res = Double.parseDouble(result.getText().toString());
                         res = init + res;
@@ -913,7 +913,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.mminus:
                 if (!result.getText().toString().isEmpty()) {
-                    if(!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                    if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
                         Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
                         Double res = Double.parseDouble(result.getText().toString());
                         res = init - res;

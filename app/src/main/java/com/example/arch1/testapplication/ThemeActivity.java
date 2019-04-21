@@ -84,7 +84,7 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
 
     private void changeTheme(String themeName) {
         String currTheme = preferences.getStringPreference(AppPreferences.APP_THEME);
-        if(currTheme.equals(themeName))
+        if (currTheme.equals(themeName))
             return;
         Theme.changeTheme(themeName, preferences);
         Intent intent[] = new Intent[3];

@@ -16,64 +16,64 @@ class Theme {
 
     static int getTheme(String themeName) {
         switch (themeName) {
-            case GREEN :
+            case GREEN:
                 return R.style.GreenAppTheme;
-            case ORANGE :
+            case ORANGE:
                 return R.style.AppTheme;
-            case BLUE :
+            case BLUE:
                 return R.style.BlueAppTheme;
-            case RED :
+            case RED:
                 return R.style.RedAppTheme;
-            case LIGHT_GREEN :
+            case LIGHT_GREEN:
                 return R.style.LightGreenAppTheme;
-            case PINK :
+            case PINK:
                 return R.style.PinkAppTheme;
-            case PURPLE :
+            case PURPLE:
                 return R.style.PurpleAppTheme;
-            case MATERIAL_LIGHT :
+            case MATERIAL_LIGHT:
                 return R.style.MaterialLight;
-            case MATERIAL_DARK :
+            case MATERIAL_DARK:
                 return R.style.MaterialDark;
-            case DEFAULT :
+            case DEFAULT:
                 return R.style.DefAppTheme;
-            default :
+            default:
                 return R.style.MaterialLight;
         }
     }
 
     static void changeTheme(String themeName, AppPreferences preferences) {
         switch (themeName) {
-            case GREEN :
+            case GREEN:
                 preferences.setStringPreference(AppPreferences.APP_THEME, GREEN);
                 break;
-            case ORANGE :
+            case ORANGE:
                 preferences.setStringPreference(AppPreferences.APP_THEME, ORANGE);
                 break;
-            case BLUE :
+            case BLUE:
                 preferences.setStringPreference(AppPreferences.APP_THEME, BLUE);
                 break;
-            case RED :
+            case RED:
                 preferences.setStringPreference(AppPreferences.APP_THEME, RED);
                 break;
-            case LIGHT_GREEN :
+            case LIGHT_GREEN:
                 preferences.setStringPreference(AppPreferences.APP_THEME, LIGHT_GREEN);
                 break;
-            case PINK :
+            case PINK:
                 preferences.setStringPreference(AppPreferences.APP_THEME, PINK);
                 break;
-            case PURPLE :
+            case PURPLE:
                 preferences.setStringPreference(AppPreferences.APP_THEME, PURPLE);
                 break;
-            case MATERIAL_LIGHT :
+            case MATERIAL_LIGHT:
                 preferences.setStringPreference(AppPreferences.APP_THEME, MATERIAL_LIGHT);
                 break;
-            case MATERIAL_DARK :
+            case MATERIAL_DARK:
                 preferences.setStringPreference(AppPreferences.APP_THEME, MATERIAL_DARK);
                 break;
-            case DEFAULT :
+            case DEFAULT:
                 preferences.setStringPreference(AppPreferences.APP_THEME, DEFAULT);
                 break;
-            default :
+            default:
                 preferences.setStringPreference(AppPreferences.APP_THEME, MATERIAL_LIGHT);
         }
     }
@@ -84,37 +84,37 @@ class Theme {
         data.setImg(R.drawable.ic_outline_color_lens_24px);
 
         switch (themeName) {
-            case GREEN :
+            case GREEN:
                 data.setBody("Green");
                 break;
-            case ORANGE :
+            case ORANGE:
                 data.setBody("Orange");
                 break;
-            case BLUE :
+            case BLUE:
                 data.setBody("Blue");
                 break;
-            case RED :
+            case RED:
                 data.setBody("Red");
                 break;
-            case LIGHT_GREEN :
+            case LIGHT_GREEN:
                 data.setBody("Light Green");
                 break;
-            case PINK :
+            case PINK:
                 data.setBody("Pink");
                 break;
-            case PURPLE :
+            case PURPLE:
                 data.setBody("Purple");
                 break;
-            case MATERIAL_LIGHT :
+            case MATERIAL_LIGHT:
                 data.setBody("Material Light");
                 break;
-            case MATERIAL_DARK :
+            case MATERIAL_DARK:
                 data.setBody("Material Dark");
                 break;
-            case DEFAULT :
+            case DEFAULT:
                 data.setBody("Classic");
                 break;
-            default :
+            default:
                 data.setBody("Material Light");
         }
 
