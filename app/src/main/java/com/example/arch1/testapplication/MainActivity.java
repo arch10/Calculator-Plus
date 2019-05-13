@@ -882,11 +882,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.ms:
                 if (!result.getText().toString().isEmpty()) {
-                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
+                    if (isNumber(result.getText().toString()))
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
                 }
                 break;
             case R.id.mr:
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                if(!isNumber(memory)) {
+                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                    break;
+                }
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
                     if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
@@ -904,8 +909,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.mplus:
                 if (!result.getText().toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
-                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                        Double res = Double.parseDouble(result.getText().toString());
+                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m2 = result.getText().toString();
+                        if(!isNumber(m2)) {
+                            break;
+                        }
+                        if(!isNumber(m1)) {
+                            preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                            break;
+                        }
+                        Double init = Double.parseDouble(m1);
+                        Double res = Double.parseDouble(m2);
                         res = init + res;
                         preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
                     }
@@ -914,6 +928,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.mminus:
                 if (!result.getText().toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m2 = result.getText().toString();
+                        if(!isNumber(m2)) {
+                            break;
+                        }
+                        if(!isNumber(m1)) {
+                            preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                            break;
+                        }
                         Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
                         Double res = Double.parseDouble(result.getText().toString());
                         res = init - res;
