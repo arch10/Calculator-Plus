@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -203,10 +206,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
                         break;
-                    }
-                    if (!res.equals("")) {
+                    }else {
                         String historyEqu = equ;
                         String historyVal = res;
+                        if(!Evaluate.balancedParenthesis(historyEqu)) {
+                            historyEqu = Evaluate.tryBalancingBrackets(historyEqu);
+                        }
                         history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
                         tempResult = res;
                         equ = "";
@@ -1136,6 +1141,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
         this.menu = menu;
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getTextColor(), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
         return true;
     }
 
@@ -1169,10 +1181,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.share:
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
+                String msg = shareExpression();
+                if(msg == null) {
+                    Toast.makeText(this, "Cannot share invalid expression", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                intent.putExtra(Intent.EXTRA_TEXT, msg);
+                startActivity(Intent.createChooser(intent, "Choose one"));
+                break;
 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String shareExpression() {
+        if (!isEquationEmpty()) {
+            String res = result.getText().toString().trim();
+            if (res.equals("") || isAnError(res)) {
+                //Cannot share invalid expressions
+                return null;
+            } else {
+                String expression = equ;
+                String result = res;
+                if(!Evaluate.balancedParenthesis(expression)) {
+                    expression = Evaluate.tryBalancingBrackets(expression);
+                }
+                return expression + " = " + result;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -1211,7 +1253,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .outerCircleAlpha(0.9f)
                         .targetCircleColor(R.color.colorWhite)
                         .titleTextSize(28)
-                        .tintTarget(false)
+                        .tintTarget(true)
+                        .titleTextColor(R.color.colorWhite)
+                        .descriptionTextColor(R.color.colorWhite)
+                        .descriptionTextSize(18)
+                        .cancelable(false),
+                TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
+                        "This is the share button. Click here to share your equations.")
+                        .outerCircleColor(R.color.colorBluePrimary)
+                        .outerCircleAlpha(0.9f)
+                        .targetCircleColor(R.color.colorWhite)
+                        .titleTextSize(28)
+                        .tintTarget(true)
                         .titleTextColor(R.color.colorWhite)
                         .descriptionTextColor(R.color.colorWhite)
                         .descriptionTextSize(18)
