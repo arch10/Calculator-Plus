@@ -37,3 +37,10 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+        def appName = "CalculatorPlus"
+        outputFileName = appName+"-v${variant.versionName}.apk"
+    }
+}
