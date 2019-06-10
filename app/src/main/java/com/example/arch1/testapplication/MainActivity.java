@@ -1226,55 +1226,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startTutorial() {
 
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
+        View shareView = toolbar.findViewById(R.id.share);
+        TapTarget delete = TapTarget.forView(mainLayout.findViewById(R.id.del),
+                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
+                        "calculator screen")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(false)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
+                "This is the angle button. Click here to change angle from " +
+                        "DEGREES to RADIANS and vice versa.")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.9f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(true)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        TapTarget options = TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
+                "menu. This will help you to change app settings and preferences. Click " +
+                "here to open the menu.")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        if(shareView!=null) {
+            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
+                    "This is the share button. Click here to share your equations.")
+                    .outerCircleColor(R.color.colorBluePrimary)
+                    .outerCircleAlpha(0.9f)
+                    .targetCircleColor(R.color.colorWhite)
+                    .titleTextSize(28)
+                    .tintTarget(true)
+                    .titleTextColor(R.color.colorWhite)
+                    .descriptionTextColor(R.color.colorWhite)
+                    .descriptionTextSize(18)
+                    .cancelable(false);
 
-        tapTargetSequence.targets(
-                TapTarget.forView(mainLayout.findViewById(R.id.del),
-                        "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
-                                "calculator screen")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.90f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .tintTarget(false)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false),
-                TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
-                        "This is the angle button. Click here to change angle from " +
-                                "DEGREES to RADIANS and vice versa.")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.9f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .tintTarget(true)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false),
-                TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
-                        "This is the share button. Click here to share your equations.")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.9f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .tintTarget(true)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false),
-                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
-                        "menu. This will help you to change app settings and preferences. Click " +
-                        "here to open the menu.")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.90f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false)
-        );
+            tapTargetSequence.targets(delete, angle, share, options);
+        } else {
+            tapTargetSequence.targets(delete, angle, options);
+        }
+
         tapTargetSequence.start();
     }
 
