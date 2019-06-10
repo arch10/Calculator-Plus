@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 
 public class Evaluate {
 
-    public static String errMsg = "Invalid Expression";
+    static String errMsg = "Invalid Expression";
+    private static String calculatedExpression = "";
     private static AppPreferences preferences = null;
     private static Boolean ifDegree = true;
 
@@ -225,7 +226,7 @@ public class Evaluate {
     //in the methods as '+-' sign, where '-' is a
     //part of the number
     //eg: '500' - '400' = '500' + '-400'
-    private boolean isTestOperator(char c) {
+    private boolean isOperator(char c) {
         if (c == '+' ||
                 c == '/' ||
                 c == '*' ||
@@ -297,7 +298,7 @@ public class Evaluate {
                 return "";
             }
         }
-
+        calculatedExpression = equation;
         c = equation.charAt(0);
         if (c == '+' || c == '-')
             equation = "0" + equation;
@@ -306,7 +307,7 @@ public class Evaluate {
         String temp = "";
         for (int i = 0; i < equation.length(); i++) {
             c = equation.charAt(i);
-            if (isTestOperator(c)) {
+            if (isOperator(c)) {
                 if (!temp.equals(""))
                     stack.push(temp);
                 stack.push(c + "");
@@ -939,6 +940,15 @@ public class Evaluate {
                 string.equals("Domain error") ||
                 string.equals("Cannot divide by 0") ||
                 string.equals("Number too large"));
+    }
+
+    static String getCalculatedExpression() {
+        String equation = calculatedExpression;
+        equation = equation.replaceAll(Math.E + "", "e");
+        equation = equation.replaceAll("" + Math.PI,"\u03c0");
+        equation = equation.replace( "/","÷");
+        equation = equation.replace("*", "\u00d7");
+        return equation;
     }
 
 }

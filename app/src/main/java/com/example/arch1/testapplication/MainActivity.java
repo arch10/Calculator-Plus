@@ -207,11 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         result.startAnimation(shake);
                         break;
                     }else {
-                        String historyEqu = equ;
+                        String historyEqu = Evaluate.getCalculatedExpression();
                         String historyVal = res;
-                        if(!Evaluate.balancedParenthesis(historyEqu)) {
-                            historyEqu = Evaluate.tryBalancingBrackets(historyEqu);
-                        }
                         history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
                         tempResult = res;
                         equ = "";
@@ -1206,11 +1203,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Cannot share invalid expressions
                 return null;
             } else {
-                String expression = equ;
+                String expression = Evaluate.getCalculatedExpression();
                 String result = res;
-                if(!Evaluate.balancedParenthesis(expression)) {
-                    expression = Evaluate.tryBalancingBrackets(expression);
-                }
                 return expression + " = " + result;
             }
         }
