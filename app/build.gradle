@@ -7,8 +7,8 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 25
-        versionName "1.9.3"
+        versionCode 29
+        versionName "1.9.7"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,7 +23,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
@@ -32,7 +32,15 @@ dependencies {
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.0.2'
     implementation 'saschpe.android:customtabs:2.0.0'
+    implementation 'androidx.browser:browser:1.0.0'
     testImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+        def appName = "CalculatorPlus"
+        outputFileName = appName+".apk"
+    }
+}

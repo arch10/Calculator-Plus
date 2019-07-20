@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -203,9 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
                         break;
-                    }
-                    if (!res.equals("")) {
-                        String historyEqu = equ;
+                    }else {
+                        String historyEqu = Evaluate.getCalculatedExpression();
                         String historyVal = res;
                         history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
                         tempResult = res;
@@ -882,11 +884,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.ms:
                 if (!result.getText().toString().isEmpty()) {
-                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
+                    if (isNumber(result.getText().toString()))
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
                 }
                 break;
             case R.id.mr:
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                if(!isNumber(memory)) {
+                    preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                    break;
+                }
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
                     if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
@@ -904,8 +911,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.mplus:
                 if (!result.getText().toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
-                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                        Double res = Double.parseDouble(result.getText().toString());
+                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m2 = result.getText().toString();
+                        if(!isNumber(m2)) {
+                            break;
+                        }
+                        if(!isNumber(m1)) {
+                            preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                            break;
+                        }
+                        Double init = Double.parseDouble(m1);
+                        Double res = Double.parseDouble(m2);
                         res = init + res;
                         preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
                     }
@@ -914,6 +930,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.mminus:
                 if (!result.getText().toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
+                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m2 = result.getText().toString();
+                        if(!isNumber(m2)) {
+                            break;
+                        }
+                        if(!isNumber(m1)) {
+                            preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
+                            break;
+                        }
                         Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
                         Double res = Double.parseDouble(result.getText().toString());
                         res = init - res;
@@ -1113,6 +1138,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
         this.menu = menu;
+        for(int i = 0; i < menu.size(); i++){
+            Drawable drawable = menu.getItem(i).getIcon();
+            if(drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getTextColor(), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
         return true;
     }
 
@@ -1146,10 +1178,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.share:
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
+                String msg = shareExpression();
+                if(msg == null) {
+                    Toast.makeText(this, "Cannot share invalid expression", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                intent.putExtra(Intent.EXTRA_TEXT, msg);
+                startActivity(Intent.createChooser(intent, "Choose one"));
+                break;
 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String shareExpression() {
+        if (!isEquationEmpty()) {
+            String res = result.getText().toString().trim();
+            if (res.equals("") || isAnError(res)) {
+                //Cannot share invalid expressions
+                return null;
+            } else {
+                String expression = Evaluate.getCalculatedExpression();
+                String result = res;
+                return expression + " = " + result;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -1167,44 +1226,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void startTutorial() {
 
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
+        View shareView = toolbar.findViewById(R.id.share);
+        TapTarget delete = TapTarget.forView(mainLayout.findViewById(R.id.del),
+                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
+                        "calculator screen")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(false)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
+                "This is the angle button. Click here to change angle from " +
+                        "DEGREES to RADIANS and vice versa.")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.9f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(true)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        TapTarget options = TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
+                "menu. This will help you to change app settings and preferences. Click " +
+                "here to open the menu.")
+                .outerCircleColor(R.color.colorBluePrimary)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .titleTextColor(R.color.colorWhite)
+                .descriptionTextColor(R.color.colorWhite)
+                .descriptionTextSize(18)
+                .cancelable(false);
+        if(shareView!=null) {
+            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
+                    "This is the share button. Click here to share your equations.")
+                    .outerCircleColor(R.color.colorBluePrimary)
+                    .outerCircleAlpha(0.9f)
+                    .targetCircleColor(R.color.colorWhite)
+                    .titleTextSize(28)
+                    .tintTarget(true)
+                    .titleTextColor(R.color.colorWhite)
+                    .descriptionTextColor(R.color.colorWhite)
+                    .descriptionTextSize(18)
+                    .cancelable(false);
 
-        tapTargetSequence.targets(
-                TapTarget.forView(mainLayout.findViewById(R.id.del),
-                        "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
-                                "calculator screen")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.90f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .tintTarget(false)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false),
-                TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
-                        "This is the angle button. Click here to change angle from " +
-                                "DEGREES to RADIANS and vice versa.")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.9f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .tintTarget(false)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false),
-                TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
-                        "menu. This will help you to change app settings and preferences. Click " +
-                        "here to open the menu.")
-                        .outerCircleColor(R.color.colorBluePrimary)
-                        .outerCircleAlpha(0.90f)
-                        .targetCircleColor(R.color.colorWhite)
-                        .titleTextSize(28)
-                        .titleTextColor(R.color.colorWhite)
-                        .descriptionTextColor(R.color.colorWhite)
-                        .descriptionTextSize(18)
-                        .cancelable(false)
-        );
+            tapTargetSequence.targets(delete, angle, share, options);
+        } else {
+            tapTargetSequence.targets(delete, angle, options);
+        }
+
         tapTargetSequence.start();
     }
 

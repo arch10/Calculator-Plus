@@ -282,6 +282,7 @@
     <style name="MyActionBar">
         <item name="background">?colorPrimary</item>
         <item name="android:titleTextAppearance">@color/colorWhite</item>
+        <item name="android:textColorSecondary">@color/colorWhite</item>
         <item name="android:colorControlNormal">@color/colorWhite</item>
         <item name="android:actionMenuTextColor">@color/colorWhite</item>
         <item name="android:actionMenuTextAppearance">@style/actionMenuTextStyle</item>

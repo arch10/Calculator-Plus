@@ -9,6 +9,11 @@
         android:visible="false"
         android:icon="@drawable/ic_history_black_24dp"/>
     <item
+        android:id="@+id/share"
+        android:title="Share"
+        android:icon="@drawable/ic_outline_share_24px"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/deg"
         android:onClick="clickDeg"
         android:title="DEG"
