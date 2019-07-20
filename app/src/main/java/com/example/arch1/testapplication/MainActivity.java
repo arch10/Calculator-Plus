@@ -1,6 +1,11 @@
 package com.example.arch1.testapplication;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -20,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -37,13 +43,14 @@ import static com.example.arch1.testapplication.Evaluate.formatString;
 import static com.example.arch1.testapplication.Evaluate.isAnError;
 import static com.example.arch1.testapplication.Evaluate.isNumber;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, TextWatcher, CalculatorEditText.OnTextSizeChangeListener {
 
-    private TextView result;
+    private CalculatorEditText result;
     private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
     private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
     private Button open, close, percent, ms, mr, mPlus, mMinus;
-    private EditText equation;
+    private CalculatorEditText equation;
     private String equ = "", tempEqu, tempResult = "";
     private View view;
     private Animator anim;
@@ -55,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
     private History history;
     private ViewPager mPadViewPager;
+
+    private Animator mCurrentAnimator;
 
     private static final String mulSymbol = "\u00d7";
     private static final String piSymbol = "\u03c0";
@@ -134,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding text change listener
         equation.addTextChangedListener(this);
+        equation.setOnTextSizeChangeListener(this);
 
     }
 
@@ -212,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
                         tempResult = res;
                         equ = "";
-                        equation.setText(res);
-                        result.setText("");
+                        onResult(res);
                     }
                 }
                 break;
@@ -1029,6 +1038,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        if (mCurrentAnimator != null) {
+            mCurrentAnimator.end();
+        }
         super.onSaveInstanceState(outState);
         outState.putString("equ", equ);
         outState.putBoolean("ifDeg", ifDegree);
@@ -1070,32 +1082,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
             viewRoot.setVisibility(View.VISIBLE);
             anim.setDuration(300);
-            anim.addListener(listener);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.setVisibility(View.INVISIBLE);
+                    mCurrentAnimator = null;
+                }
+            });
+            mCurrentAnimator = anim;
             anim.start();
         }
     }
-
-    private Animator.AnimatorListener listener = new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            view.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    };
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1506,5 +1503,88 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             equ = equ.replaceAll(",", "");
         }
         equation.setText(equ);
+    }
+
+    @Override
+    public void onTextSizeChanged(TextView textView, float oldSize) {
+
+        // Calculate the values needed to perform the scale and translation animations,
+        // maintaining the same apparent baseline for the displayed text.
+        final float textScale = oldSize / textView.getTextSize();
+        final float translationX = (1.0f - textScale) *
+                (textView.getWidth() / 2.0f - textView.getPaddingEnd());
+        final float translationY = (1.0f - textScale) *
+                (textView.getHeight() / 2.0f - textView.getPaddingBottom());
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(textView, View.SCALE_X, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.SCALE_Y, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_X, translationX, 0.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, translationY, 0.0f));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
+    }
+
+    private void onResult(final String answer) {
+        // Calculate the values needed to perform the scale and translation animations,
+        // accounting for how the scale will affect the final position of the text.
+        final float resultScale =
+                equation.getVariableTextSize(answer) / result.getTextSize();
+        final float resultTranslationX = (1.0f - resultScale) *
+                (result.getWidth() / 2.0f - result.getPaddingEnd());
+        final float resultTranslationY = (1.0f - resultScale) *
+                (result.getHeight() / 2.0f - result.getPaddingBottom()) +
+                (equation.getBottom() - result.getBottom()) +
+                (result.getPaddingBottom() - equation.getPaddingBottom());
+        final float formulaTranslationY = -equation.getBottom();
+
+        // Use a value animator to fade to the final text color over the course of the animation.
+        final int resultTextColor = result.getCurrentTextColor();
+        final int formulaTextColor = equation.getCurrentTextColor();
+        final ValueAnimator textColorAnimator =
+                ValueAnimator.ofObject(new ArgbEvaluator(), resultTextColor, formulaTextColor);
+        textColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                result.setTextColor((int) valueAnimator.getAnimatedValue());
+            }
+        });
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                textColorAnimator,
+                ObjectAnimator.ofFloat(result, View.SCALE_X, resultScale),
+                ObjectAnimator.ofFloat(result, View.SCALE_Y, resultScale),
+                ObjectAnimator.ofFloat(result, View.TRANSLATION_X, resultTranslationX),
+                ObjectAnimator.ofFloat(result, View.TRANSLATION_Y, resultTranslationY),
+                ObjectAnimator.ofFloat(equation, View.TRANSLATION_Y, formulaTranslationY));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                result.setText(answer);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Reset all of the values modified during the animation.
+                result.setTextColor(resultTextColor);
+                result.setScaleX(1.0f);
+                result.setScaleY(1.0f);
+                result.setTranslationX(0.0f);
+                result.setTranslationY(0.0f);
+                equation.setTranslationY(0.0f);
+
+                // Finally update the formula to use the current result.
+                equation.setText(answer);
+                mCurrentAnimator = null;
+            }
+        });
+
+        mCurrentAnimator = animatorSet;
+        animatorSet.start();
     }
 }

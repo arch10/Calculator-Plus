@@ -8,4 +8,11 @@
     <attr name="buttonAdv" format="reference"/>
     <attr name="iconColor" format="color"/>
     <attr name="clearColor" format="color"/>
+
+    <declare-styleable name="CalculatorEditText">
+        <attr name="minTextSize" format="dimension" />
+        <attr name="maxTextSize" format="dimension" />
+        <attr name="stepTextSize" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
     private History history;
     private FrameLayout noHistoryLayout;
     private MenuItem delItem;
+    private ImageView noHistoryIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +45,29 @@ public class HistoryActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        noHistoryLayout = findViewById(R.id.fl_no_history);
+        noHistoryIcon = findViewById(R.id.iv_icon);
 
         TypedValue typedValue = new TypedValue();
         TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         int color = a.getColor(0, 0);
         a.recycle();
 
-        if (themeName.equals(Theme.DEFAULT)) {
-            color = getResources().getColor(R.color.colorMaterialSteelGrey);
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        } else if (themeName.equals(Theme.MATERIAL_LIGHT)) {
-            toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        } else {
-            toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        switch (themeName) {
+            case Theme.DEFAULT:
+                color = getResources().getColor(R.color.colorMaterialSteelGrey);
+                toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+                break;
+            case Theme.MATERIAL_LIGHT:
+                toolbar.setTitleTextColor(getResources().getColor(R.color.gray));
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+                break;
+            case Theme.MATERIAL_DARK:
+                noHistoryIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorWhite));
+            default:
+                toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+                toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
 
         //setting toolbar style manually
@@ -70,7 +80,6 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-        noHistoryLayout = findViewById(R.id.fl_no_history);
         history = new History(this);
         recyclerView = findViewById(R.id.rv_history);
         mLayoutManager = new LinearLayoutManager(this);
