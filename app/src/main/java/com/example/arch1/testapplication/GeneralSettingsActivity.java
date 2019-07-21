@@ -12,12 +12,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 
 public class GeneralSettingsActivity extends AppCompatActivity {
 
     private AppPreferences preferences;
-    private Switch numberFormatterSwitch, smartCalculationSwitch;
+    private Switch numberFormatterSwitch, smartCalculationSwitch, scientificResultSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,37 +63,34 @@ public class GeneralSettingsActivity extends AppCompatActivity {
 
         numberFormatterSwitch = findViewById(R.id.switch1);
         smartCalculationSwitch = findViewById(R.id.switch2);
+        scientificResultSwitch = findViewById(R.id.switch3);
 
 
         //setting preference values
         numberFormatterSwitch.setChecked(preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER));
         smartCalculationSwitch.setChecked(preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS));
+        scientificResultSwitch.setChecked(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT));
 
+        numberFormatterSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER, isChecked));
 
-        numberFormatterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                preferences.setBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER, isChecked);
+        smartCalculationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked) {
+                //show warning
+                AlertDialog.Builder builder = new AlertDialog.Builder(GeneralSettingsActivity.this);
+                builder.setTitle("Warning")
+                        .setMessage("This action will disable smart calculations. Calculator Plus" +
+                                " will no longer be able to auto-complete or auto-correct " +
+                                "your equations. We recommend to enable this feature for faster and " +
+                                "easy usage of Calculator Plus.")
+                        .setPositiveButton("Ok", null);
+                builder.show();
             }
+            preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, isChecked);
         });
 
-        smartCalculationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    //show warning
-                    AlertDialog.Builder builder = new AlertDialog.Builder(GeneralSettingsActivity.this);
-                    builder.setTitle("Warning")
-                            .setMessage("This action will disable smart calculations. Calculator Plus" +
-                                    " will no longer be able to auto-complete or auto-correct " +
-                                    "your equations. We recommend to enable this feature for faster and " +
-                                    "easy usage of Calculator Plus.")
-                            .setPositiveButton("Ok", null);
-                    builder.show();
-                }
-                preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, isChecked);
-            }
-        });
+        scientificResultSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, isChecked));
 
     }
 
@@ -102,5 +100,9 @@ public class GeneralSettingsActivity extends AppCompatActivity {
 
     public void numFormatClick(View view) {
         numberFormatterSwitch.setChecked(!numberFormatterSwitch.isChecked());
+    }
+
+    public void scientificResultClick(View view) {
+        scientificResultSwitch.setChecked(!scientificResultSwitch.isChecked());
     }
 }

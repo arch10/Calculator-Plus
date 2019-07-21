@@ -5,6 +5,8 @@ import android.content.Context;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -28,7 +30,7 @@ public class Evaluate {
             String ans = new Evaluate().getAnswer(equ);
             if (ans.equals("-0"))
                 ans = "0";
-            if (enableNumberFormatter)
+            if (enableNumberFormatter && !(ans.contains("E")))
                 return formatString(ans);
             return ans;
         }
@@ -154,6 +156,9 @@ public class Evaluate {
 
         if (num.compareTo(new BigDecimal("0")) == 0)
             return "0";
+        if(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT)) {
+            return toScientific(num.toPlainString());
+        }
         return num.toPlainString();
     }
 
@@ -266,6 +271,26 @@ public class Evaluate {
                 return true;
         }
         return false;
+    }
+
+    private static String format(BigDecimal x, int scale) {
+        NumberFormat formatter = new DecimalFormat("0.0E0");
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+        formatter.setMinimumFractionDigits(scale);
+        formatter.setMinimumIntegerDigits(1);
+        return formatter.format(x);
+    }
+
+    private static String toScientific(String ans) {
+        String temp = ans;
+        int scale = 7;
+        while (temp.length()>11) {
+            temp = format(new BigDecimal(temp), scale);
+            scale--;
+            if(scale==1)
+                break;
+        }
+        return temp;
     }
 
     //you provide the equation, it will give the result
@@ -802,9 +827,18 @@ public class Evaluate {
             temp = workingStack.pop();
 
             if (temp.equals("^")) {
-                Double num1 = Double.parseDouble(stack.pop());
-                Double num2 = Double.parseDouble(workingStack.pop());
-                stack.push(Math.pow(num1, num2) + "");
+                BigDecimal num1 = new BigDecimal(stack.pop());
+                int num2 = Integer.parseInt(workingStack.pop());
+                if(num2>0) {
+                    try {
+                        stack.push(num1.pow(num2).toPlainString());
+                    } catch (ArithmeticException e) {
+                        errMsg = "Number too large";
+                        return null;
+                    }
+                } else {
+                    stack.push(Math.pow(num1.doubleValue(), num2) + "");
+                }
             } else
                 stack.push(temp);
         }

@@ -21,6 +21,7 @@ public class AppPreferences {
     final static String APP_HISTORY_SET = "app.is.history.set";
     final static String APP_HISTORY_EQUATION = "app.history.equation";
     final static String APP_MEMORY_VALUE = "app.memory.value";
+    final static String APP_SCIENTIFIC_RESULT = "app.scientific.string";
 
     public AppPreferences(Context context) {
         ctx = context;
