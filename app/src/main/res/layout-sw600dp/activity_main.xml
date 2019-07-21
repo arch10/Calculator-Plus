@@ -44,7 +44,7 @@
             android:layout_weight="0.5"
             android:inputType="none"
             android:focusable="false"
-            android:gravity="top|end"
+            android:gravity="bottom|end"
             custom:maxTextSize="95sp"
             custom:minTextSize="60sp"
             android:singleLine="true"

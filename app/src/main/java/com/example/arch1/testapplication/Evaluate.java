@@ -151,11 +151,16 @@ public class Evaluate {
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num = new BigDecimal(ans);
 
+        BigDecimal temp = num;
         num = num.setScale(getPrecision(precision), RoundingMode.HALF_UP);
         num = num.stripTrailingZeros();
 
-        if (num.compareTo(new BigDecimal("0")) == 0)
+        if (num.compareTo(new BigDecimal("0")) == 0) {
+            if(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT) && (temp.compareTo(new BigDecimal("0")) != 0)) {
+                return format(temp, 2);
+            }
             return "0";
+        }
         if(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT)) {
             return toScientific(num.toPlainString());
         }
@@ -794,7 +799,7 @@ public class Evaluate {
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
-                    if (a > 50) {
+                    if (a > 90) {
                         errMsg = "Number too large";
                         return null;
                     }
@@ -829,7 +834,7 @@ public class Evaluate {
             if (temp.equals("^")) {
                 BigDecimal num1 = new BigDecimal(stack.pop());
                 int num2 = Integer.parseInt(workingStack.pop());
-                if(num2>0) {
+                if(num2 >= 0) {
                     try {
                         stack.push(num1.pow(num2).toPlainString());
                     } catch (ArithmeticException e) {
@@ -837,7 +842,13 @@ public class Evaluate {
                         return null;
                     }
                 } else {
-                    stack.push(Math.pow(num1.doubleValue(), num2) + "");
+                    try {
+                        BigDecimal inter = num1.pow(-num2);
+                        stack.push(BigDecimal.ONE.divide(inter, 100, RoundingMode.HALF_UP).toPlainString());
+                    } catch (ArithmeticException e) {
+                        errMsg = "Number too large";
+                        return null;
+                    }
                 }
             } else
                 stack.push(temp);
@@ -874,7 +885,7 @@ public class Evaluate {
                     return null;
                 }
 
-                num1 = num1.divide(num2, 15, RoundingMode.HALF_UP);
+                num1 = num1.divide(num2, 100, RoundingMode.HALF_UP);
                 val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
