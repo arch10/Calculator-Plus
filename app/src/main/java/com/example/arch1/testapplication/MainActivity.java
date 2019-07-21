@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
             preferences.setStringPreference(AppPreferences.APP_HISTORY, "");
             preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING, "");
+            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, true);
         }
 
         //getting primary color of the theme
