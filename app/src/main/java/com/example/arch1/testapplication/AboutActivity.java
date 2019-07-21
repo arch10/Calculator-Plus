@@ -26,7 +26,7 @@ public class AboutActivity extends AppCompatActivity {
     private Context context;
     private int color;
 
-    private static final String PRIVACY_URL = "https://github.com/arch10/Calculator/blob/master/docs/en/privacy_policy.md";
+    private static final String PRIVACY_URL = "https://raw.githubusercontent.com/arch10/Calculator-Plus/master/docs/en/privacy_policy.md";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +75,8 @@ public class AboutActivity extends AppCompatActivity {
 
         Date buildDate = BuildConfig.buildTime;
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        build.setText("Build Date: " + sdf.format(buildDate));
-        version.setText("Version: " + BuildConfig.VERSION_NAME);
+        build.setText(getString(R.string.release_date) + " " + sdf.format(buildDate));
+        version.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
 
 
         //privacy policy link

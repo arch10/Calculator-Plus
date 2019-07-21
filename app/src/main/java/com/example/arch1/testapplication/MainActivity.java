@@ -1127,7 +1127,7 @@ public class MainActivity extends AppCompatActivity
                 result.setText(Evaluate.calculateResult(tempEqu, enableNumberFormatter, MainActivity.this));
             } else {
                 result.setText("");
-                Evaluate.errMsg = "Invalid Expression";
+                Evaluate.errMsg = getString(R.string.error_invalid);
             }
         }
     }
@@ -1182,11 +1182,11 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
                 String msg = shareExpression();
                 if(msg == null) {
-                    Toast.makeText(this, "Cannot share invalid expression", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.share_error), Toast.LENGTH_SHORT).show();
                     break;
                 }
                 intent.putExtra(Intent.EXTRA_TEXT, msg);
-                startActivity(Intent.createChooser(intent, "Choose one"));
+                startActivity(Intent.createChooser(intent, getString(R.string.choose)));
                 break;
 
         }
@@ -1226,8 +1226,7 @@ public class MainActivity extends AppCompatActivity
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
         View shareView = toolbar.findViewById(R.id.share);
         TapTarget delete = TapTarget.forView(mainLayout.findViewById(R.id.del),
-                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
-                        "calculator screen")
+                getString(R.string.delete_button), getString(R.string.delete_button_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1237,9 +1236,8 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
                 .cancelable(false);
-        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
-                "This is the angle button. Click here to change angle from " +
-                        "DEGREES to RADIANS and vice versa.")
+        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, getString(R.string.angle_button),
+                getString(R.string.angle_button_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.9f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1249,9 +1247,8 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
                 .cancelable(false);
-        TapTarget options = TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
-                "menu. This will help you to change app settings and preferences. Click " +
-                "here to open the menu.")
+        TapTarget options = TapTarget.forToolbarOverflow(toolbar,
+                getString(R.string.options_menu), getString(R.string.options_menu_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1261,8 +1258,8 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextSize(18)
                 .cancelable(false);
         if(shareView!=null) {
-            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
-                    "This is the share button. Click here to share your equations.")
+            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, getString(R.string.share_button),
+                    getString(R.string.share_button_desc))
                     .outerCircleColor(R.color.colorBluePrimary)
                     .outerCircleAlpha(0.9f)
                     .targetCircleColor(R.color.colorWhite)
