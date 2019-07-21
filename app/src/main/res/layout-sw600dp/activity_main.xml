@@ -28,8 +28,8 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="bottom|end"
-            custom:maxTextSize="100sp"
-            custom:minTextSize="50sp"
+            custom:maxTextSize="150sp"
+            custom:minTextSize="100sp"
             android:singleLine="true"
             android:includeFontPadding="false"
             android:fontFamily="@font/productsans"
@@ -41,12 +41,12 @@
             style="?displayTextStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.75"
+            android:layout_weight="0.5"
             android:inputType="none"
             android:focusable="false"
-            android:gravity="bottom|end"
-            custom:maxTextSize="70sp"
-            custom:minTextSize="35sp"
+            android:gravity="top|end"
+            custom:maxTextSize="95sp"
+            custom:minTextSize="60sp"
             android:singleLine="true"
             android:includeFontPadding="false"
             android:fontFamily="@font/productsans"
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.30" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
