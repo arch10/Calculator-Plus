@@ -12,7 +12,6 @@ import saschpe.android.customtabs.CustomTabsHelper;
 import saschpe.android.customtabs.WebViewFallback;
 
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -20,9 +19,6 @@ import java.util.Date;
 
 public class AboutActivity extends AppCompatActivity {
 
-    private AppPreferences preferences;
-    private Toolbar toolbar;
-    private TextView version, build, privacy;
     private Context context;
     private int color;
 
@@ -30,7 +26,7 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        preferences = AppPreferences.getInstance(this);
+        AppPreferences preferences = AppPreferences.getInstance(this);
         setTheme(Theme.getTheme(preferences.getStringPreference(AppPreferences.APP_THEME)));
 
         super.onCreate(savedInstanceState);
@@ -38,12 +34,12 @@ public class AboutActivity extends AppCompatActivity {
 
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        version = findViewById(R.id.version);
-        build = findViewById(R.id.build);
-        privacy = findViewById(R.id.privacy);
+        TextView version = findViewById(R.id.version);
+        TextView build = findViewById(R.id.build);
+        TextView privacy = findViewById(R.id.privacy);
         context = this;
 
         TypedValue typedValue = new TypedValue();
@@ -66,12 +62,7 @@ public class AboutActivity extends AppCompatActivity {
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         Date buildDate = BuildConfig.buildTime;
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
@@ -80,17 +71,14 @@ public class AboutActivity extends AppCompatActivity {
 
 
         //privacy policy link
-        privacy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                        .addDefaultShareMenuItem()
-                        .setToolbarColor(color)
-                        .setShowTitle(true)
-                        .build();
-                CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
-                CustomTabsHelper.openCustomTab(context, customTabsIntent, Uri.parse(PRIVACY_URL), new WebViewFallback());
-            }
+        privacy.setOnClickListener(v -> {
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                    .addDefaultShareMenuItem()
+                    .setToolbarColor(color)
+                    .setShowTitle(true)
+                    .build();
+            CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
+            CustomTabsHelper.openCustomTab(context, customTabsIntent, Uri.parse(PRIVACY_URL), new WebViewFallback());
         });
     }
 

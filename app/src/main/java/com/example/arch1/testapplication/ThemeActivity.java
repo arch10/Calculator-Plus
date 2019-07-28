@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 public class ThemeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private AppPreferences preferences;
-    private View themeSwitcher;
-    private LinearLayout classic, orange, green, blue, red, lightGreen, purple, pink, materialLight, materialDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +22,9 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theme_layout);
+
+        View themeSwitcher;
+        LinearLayout classic, orange, green, blue, red, lightGreen, purple, pink, materialLight, materialDark;
 
         themeSwitcher = findViewById(R.id.theme_switcher);
         classic = themeSwitcher.findViewById(R.id.theme_classic);
@@ -73,12 +74,7 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
     }
 
@@ -87,7 +83,7 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
         if (currTheme.equals(themeName))
             return;
         Theme.changeTheme(themeName, preferences);
-        Intent intent[] = new Intent[3];
+        Intent[] intent = new Intent[3];
         intent[2] = new Intent(this, ThemeActivity.class);
         intent[1] = new Intent(this, SettingsActivity.class);
         intent[0] = new Intent(this, MainActivity.class);

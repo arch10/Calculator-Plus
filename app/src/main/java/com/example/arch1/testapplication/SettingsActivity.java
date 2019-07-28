@@ -8,32 +8,34 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
+import saschpe.android.customtabs.CustomTabsHelper;
+import saschpe.android.customtabs.WebViewFallback;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private Intent intent;
     private AppPreferences preferences;
-    private Toolbar toolbar;
     private Dialog precisionDialog;
     private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
     private ListAdapter mAdapter;
+    private static final String SURVEY_URL = "https://docs.google.com/forms/d/e/1FAIpQLScjn3uwQpPuDOV_CNEP82HddF59rZw3LRps-IFWE0_b9h2o0w/viewform?usp=sf_link";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         TypedValue typedValue = new TypedValue();
@@ -68,60 +70,56 @@ public class SettingsActivity extends AppCompatActivity {
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         precisionDialog = new Dialog(this);
         recyclerView = findViewById(R.id.rv);
-        layoutManager = new LinearLayoutManager(this);
-        mAdapter = new ListAdapter(this, setListData(), new ListAdapter.OnSettingClickListener() {
-            @Override
-            public void OnSettingClick(ListData data, int position) {
-                if (position == 0) {
-                    intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        int finalColor = color;
+        mAdapter = new ListAdapter(this, setListData(), (data, position) -> {
+            if (position == 0) {
+                intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
+                startActivity(intent);
+            } else if (position == 1) {
+                intent = new Intent(SettingsActivity.this, ThemeActivity.class);
+                startActivity(intent);
+            } else if (position == 2) {
+                //showPopUp
+                showPrecisionDialog();
+            }else if (position == 3) {
+                //Angle
+                showAngleDialog();
+            }else if (position == 4) {
+                //share
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
+                String msg = "\nHey, checkout this cool Calculator app. It has ";
+                msg += "some very nice features. Go to this link to download this app now.\n\n";
+                msg += "https://gigaworks.page.link/calculatorplus";
+                intent.putExtra(Intent.EXTRA_TEXT, msg);
+                startActivity(Intent.createChooser(intent, "Choose one"));
+            } else if(position == 5) {
+                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                        .addDefaultShareMenuItem()
+                        .setToolbarColor(finalColor)
+                        .setShowTitle(true)
+                        .build();
+                CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
+                CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(SURVEY_URL), new WebViewFallback());
+            } else if (position == 6) {
+                intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus " + BuildConfig.VERSION_NAME
+                        + " // " + Build.MANUFACTURER + " " + Build.MODEL + "(" + Build.DEVICE + ")" +
+                        " // " + getResources().getDisplayMetrics().densityDpi);
+                if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 }
-                if (position == 1) {
-                    intent = new Intent(SettingsActivity.this, ThemeActivity.class);
-                    startActivity(intent);
-                }
-                if (position == 2) {
-                    //showPopUp
-                    showPrecisionDialog();
-                }
-                if (position == 3) {
-                    //Angle
-                    showAngleDialog();
-                }
-                if (position == 4) {
-                    //share
-                    intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
-                    String msg = "\nHey, checkout this cool Calculator app. It has ";
-                    msg += "some very nice features. Go to this link to download this app now.\n\n";
-                    msg += "https://gigaworks.page.link/calculatorplus";
-                    intent.putExtra(Intent.EXTRA_TEXT, msg);
-                    startActivity(Intent.createChooser(intent, "Choose one"));
-                }
-                if (position == 5) {
-                    intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setType("text/email");
-                    intent.setData(Uri.parse("mailto:"));
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus " + BuildConfig.VERSION_NAME
-                            + " // " + Build.MANUFACTURER + " " + Build.MODEL + "(" + Build.DEVICE + ")" +
-                            " // " + getResources().getDisplayMetrics().densityDpi);
-                    startActivity(intent);
-                }
-                if (position == 6) {
-                    intent = new Intent(SettingsActivity.this, AboutActivity.class);
-                    startActivity(intent);
-                }
+            }else if (position == 7) {
+                intent = new Intent(SettingsActivity.this, AboutActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -139,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-        precisionDialog.getWindow().setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        Objects.requireNonNull(precisionDialog.getWindow()).setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
         Button cancelButton = precisionDialog.findViewById(R.id.buttonCancel);
         Button setButton = precisionDialog.findViewById(R.id.buttonSet);
@@ -147,19 +145,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         indicatorSeekBar.setProgress(getPrecision());
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                precisionDialog.dismiss();
-            }
-        });
+        cancelButton.setOnClickListener(v -> precisionDialog.dismiss());
 
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setPrecision(indicatorSeekBar.getProgress());
-                precisionDialog.dismiss();
-            }
+        setButton.setOnClickListener(v -> {
+            setPrecision(indicatorSeekBar.getProgress());
+            precisionDialog.dismiss();
         });
         precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;
@@ -245,6 +235,8 @@ public class SettingsActivity extends AppCompatActivity {
         list.add(data);
         data = new ListData("Share", "Share this app", R.drawable.ic_outline_share_24px);
         list.add(data);
+        data = new ListData("Translate", "Help translate Calculator Plus to you language", R.drawable.ic_translate_black_24dp);
+        list.add(data);
         data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_outline_feedback_24px);
         list.add(data);
         data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
@@ -278,7 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-        precisionDialog.getWindow().setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        Objects.requireNonNull(precisionDialog.getWindow()).setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
         RadioGroup radioGroup = precisionDialog.findViewById(R.id.rg_angle);
 
@@ -289,21 +281,18 @@ public class SettingsActivity extends AppCompatActivity {
             radioGroup.check(R.id.ang_rad);
         }
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.ang_deg:
-                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
-                        break;
-                    case R.id.ang_rad:
-                        preferences.setBooleanPreference(AppPreferences.APP_ANGLE, false);
-                        break;
-                }
-                mAdapter.setList(setListData());
-                recyclerView.setAdapter(mAdapter);
-                precisionDialog.dismiss();
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.ang_deg:
+                    preferences.setBooleanPreference(AppPreferences.APP_ANGLE, true);
+                    break;
+                case R.id.ang_rad:
+                    preferences.setBooleanPreference(AppPreferences.APP_ANGLE, false);
+                    break;
             }
+            mAdapter.setList(setListData());
+            recyclerView.setAdapter(mAdapter);
+            precisionDialog.dismiss();
         });
         precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;

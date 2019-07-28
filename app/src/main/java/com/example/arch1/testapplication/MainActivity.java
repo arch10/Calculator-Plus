@@ -13,10 +13,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -29,14 +25,17 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
+import java.util.Objects;
 import java.util.Stack;
 
 import static com.example.arch1.testapplication.Evaluate.formatString;
@@ -47,19 +46,17 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, TextWatcher, CalculatorEditText.OnTextSizeChangeListener {
 
     private CalculatorEditText result;
-    private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
-    private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
-    private Button open, close, percent, ms, mr, mPlus, mMinus;
+    private Button bdel;
     private CalculatorEditText equation;
-    private String equ = "", tempEqu, tempResult = "";
+    private String equ = "";
+    private String tempResult = "";
     private View view;
-    private Animator anim;
     private View mainLayout, slidingLayout;
     private AppPreferences preferences;
     private androidx.appcompat.widget.Toolbar toolbar;
-    private boolean firstLaunch;
     private Menu menu;
-    private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
+    private boolean ifDegree;
+    private boolean enableNumberFormatter;
     private History history;
     private ViewPager mPadViewPager;
 
@@ -91,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         initialiseVariables();
 
         //checking if first Launch
-        firstLaunch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
+        boolean firstLaunch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
         if (firstLaunch) {
             //set app default preferences
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
@@ -130,16 +127,13 @@ public class MainActivity extends AppCompatActivity
         equation.setLongClickable(false);
 
         //adding button long press listener
-        bdel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (!equation.getText().toString().equals(""))
-                    animateClear(view);
-                equ = "";
-                equation.setText(equ);
-                result.setText("");
-                return true;
-            }
+        bdel.setOnLongClickListener(v -> {
+            if (!Objects.requireNonNull(equation.getText()).toString().equals(""))
+                animateClear(view);
+            equ = "";
+            equation.setText(equ);
+            result.setText("");
+            return true;
         });
 
         //adding text change listener
@@ -206,7 +200,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.equal:
                 if (!isEquationEmpty()) {
-                    String res = result.getText().toString().trim();
+                    String res = Objects.requireNonNull(result.getText()).toString().trim();
                     if (res.equals("") || isAnError(res)) {
                         result.setText(Evaluate.errMsg);
                         if (preferences.getStringPreference(AppPreferences.APP_THEME).equals("red")) {
@@ -219,8 +213,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                     }else {
                         String historyEqu = Evaluate.getCalculatedExpression();
-                        String historyVal = res;
-                        history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
+                        history.addToHistory(historyEqu, res, System.currentTimeMillis());
                         tempResult = res;
                         equ = "";
                         onResult(res);
@@ -690,7 +683,8 @@ public class MainActivity extends AppCompatActivity
                         add("0\u00d7e");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("e");
                         break;
                     }
@@ -822,7 +816,8 @@ public class MainActivity extends AppCompatActivity
                         add("0\u00d7\u221a");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u221a");
                         break;
                     }
@@ -849,7 +844,8 @@ public class MainActivity extends AppCompatActivity
                         add("0\u00d7\u221b");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u221b");
                         break;
                     }
@@ -876,7 +872,8 @@ public class MainActivity extends AppCompatActivity
                         add("0\u00d7\u03c0");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u03c0");
                         break;
                     }
@@ -893,9 +890,10 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.ms:
-                if (!result.getText().toString().isEmpty()) {
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
                     if (isNumber(result.getText().toString()))
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                result.getText().toString());
                 }
                 break;
             case R.id.mr:
@@ -906,7 +904,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
+                    if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e")
+                            || equ.endsWith("!") || equ.endsWith(piSymbol)) {
                         add(mulSymbol + memory);
                         break;
                     }
@@ -919,7 +918,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case R.id.mplus:
-                if (!result.getText().toString().isEmpty()) {
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
                         String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
@@ -933,14 +932,16 @@ public class MainActivity extends AppCompatActivity
                         Double init = Double.parseDouble(m1);
                         Double res = Double.parseDouble(m2);
                         res = init + res;
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                Evaluate.roundMyAnswer(res.toString(), this));
                     }
                 }
                 break;
             case R.id.mminus:
-                if (!result.getText().toString().isEmpty()) {
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
-                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m1 = preferences
+                                .getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
                         if(!isNumber(m2)) {
                             break;
@@ -949,10 +950,12 @@ public class MainActivity extends AppCompatActivity
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
-                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
+                        Double init = Double.parseDouble(preferences
+                                .getStringPreference(AppPreferences.APP_MEMORY_VALUE));
                         Double res = Double.parseDouble(result.getText().toString());
                         res = init - res;
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                Evaluate.roundMyAnswer(res.toString(), this));
                     }
                 }
                 break;
@@ -1024,10 +1027,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isEquationEmpty() {
-        String eq = equ;
-        if (eq.equals(""))
-            return true;
-        return false;
+        return equ.equals("");
     }
 
     private boolean ifPrevOperator() {
@@ -1066,10 +1066,7 @@ public class MainActivity extends AppCompatActivity
                 count++;
             j--;
         }
-        if (count == 0)
-            return true;
-        else
-            return false;
+        return count == 0;
     }
 
     private void animateClear(View viewRoot) {
@@ -1080,7 +1077,8 @@ public class MainActivity extends AppCompatActivity
         int finalRadius = (int) Math.sqrt((l * l) + (b * b));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+            Animator anim = ViewAnimationUtils
+                    .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
             viewRoot.setVisibility(View.VISIBLE);
             anim.setDuration(300);
             anim.addListener(new AnimatorListenerAdapter() {
@@ -1109,22 +1107,26 @@ public class MainActivity extends AppCompatActivity
     public void afterTextChanged(Editable s) {
 
         //check if number formatter is enabled
-        enableNumberFormatter = preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER);
+        enableNumberFormatter =
+                preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER);
         //check if smart calculations is enabled
-        enableSmartCalculation = preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
+        boolean enableSmartCalculation =
+                preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
 
         if (Evaluate.balancedParenthesis(equ)) {
             result.setTextColor(getTextColor());
-            result.setText(Evaluate.calculateResult(equ, enableNumberFormatter, MainActivity.this));
+            result.setText(Evaluate.calculateResult(equ, enableNumberFormatter,
+                    MainActivity.this));
         } else {
 
             //trying to balance equation coz it's a smart calculator
-            tempEqu = Evaluate.tryBalancingBrackets(equ);
+            String tempEqu = Evaluate.tryBalancingBrackets(equ);
 
             //if smart calculations is on and was able to balance the equation
             if (Evaluate.balancedParenthesis(tempEqu) && enableSmartCalculation) {
                 result.setTextColor(getTextColor());
-                result.setText(Evaluate.calculateResult(tempEqu, enableNumberFormatter, MainActivity.this));
+                result.setText(Evaluate.calculateResult(tempEqu, enableNumberFormatter,
+                        MainActivity.this));
             } else {
                 result.setText("");
                 Evaluate.errMsg = getString(R.string.error_invalid);
@@ -1182,7 +1184,8 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
                 String msg = shareExpression();
                 if(msg == null) {
-                    Toast.makeText(this, getString(R.string.share_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.share_error),
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
                 intent.putExtra(Intent.EXTRA_TEXT, msg);
@@ -1196,14 +1199,13 @@ public class MainActivity extends AppCompatActivity
 
     private String shareExpression() {
         if (!isEquationEmpty()) {
-            String res = result.getText().toString().trim();
+            String res = Objects.requireNonNull(result.getText()).toString().trim();
             if (res.equals("") || isAnError(res)) {
                 //Cannot share invalid expressions
                 return null;
             } else {
                 String expression = Evaluate.getCalculatedExpression();
-                String result = res;
-                return expression + " = " + result;
+                return expression + " = " + res;
             }
         }
         return null;
@@ -1294,45 +1296,45 @@ public class MainActivity extends AppCompatActivity
         mPadViewPager = findViewById(R.id.pad_pager);
         equation = findViewById(R.id.et_display1);
         result = findViewById(R.id.tv_display);
-        b1 = mainLayout.findViewById(R.id.one);
-        b2 = mainLayout.findViewById(R.id.two);
-        b3 = mainLayout.findViewById(R.id.three);
-        b4 = mainLayout.findViewById(R.id.four);
-        b5 = mainLayout.findViewById(R.id.five);
-        b6 = mainLayout.findViewById(R.id.six);
-        b7 = mainLayout.findViewById(R.id.seven);
-        b8 = mainLayout.findViewById(R.id.eight);
-        b9 = mainLayout.findViewById(R.id.nine);
-        b0 = mainLayout.findViewById(R.id.zero);
-        badd = mainLayout.findViewById(R.id.add);
-        bsub = mainLayout.findViewById(R.id.sub);
-        bmul = mainLayout.findViewById(R.id.mul);
-        bdiv = mainLayout.findViewById(R.id.div);
-        bequal = mainLayout.findViewById(R.id.equal);
+        Button b1 = mainLayout.findViewById(R.id.one);
+        Button b2 = mainLayout.findViewById(R.id.two);
+        Button b3 = mainLayout.findViewById(R.id.three);
+        Button b4 = mainLayout.findViewById(R.id.four);
+        Button b5 = mainLayout.findViewById(R.id.five);
+        Button b6 = mainLayout.findViewById(R.id.six);
+        Button b7 = mainLayout.findViewById(R.id.seven);
+        Button b8 = mainLayout.findViewById(R.id.eight);
+        Button b9 = mainLayout.findViewById(R.id.nine);
+        Button b0 = mainLayout.findViewById(R.id.zero);
+        Button badd = mainLayout.findViewById(R.id.add);
+        Button bsub = mainLayout.findViewById(R.id.sub);
+        Button bmul = mainLayout.findViewById(R.id.mul);
+        Button bdiv = mainLayout.findViewById(R.id.div);
+        Button bequal = mainLayout.findViewById(R.id.equal);
         bdel = mainLayout.findViewById(R.id.del);
-        bdecimal = mainLayout.findViewById(R.id.decimal);
-        open = mainLayout.findViewById(R.id.open);
-        close = mainLayout.findViewById(R.id.close);
-        percent = mainLayout.findViewById(R.id.percent);
+        Button bdecimal = mainLayout.findViewById(R.id.decimal);
+        Button open = mainLayout.findViewById(R.id.open);
+        Button close = mainLayout.findViewById(R.id.close);
+        Button percent = mainLayout.findViewById(R.id.percent);
 
-        sin = slidingLayout.findViewById(R.id.sin);
-        cos = slidingLayout.findViewById(R.id.cos);
-        tan = slidingLayout.findViewById(R.id.tan);
-        asin = slidingLayout.findViewById(R.id.asin);
-        acos = slidingLayout.findViewById(R.id.acos);
-        atan = slidingLayout.findViewById(R.id.atan);
-        exp = slidingLayout.findViewById(R.id.exp);
-        log = slidingLayout.findViewById(R.id.log);
-        ln = slidingLayout.findViewById(R.id.ln);
-        pow = slidingLayout.findViewById(R.id.pow);
-        factorial = slidingLayout.findViewById(R.id.fact);
-        sqrt = slidingLayout.findViewById(R.id.sqroot);
-        cbrt = slidingLayout.findViewById(R.id.cuberoot);
-        pi = slidingLayout.findViewById(R.id.pi);
-        ms = slidingLayout.findViewById(R.id.ms);
-        mr = slidingLayout.findViewById(R.id.mr);
-        mPlus = slidingLayout.findViewById(R.id.mplus);
-        mMinus = slidingLayout.findViewById(R.id.mminus);
+        Button sin = slidingLayout.findViewById(R.id.sin);
+        Button cos = slidingLayout.findViewById(R.id.cos);
+        Button tan = slidingLayout.findViewById(R.id.tan);
+        Button asin = slidingLayout.findViewById(R.id.asin);
+        Button acos = slidingLayout.findViewById(R.id.acos);
+        Button atan = slidingLayout.findViewById(R.id.atan);
+        Button exp = slidingLayout.findViewById(R.id.exp);
+        Button log = slidingLayout.findViewById(R.id.log);
+        Button ln = slidingLayout.findViewById(R.id.ln);
+        Button pow = slidingLayout.findViewById(R.id.pow);
+        Button factorial = slidingLayout.findViewById(R.id.fact);
+        Button sqrt = slidingLayout.findViewById(R.id.sqroot);
+        Button cbrt = slidingLayout.findViewById(R.id.cuberoot);
+        Button pi = slidingLayout.findViewById(R.id.pi);
+        Button ms = slidingLayout.findViewById(R.id.ms);
+        Button mr = slidingLayout.findViewById(R.id.mr);
+        Button mPlus = slidingLayout.findViewById(R.id.mplus);
+        Button mMinus = slidingLayout.findViewById(R.id.mminus);
 
         view = findViewById(R.id.view2);
         toolbar = findViewById(R.id.toolbar);
@@ -1383,7 +1385,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isOperator(char c) {
-        if (c == '+' ||
+        return c == '+' ||
                 c == '/' ||
                 c == '*' ||
                 c == '%' ||
@@ -1393,36 +1395,34 @@ public class MainActivity extends AppCompatActivity
                 c == '\u221b' ||
                 c == '÷' ||
                 c == '\u00d7' ||
-                c == '-')
-            return true;
-        return false;
+                c == '-';
     }
 
     //adds number formatter (,) to the equation
     private String formatEquation(String equation) {
         Stack<String> stack = new Stack<>();
         char c;
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for (int i = 0; i < equation.length(); i++) {
             c = equation.charAt(i);
             if (isOperator(c)) {
-                if (!temp.equals(""))
-                    stack.push(temp);
+                if (!temp.toString().equals(""))
+                    stack.push(temp.toString());
                 stack.push(c + "");
-                temp = "";
+                temp = new StringBuilder();
             } else if (c == '(' || c == ')') {
-                if (!temp.equals("")) {
-                    stack.push(temp);
-                    temp = "";
+                if (!temp.toString().equals("")) {
+                    stack.push(temp.toString());
+                    temp = new StringBuilder();
                 }
                 stack.push(c + "");
             } else {
-                temp = temp + c;
+                temp.append(c);
             }
         }
 
-        if (!temp.equals(""))
-            stack.push(temp);
+        if (!temp.toString().equals(""))
+            stack.push(temp.toString());
 
         Stack<String> abc = new Stack<>();
         while (!stack.empty()) {
@@ -1471,7 +1471,7 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
         preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING,
-                equation.getText().toString().trim());
+                Objects.requireNonNull(equation.getText()).toString().trim());
     }
 
     @Override
@@ -1543,12 +1543,8 @@ public class MainActivity extends AppCompatActivity
         final int formulaTextColor = equation.getCurrentTextColor();
         final ValueAnimator textColorAnimator =
                 ValueAnimator.ofObject(new ArgbEvaluator(), resultTextColor, formulaTextColor);
-        textColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                result.setTextColor((int) valueAnimator.getAnimatedValue());
-            }
-        });
+        textColorAnimator.addUpdateListener(valueAnimator ->
+                result.setTextColor((int) valueAnimator.getAnimatedValue()));
 
         final AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(

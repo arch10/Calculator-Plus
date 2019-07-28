@@ -6,10 +6,8 @@ import android.content.SharedPreferences;
 public class AppPreferences {
 
     private SharedPreferences sharedPreferences;
-    private Context ctx;
     private SharedPreferences.Editor editor;
 
-    final private String SHARED_PREF_STRING = "com.example.arch1.testapplication";
     final static String APP_THEME = "appTheme";
     final static String APP_FIRST_LAUNCH = "AppFirstLaunch";
     final static String APP_ANSWER_PRECISION = "precision";
@@ -24,8 +22,8 @@ public class AppPreferences {
     final static String APP_SCIENTIFIC_RESULT = "app.scientific.string";
 
     public AppPreferences(Context context) {
-        ctx = context;
-        sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_STRING, Context.MODE_PRIVATE);
+        String SHARED_PREF_STRING = "com.example.arch1.testapplication";
+        sharedPreferences = context.getSharedPreferences(SHARED_PREF_STRING, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 

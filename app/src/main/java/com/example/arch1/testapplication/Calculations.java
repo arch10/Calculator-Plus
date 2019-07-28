@@ -4,13 +4,13 @@ public class Calculations {
     String equation, answer;
     String date;
 
-    public Calculations(String equation, String answer, String date) {
+    Calculations(String equation, String answer, String date) {
         this.equation = equation;
         this.answer = answer;
         this.date = date;
     }
 
-    public String getEquation() {
+    String getEquation() {
         return equation;
     }
 

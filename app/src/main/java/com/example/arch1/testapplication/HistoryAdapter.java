@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
 
-    private Context ctx;
     private ArrayList<Calculations> list;
     private HistoryAdapter.OnHistoryClickListener listener;
     private OnHistoryLongPressListener longPressListener;
@@ -28,15 +27,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         void onHistoryLongPressed(Calculations data, int position);
     }
 
-    public HistoryAdapter(Context context, ArrayList<Calculations> list, OnHistoryClickListener listener,
-                          OnHistoryLongPressListener longPressListener) {
-        this.ctx = context;
+    HistoryAdapter(ArrayList<Calculations> list, OnHistoryClickListener listener,
+                   OnHistoryLongPressListener longPressListener) {
         this.list = list;
         this.listener = listener;
         this.longPressListener = longPressListener;
     }
 
-    public void setList(ArrayList<Calculations> list) {
+    void setList(ArrayList<Calculations> list) {
         this.list = list;
     }
 
@@ -46,8 +44,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.history_item_layout, parent, false);
-        HistoryViewHolder holder = new HistoryViewHolder(view);
-        return holder;
+        return new HistoryViewHolder(view);
     }
 
     @Override
@@ -69,28 +66,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         TextView title, body, date;
 
-        public HistoryViewHolder(View itemView) {
+        HistoryViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tv_equation);
             body = itemView.findViewById(R.id.tv_answer);
             date = itemView.findViewById(R.id.tv_date);
         }
 
-        public void bind(final Calculations data, final OnHistoryClickListener listener,
-                         final OnHistoryLongPressListener longPressListener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onHistoryClick(data, getAdapterPosition());
-                }
-            });
+        void bind(final Calculations data, final OnHistoryClickListener listener,
+                  final OnHistoryLongPressListener longPressListener) {
+            itemView.setOnClickListener(v -> listener.onHistoryClick(data, getAdapterPosition()));
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    longPressListener.onHistoryLongPressed(data, getAdapterPosition());
-                    return false;
-                }
+            itemView.setOnLongClickListener(v -> {
+                longPressListener.onHistoryLongPressed(data, getAdapterPosition());
+                return false;
             });
         }
     }

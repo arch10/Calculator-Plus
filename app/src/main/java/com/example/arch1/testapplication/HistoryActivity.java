@@ -24,14 +24,11 @@ import java.util.ArrayList;
 public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private LinearLayoutManager mLayoutManager;
     private HistoryAdapter mAdapter;
     private AppPreferences preferences;
-    private Toolbar toolbar;
     private History history;
     private FrameLayout noHistoryLayout;
     private MenuItem delItem;
-    private ImageView noHistoryIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +40,10 @@ public class HistoryActivity extends AppCompatActivity {
 
         String themeName = preferences.getStringPreference(AppPreferences.APP_THEME);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         noHistoryLayout = findViewById(R.id.fl_no_history);
-        noHistoryIcon = findViewById(R.id.iv_icon);
+        ImageView noHistoryIcon = findViewById(R.id.iv_icon);
 
         TypedValue typedValue = new TypedValue();
         TypedArray a = obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
@@ -73,34 +70,23 @@ public class HistoryActivity extends AppCompatActivity {
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         history = new History(this);
         recyclerView = findViewById(R.id.rv_history);
-        mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 
 
-        mAdapter = new HistoryAdapter(this, reverseHistory(history.showHistory()), new HistoryAdapter.OnHistoryClickListener() {
-            @Override
-            public void onHistoryClick(Calculations data, int position) {
-                //History Clicked
-                preferences.setBooleanPreference(AppPreferences.APP_HISTORY_SET, true);
-                preferences.setStringPreference(AppPreferences.APP_HISTORY_EQUATION, data.getEquation());
-                Intent intent = new Intent(HistoryActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            }
-        }, new HistoryAdapter.OnHistoryLongPressListener() {
-            @Override
-            public void onHistoryLongPressed(Calculations data, int position) {
-                //long Pressed
-            }
+        mAdapter = new HistoryAdapter(reverseHistory(history.showHistory()), (data, position) -> {
+            //History Clicked
+            preferences.setBooleanPreference(AppPreferences.APP_HISTORY_SET, true);
+            preferences.setStringPreference(AppPreferences.APP_HISTORY_EQUATION, data.getEquation());
+            Intent intent = new Intent(HistoryActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }, (data, position) -> {
+            //long Pressed
         });
 
         //setting Recycler View

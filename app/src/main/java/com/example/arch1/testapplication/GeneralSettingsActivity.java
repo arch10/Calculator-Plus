@@ -1,19 +1,14 @@
 package com.example.arch1.testapplication;
 
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
 import androidx.appcompat.widget.Toolbar;
-
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Switch;
 
 public class GeneralSettingsActivity extends AppCompatActivity {
 
@@ -54,12 +49,7 @@ public class GeneralSettingsActivity extends AppCompatActivity {
         //setting toolbar style manually
         toolbar.setBackgroundColor(color);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         numberFormatterSwitch = findViewById(R.id.switch1);
         smartCalculationSwitch = findViewById(R.id.switch2);
