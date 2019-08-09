@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calculator Plus</string>
+    <string name="title_activity_settings">Configuración</string>
+    <string name="title_activity_theme">Temas</string>
+    <string name="share_error">No se puede compartir una expresión no válida</string>
+    <string name="choose">Elige uno</string>
+    <string name="delete_button">Botón de Borrar</string>
+    <string name="delete_button_desc">Simplemente presione el botón ELIMINAR para borrar la pantalla de la calculadora</string>
+    <string name="angle_button">Botón de Ángulo</string>
+    <string name="angle_button_desc">Este es el botón de ángulo. Haga clic aquí para cambiar el ángulo de GRADOS a RADIANES y viceversa.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="degrees">Grados</string>
+    <string name="error_invalid">Expresión inválida</string>
+    <string name="no_history">No historial</string>
+    <string name="number_formatter">Formato numérico</string>
+    <string name="number_formatter_desc">Habilita el separador de miles de grupos</string>
+    <string name="options_menu">Opciónes del menú</string>
+    <string name="options_menu_desc">Este es el menú de opciones. Esto lo ayudará a cambiar la configuración y las preferencias de la aplicación. Haga clic aquí para abrir el menú.</string>
+    <string name="privacy_policy"><u>Política de Privacidad</u></string>
+    <string name="radians">Radianes</string>
+    <string name="release_date">La fecha de modificación:</string>
+    <string name="scientific_result">Resultado científico</string>
+    <string name="scientific_result_desc">Permite la notación científica en el resultado</string>
+    <string name="set">Conjunto</string>
+    <string name="share_button">Botón de Compartir</string>
+    <string name="share_button_desc">Este es el botón compartir. Haga clic aquí para compartir sus ecuaciones.</string>
+    <string name="smart_calculations">Cálculos Inteligentes</string>
+    <string name="smart_calculations_desc">Habilita la ecuación de autocompletar</string>
+    <string name="today">Hoy</string>
+    <string name="version">Versión</string>
+    <string name="yesterday">Ayer</string>
+</resources>
