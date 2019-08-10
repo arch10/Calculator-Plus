@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="bottom|end"
-            custom:maxTextSize="60sp"
+            custom:maxTextSize="55sp"
             custom:minTextSize="40sp"
             android:singleLine="true"
             android:includeFontPadding="false"

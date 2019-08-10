@@ -68,12 +68,9 @@ public class GeneralSettingsActivity extends AppCompatActivity {
             if (!isChecked) {
                 //show warning
                 AlertDialog.Builder builder = new AlertDialog.Builder(GeneralSettingsActivity.this);
-                builder.setTitle("Warning")
-                        .setMessage("This action will disable smart calculations. Calculator Plus" +
-                                " will no longer be able to auto-complete or auto-correct " +
-                                "your equations. We recommend to enable this feature for faster and " +
-                                "easy usage of Calculator Plus.")
-                        .setPositiveButton("Ok", null);
+                builder.setTitle(getString(R.string.warning))
+                        .setMessage(getString(R.string.smart_calculation_warning))
+                        .setPositiveButton(getString(R.string.ok), null);
                 builder.show();
             }
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, isChecked);

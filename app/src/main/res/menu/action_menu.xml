@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/history_icon"
-        android:title="History"
+        android:title="@string/title_activity_history"
         app:showAsAction="always"
         android:visible="false"
         android:icon="@drawable/ic_history_black_24dp"/>
     <item
         android:id="@+id/share"
-        android:title="Share"
+        android:title="@string/settings_share"
         android:icon="@drawable/ic_outline_share_24px"
         app:showAsAction="ifRoom" />
     <item
@@ -20,19 +20,19 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/settings"
-        android:title="Settings"
+        android:title="@string/title_activity_settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/history"
-        android:title="History"
+        android:title="@string/title_activity_history"
         app:showAsAction="never"/>
     <item
         android:id="@+id/tutorial"
-        android:title="Show Tutorial"
+        android:title="@string/show_tutorial"
         app:showAsAction="never"/>
     <item
         android:id="@+id/about"
-        android:title="About"
+        android:title="@string/title_activity_about"
         app:showAsAction="never" />
 
 </menu>

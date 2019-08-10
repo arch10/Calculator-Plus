@@ -19,7 +19,7 @@
     <string name="options_menu_desc">Este es el menú de opciones. Esto lo ayudará a cambiar la configuración y las preferencias de la aplicación. Haga clic aquí para abrir el menú.</string>
     <string name="privacy_policy"><u>Política de Privacidad</u></string>
     <string name="radians">Radianes</string>
-    <string name="release_date">La fecha de modificación:</string>
+    <string name="release_date">La fecha de modificación :</string>
     <string name="scientific_result">Resultado científico</string>
     <string name="scientific_result_desc">Permite la notación científica en el resultado</string>
     <string name="set">Conjunto</string>
@@ -28,6 +28,24 @@
     <string name="smart_calculations">Cálculos Inteligentes</string>
     <string name="smart_calculations_desc">Habilita la ecuación de autocompletar</string>
     <string name="today">Hoy</string>
-    <string name="version">Versión</string>
+    <string name="version">Versión :</string>
     <string name="yesterday">Ayer</string>
+    <string name="settings_general">General</string>
+    <string name="settings_general_desc">Preferencias generales del usuario</string>
+    <string name="settings_precision">Respuesta Precisión</string>
+    <string name="settings_precision_desc">Precisión</string>
+    <string name="settings_angle">Ángulo</string>
+    <string name="settings_share">Compartir</string>
+    <string name="settings_share_desc">Comparte esta aplicación</string>
+    <string name="settings_translate">Traducir</string>
+    <string name="settings_translate_desc">Ayuda a traducir Calculator Plus a tu idioma</string>
+    <string name="settings_report">Reportar un problema</string>
+    <string name="settings_report_desc">Informar un error al desarrollador</string>
+    <string name="title_activity_about">Acerca de</string>
+    <string name="title_activity_general_settings">Configuración general</string>
+    <string name="title_activity_history">Historia</string>
+    <string name="warning">Advertencia</string>
+    <string name="smart_calculation_warning">Esta acción deshabilitará los cálculos inteligentes. Calculator Plus ya no podrá completar o corregir automáticamente sus ecuaciones. Recomendamos habilitar esta función para un uso más rápido y fácil de Calculator Plus.</string>
+    <string name="ok">Okay</string>
+    <string name="show_tutorial">Mostrar Tutorial</string>
 </resources>

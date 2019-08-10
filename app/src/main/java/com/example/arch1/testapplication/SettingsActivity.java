@@ -227,19 +227,21 @@ public class SettingsActivity extends AppCompatActivity {
         ListData data;
 
         ArrayList<ListData> list = new ArrayList<>();
-        data = new ListData("General", "General user preferences", R.drawable.ic_outline_build_24px);
+        data = new ListData(getString(R.string.settings_general), getString(R.string.settings_general_desc), R.drawable.ic_outline_build_24px);
         list.add(data);
-        list.add(Theme.getThemeData(themeName));
+        data = Theme.getThemeData(themeName);
+        data.setTitle(getString(R.string.title_activity_theme));
+        list.add(data);
         list.add(getPrecisionData());
-        data = new ListData("Angle", getAngle(), R.drawable.ic_outline_track_changes_24px);
+        data = new ListData(getString(R.string.settings_angle), getAngle(), R.drawable.ic_outline_track_changes_24px);
         list.add(data);
-        data = new ListData("Share", "Share this app", R.drawable.ic_outline_share_24px);
+        data = new ListData(getString(R.string.settings_share), getString(R.string.settings_share_desc), R.drawable.ic_outline_share_24px);
         list.add(data);
-        data = new ListData("Translate", "Help translate Calculator Plus to you language", R.drawable.ic_translate_black_24dp);
+        data = new ListData(getString(R.string.settings_translate), getString(R.string.settings_translate_desc), R.drawable.ic_translate_black_24dp);
         list.add(data);
-        data = new ListData("Report a problem", "Report bug to the developer", R.drawable.ic_outline_feedback_24px);
+        data = new ListData(getString(R.string.settings_report), getString(R.string.settings_report_desc), R.drawable.ic_outline_feedback_24px);
         list.add(data);
-        data = new ListData("About", "Version : " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
+        data = new ListData(getString(R.string.title_activity_about),  getString(R.string.version) + " " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
         list.add(data);
 
         return list;
@@ -247,9 +249,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     private ListData getPrecisionData() {
         ListData data = new ListData();
-        data.setTitle("Answer Precision");
+        data.setTitle(getString(R.string.settings_precision));
         data.setImg(R.drawable.ic_outline_create_24px);
-        data.setBody("Precision: " + getPrecision());
+        data.setBody(getString(R.string.settings_precision_desc) + ": " + getPrecision());
         return data;
     }
 
@@ -257,9 +259,9 @@ public class SettingsActivity extends AppCompatActivity {
         boolean ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
 
         if (ifDegree) {
-            return "Degrees";
+            return getString(R.string.degrees);
         } else {
-            return "Radians";
+            return getString(R.string.radians);
         }
     }
 
