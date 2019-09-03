@@ -94,11 +94,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         }
     }
 
-    public void removeItem(int position) {
-        list.remove(position);
-        notifyDataSetChanged();
-    }
-
     public void updateAdapter(ArrayList<Calculations> list) {
         setList(list);
         notifyDataSetChanged();

@@ -155,7 +155,6 @@ class History {
 
     private void delete(String title) throws JSONException {
         JSONArray ary = new JSONArray();
-        new JSONArray(new JSONArray());
 
         JSONArray jsonArray = new JSONArray(jsonString);
         for (int i = 0; i < jsonArray.length(); i++) {

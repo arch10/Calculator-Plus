@@ -147,8 +147,7 @@ public class HistoryActivity extends AppCompatActivity {
             case 101:
                 Calculations calculations = mAdapter.getCalculations(item.getGroupId());
                 history.deleteHistory(calculations.getEquation());
-                mAdapter.setList(reverseHistory(history.showHistory()));
-                recyclerView.setAdapter(mAdapter);
+                mAdapter.updateAdapter(reverseHistory(history.showHistory()));
                 checkHistoryStatus();
                 return true;
             default:
