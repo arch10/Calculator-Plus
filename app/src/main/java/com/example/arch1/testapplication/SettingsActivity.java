@@ -77,49 +77,56 @@ public class SettingsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         int finalColor = color;
         mAdapter = new ListAdapter(this, setListData(), (data, position) -> {
-            if (position == 0) {
-                intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
-                startActivity(intent);
-            } else if (position == 1) {
-                intent = new Intent(SettingsActivity.this, ThemeActivity.class);
-                startActivity(intent);
-            } else if (position == 2) {
-                //showPopUp
-                showPrecisionDialog();
-            }else if (position == 3) {
-                //Angle
-                showAngleDialog();
-            }else if (position == 4) {
-                //share
-                intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
-                String msg = "\nHey, checkout this cool Calculator app. It has ";
-                msg += "some very nice features. Go to this link to download this app now.\n\n";
-                msg += "https://gigaworks.page.link/calculatorplus";
-                intent.putExtra(Intent.EXTRA_TEXT, msg);
-                startActivity(Intent.createChooser(intent, "Choose one"));
-            } else if(position == 5) {
-                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                        .addDefaultShareMenuItem()
-                        .setToolbarColor(finalColor)
-                        .setShowTitle(true)
-                        .build();
-                CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
-                CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(SURVEY_URL), new WebViewFallback());
-            } else if (position == 6) {
-                intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"));
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus " + BuildConfig.VERSION_NAME
-                        + " // " + Build.MANUFACTURER + " " + Build.MODEL + "(" + Build.DEVICE + ")" +
-                        " // " + getResources().getDisplayMetrics().densityDpi);
-                if (intent.resolveActivity(getPackageManager()) != null) {
+            switch (position) {
+                case 0 :
+                    intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
                     startActivity(intent);
-                }
-            }else if (position == 7) {
-                intent = new Intent(SettingsActivity.this, AboutActivity.class);
-                startActivity(intent);
+                    break;
+                case 1:
+                    intent = new Intent(SettingsActivity.this, ThemeActivity.class);
+                    startActivity(intent);
+                    break;
+                case 2:
+                    showPrecisionDialog();
+                    break;
+                case 3:
+                    showAngleDialog();
+                    break;
+                case 4:
+                    intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
+                    String msg = "\nHey, checkout this cool Calculator app. It has ";
+                    msg += "some very nice features. Go to this link to download this app now.\n\n";
+                    msg += "https://gigaworks.page.link/calculatorplus";
+                    intent.putExtra(Intent.EXTRA_TEXT, msg);
+                    startActivity(Intent.createChooser(intent, "Choose one"));
+                    break;
+                case 5:
+                    CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                            .addDefaultShareMenuItem()
+                            .setToolbarColor(finalColor)
+                            .setShowTitle(true)
+                            .build();
+                    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
+                    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(SURVEY_URL), new WebViewFallback());
+                    break;
+                case 6:
+                    intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:"));
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus " + BuildConfig.VERSION_NAME
+                            + " // " + Build.MANUFACTURER + " " + Build.MODEL + "(" + Build.DEVICE + ")" +
+                            " // " + getResources().getDisplayMetrics().densityDpi);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                    break;
+                case 7:
+                    intent = new Intent(SettingsActivity.this, AboutActivity.class);
+                    startActivity(intent);
+                    break;
+
             }
         });
 
@@ -243,6 +250,8 @@ public class SettingsActivity extends AppCompatActivity {
         list.add(data);
         data = new ListData(getString(R.string.title_activity_about),  getString(R.string.version) + " " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
         list.add(data);
+//        data = new ListData("Delete History", "Never", R.drawable.ic_history_black_24dp);
+//        list.add(data);
 
         return list;
     }
@@ -294,6 +303,33 @@ public class SettingsActivity extends AppCompatActivity {
             }
             mAdapter.setList(setListData());
             recyclerView.setAdapter(mAdapter);
+            precisionDialog.dismiss();
+        });
+        precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;
+        precisionDialog.show();
+    }
+
+    private void showDeleteHistoryDialog() {
+        precisionDialog.setCanceledOnTouchOutside(true);
+        precisionDialog.setContentView(R.layout.delete_history_popup);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        Objects.requireNonNull(precisionDialog.getWindow()).setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+        Button cancelButton = precisionDialog.findViewById(R.id.buttonCancel);
+        Button setButton = precisionDialog.findViewById(R.id.buttonSet);
+        final IndicatorSeekBar indicatorSeekBar = precisionDialog.findViewById(R.id.indicatorSeekBar);
+
+        indicatorSeekBar.setProgress(getPrecision());
+        indicatorSeekBar.customTickTexts(new String[] {"1", "7", "15", "30", "Never"});
+
+        cancelButton.setOnClickListener(v -> precisionDialog.dismiss());
+
+        setButton.setOnClickListener(v -> {
+            setPrecision(indicatorSeekBar.getProgress());
             precisionDialog.dismiss();
         });
         precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
