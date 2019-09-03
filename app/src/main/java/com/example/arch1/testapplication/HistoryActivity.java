@@ -139,4 +139,20 @@ public class HistoryActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 101:
+                Calculations calculations = mAdapter.getCalculations(item.getGroupId());
+                history.deleteHistory(calculations.getEquation());
+                mAdapter.setList(reverseHistory(history.showHistory()));
+                recyclerView.setAdapter(mAdapter);
+                checkHistoryStatus();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 }

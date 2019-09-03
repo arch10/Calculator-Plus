@@ -138,4 +138,36 @@ class History {
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }
 
+    public void deleteHistory(String title) {
+        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
+
+        if (jsonString.contains("\"title\":\"" + title + "\"")) {
+            String js = jsonString;
+            try {
+                delete(title);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                jsonString = js;
+                preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+            }
+        }
+    }
+
+    private void delete(String title) throws JSONException {
+        JSONArray ary = new JSONArray();
+        new JSONArray(new JSONArray());
+
+        JSONArray jsonArray = new JSONArray(jsonString);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject object = jsonArray.getJSONObject(i);
+            if (object.getString("title").equals(title)) {
+                continue;
+            }
+            ary.put(object);
+        }
+
+        jsonString = ary.toString();
+        preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+    }
+
 }

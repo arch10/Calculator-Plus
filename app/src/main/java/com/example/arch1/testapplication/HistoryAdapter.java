@@ -5,9 +5,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,15 +64,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return list.size();
     }
 
-    class HistoryViewHolder extends RecyclerView.ViewHolder {
+    class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         TextView title, body, date;
+        LinearLayout historyItem;
 
         HistoryViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tv_equation);
             body = itemView.findViewById(R.id.tv_answer);
             date = itemView.findViewById(R.id.tv_date);
+            historyItem = itemView.findViewById(R.id.history_item);
+            historyItem.setOnCreateContextMenuListener(this);
         }
 
         void bind(final Calculations data, final OnHistoryClickListener listener,
@@ -82,5 +87,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 return false;
             });
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            contextMenu.add(this.getAdapterPosition(), 101, 0, "Delete");
+        }
+    }
+
+    public void removeItem(int position) {
+        list.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void updateAdapter(ArrayList<Calculations> list) {
+        setList(list);
+        notifyDataSetChanged();
+    }
+
+    public Calculations getCalculations(int pos) {
+        return list.get(pos);
     }
 }
