@@ -7,5 +7,5 @@
             android:id="@android:id/background"
             android:drawable="?colorAccent" />
     </ripple>
-    <solid android:color="?colorPrimary" />
+    <solid android:color="?colorAccent" />
 </shape>
