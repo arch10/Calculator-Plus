@@ -76,6 +76,7 @@
             android:fontFamily="@font/productsans"
             android:padding="8dp"
             android:text="@string/set"
+            android:textColor="@color/colorOffWhite"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
