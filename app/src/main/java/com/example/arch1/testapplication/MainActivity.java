@@ -891,9 +891,12 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.ms:
                 if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
-                    if (isNumber(result.getText().toString()))
+                    String answerString = result.getText().toString();
+                    answerString = answerString.replace(",", "");
+                    if (isNumber(answerString)) {
                         preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
-                                result.getText().toString());
+                                answerString);
+                    }
                 }
                 break;
             case R.id.mr:
@@ -922,6 +925,7 @@ public class MainActivity extends AppCompatActivity
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
                         String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
+                        m2 = m2.replace(",", "");
                         if(!isNumber(m2)) {
                             break;
                         }
@@ -943,6 +947,7 @@ public class MainActivity extends AppCompatActivity
                         String m1 = preferences
                                 .getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
+                        m2 = m2.replace(",", "");
                         if(!isNumber(m2)) {
                             break;
                         }
@@ -950,9 +955,8 @@ public class MainActivity extends AppCompatActivity
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
-                        Double init = Double.parseDouble(preferences
-                                .getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                        Double res = Double.parseDouble(result.getText().toString());
+                        Double init = Double.parseDouble(m1);
+                        Double res = Double.parseDouble(m2);
                         res = init - res;
                         preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
                                 Evaluate.roundMyAnswer(res.toString(), this));
