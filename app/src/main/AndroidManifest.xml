@@ -28,13 +28,16 @@
             android:parentActivityName=".SettingsActivity" />
         <activity
             android:name=".AboutActivity"
-            android:label="About" />
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".SettingsActivity"/>
         <activity
             android:name=".HistoryActivity"
-            android:label="History" />
+            android:label="@string/title_activity_history"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".GeneralSettingsActivity"
-            android:label="General Settings"/>
+            android:label="@string/title_activity_general_settings"
+            android:parentActivityName=".SettingsActivity"/>
     </application>
 
 </manifest>

@@ -11,19 +11,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:text="Theme Name"
-        android:textSize="20sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/guideline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="wrap_content"

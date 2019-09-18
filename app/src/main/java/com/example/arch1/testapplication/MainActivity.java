@@ -1,6 +1,11 @@
 package com.example.arch1.testapplication;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -8,10 +13,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -20,41 +21,46 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
+import java.util.Objects;
 import java.util.Stack;
 
 import static com.example.arch1.testapplication.Evaluate.formatString;
 import static com.example.arch1.testapplication.Evaluate.isAnError;
 import static com.example.arch1.testapplication.Evaluate.isNumber;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, TextWatcher, CalculatorEditText.OnTextSizeChangeListener {
 
-    private TextView result;
-    private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, badd, bsub, bmul, bdiv, bequal, bdel, bdecimal;
-    private Button sin, cos, tan, asin, acos, atan, exp, log, ln, pow, factorial, sqrt, cbrt, pi;
-    private Button open, close, percent, ms, mr, mPlus, mMinus;
-    private EditText equation;
-    private String equ = "", tempEqu, tempResult = "";
+    private CalculatorEditText result;
+    private Button bdel;
+    private CalculatorEditText equation;
+    private String equ = "";
+    private String tempResult = "";
     private View view;
-    private Animator anim;
     private View mainLayout, slidingLayout;
     private AppPreferences preferences;
     private androidx.appcompat.widget.Toolbar toolbar;
-    private boolean firstLaunch;
     private Menu menu;
-    private boolean ifDegree, enableNumberFormatter, enableSmartCalculation = false;
+    private boolean ifDegree;
+    private boolean enableNumberFormatter;
     private History history;
     private ViewPager mPadViewPager;
+
+    private Animator mCurrentAnimator;
 
     private static final String mulSymbol = "\u00d7";
     private static final String piSymbol = "\u03c0";
@@ -82,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initialiseVariables();
 
         //checking if first Launch
-        firstLaunch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
+        boolean firstLaunch = preferences.getBooleanPreference(AppPreferences.APP_FIRST_LAUNCH);
         if (firstLaunch) {
             //set app default preferences
             preferences.setBooleanPreference(AppPreferences.APP_FIRST_LAUNCH, false);
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
             preferences.setStringPreference(AppPreferences.APP_HISTORY, "");
             preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING, "");
+            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, true);
         }
 
         //getting primary color of the theme
@@ -120,20 +127,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         equation.setLongClickable(false);
 
         //adding button long press listener
-        bdel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (!equation.getText().toString().equals(""))
-                    animateClear(view);
-                equ = "";
-                equation.setText(equ);
-                result.setText("");
-                return true;
-            }
+        bdel.setOnLongClickListener(v -> {
+            if (!Objects.requireNonNull(equation.getText()).toString().equals(""))
+                animateClear(view);
+            equ = "";
+            equation.setText(equ);
+            result.setText("");
+            return true;
         });
 
         //adding text change listener
         equation.addTextChangedListener(this);
+        equation.setOnTextSizeChangeListener(this);
 
     }
 
@@ -195,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.equal:
                 if (!isEquationEmpty()) {
-                    String res = result.getText().toString().trim();
+                    String res = Objects.requireNonNull(result.getText()).toString().trim();
                     if (res.equals("") || isAnError(res)) {
                         result.setText(Evaluate.errMsg);
                         if (preferences.getStringPreference(AppPreferences.APP_THEME).equals("red")) {
@@ -208,12 +213,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }else {
                         String historyEqu = Evaluate.getCalculatedExpression();
-                        String historyVal = res;
-                        history.addToHistory(historyEqu, historyVal, System.currentTimeMillis());
+                        history.addToHistory(historyEqu, res, System.currentTimeMillis());
                         tempResult = res;
                         equ = "";
-                        equation.setText(res);
-                        result.setText("");
+                        onResult(res);
                     }
                 }
                 break;
@@ -680,7 +683,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7e");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("e");
                         break;
                     }
@@ -812,7 +816,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7\u221a");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u221a");
                         break;
                     }
@@ -839,7 +844,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7\u221b");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u221b");
                         break;
                     }
@@ -866,7 +872,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         add("0\u00d7\u03c0");
                         break;
                     }
-                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷' || c == '^' || c == '\u221a' || c == '\u221b') {
+                    if (c == '(' || c == '\u00d7' || c == '+' || c == '-' || c == '÷'
+                            || c == '^' || c == '\u221a' || c == '\u221b') {
                         add("\u03c0");
                         break;
                     }
@@ -883,9 +890,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.ms:
-                if (!result.getText().toString().isEmpty()) {
-                    if (isNumber(result.getText().toString()))
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, result.getText().toString());
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
+                    String answerString = result.getText().toString();
+                    answerString = answerString.replace(",", "");
+                    if (isNumber(answerString)) {
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                answerString);
+                    }
                 }
                 break;
             case R.id.mr:
@@ -896,7 +907,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 if (!isEquationEmpty()) {
                     c = equ.charAt(equ.length() - 1);
-                    if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e") || equ.endsWith("!") || equ.endsWith(piSymbol)) {
+                    if (equ.endsWith("%") || equ.endsWith(")") || equ.endsWith("e")
+                            || equ.endsWith("!") || equ.endsWith(piSymbol)) {
                         add(mulSymbol + memory);
                         break;
                     }
@@ -909,10 +921,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.mplus:
-                if (!result.getText().toString().isEmpty()) {
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
                         String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
+                        m2 = m2.replace(",", "");
                         if(!isNumber(m2)) {
                             break;
                         }
@@ -923,15 +936,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Double init = Double.parseDouble(m1);
                         Double res = Double.parseDouble(m2);
                         res = init + res;
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                Evaluate.roundMyAnswer(res.toString(), this));
                     }
                 }
                 break;
             case R.id.mminus:
-                if (!result.getText().toString().isEmpty()) {
+                if (!Objects.requireNonNull(result.getText()).toString().isEmpty()) {
                     if (!preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE).equals("")) {
-                        String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
+                        String m1 = preferences
+                                .getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
+                        m2 = m2.replace(",", "");
                         if(!isNumber(m2)) {
                             break;
                         }
@@ -939,10 +955,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
-                        Double init = Double.parseDouble(preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE));
-                        Double res = Double.parseDouble(result.getText().toString());
+                        Double init = Double.parseDouble(m1);
+                        Double res = Double.parseDouble(m2);
                         res = init - res;
-                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, Evaluate.roundMyAnswer(res.toString()));
+                        preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
+                                Evaluate.roundMyAnswer(res.toString(), this));
                     }
                 }
                 break;
@@ -1014,10 +1031,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isEquationEmpty() {
-        String eq = equ;
-        if (eq.equals(""))
-            return true;
-        return false;
+        return equ.equals("");
     }
 
     private boolean ifPrevOperator() {
@@ -1029,6 +1043,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        if (mCurrentAnimator != null) {
+            mCurrentAnimator.end();
+        }
         super.onSaveInstanceState(outState);
         outState.putString("equ", equ);
         outState.putBoolean("ifDeg", ifDegree);
@@ -1053,10 +1070,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 count++;
             j--;
         }
-        if (count == 0)
-            return true;
-        else
-            return false;
+        return count == 0;
     }
 
     private void animateClear(View viewRoot) {
@@ -1067,35 +1081,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int finalRadius = (int) Math.sqrt((l * l) + (b * b));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            anim = ViewAnimationUtils.createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+            Animator anim = ViewAnimationUtils
+                    .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
             viewRoot.setVisibility(View.VISIBLE);
             anim.setDuration(300);
-            anim.addListener(listener);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.setVisibility(View.INVISIBLE);
+                    mCurrentAnimator = null;
+                }
+            });
+            mCurrentAnimator = anim;
             anim.start();
         }
     }
-
-    private Animator.AnimatorListener listener = new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            view.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    };
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1111,25 +1111,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void afterTextChanged(Editable s) {
 
         //check if number formatter is enabled
-        enableNumberFormatter = preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER);
+        enableNumberFormatter =
+                preferences.getBooleanPreference(AppPreferences.APP_NUMBER_FORMATTER);
         //check if smart calculations is enabled
-        enableSmartCalculation = preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
+        boolean enableSmartCalculation =
+                preferences.getBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS);
 
         if (Evaluate.balancedParenthesis(equ)) {
             result.setTextColor(getTextColor());
-            result.setText(Evaluate.calculateResult(equ, enableNumberFormatter, MainActivity.this));
+            result.setText(Evaluate.calculateResult(equ, enableNumberFormatter,
+                    MainActivity.this));
         } else {
 
             //trying to balance equation coz it's a smart calculator
-            tempEqu = Evaluate.tryBalancingBrackets(equ);
+            String tempEqu = Evaluate.tryBalancingBrackets(equ);
 
             //if smart calculations is on and was able to balance the equation
             if (Evaluate.balancedParenthesis(tempEqu) && enableSmartCalculation) {
                 result.setTextColor(getTextColor());
-                result.setText(Evaluate.calculateResult(tempEqu, enableNumberFormatter, MainActivity.this));
+                result.setText(Evaluate.calculateResult(tempEqu, enableNumberFormatter,
+                        MainActivity.this));
             } else {
                 result.setText("");
-                Evaluate.errMsg = "Invalid Expression";
+                Evaluate.errMsg = getString(R.string.error_invalid);
             }
         }
     }
@@ -1184,11 +1188,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
                 String msg = shareExpression();
                 if(msg == null) {
-                    Toast.makeText(this, "Cannot share invalid expression", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.share_error),
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
                 intent.putExtra(Intent.EXTRA_TEXT, msg);
-                startActivity(Intent.createChooser(intent, "Choose one"));
+                startActivity(Intent.createChooser(intent, getString(R.string.choose)));
                 break;
 
         }
@@ -1198,14 +1203,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String shareExpression() {
         if (!isEquationEmpty()) {
-            String res = result.getText().toString().trim();
+            String res = Objects.requireNonNull(result.getText()).toString().trim();
             if (res.equals("") || isAnError(res)) {
                 //Cannot share invalid expressions
                 return null;
             } else {
                 String expression = Evaluate.getCalculatedExpression();
-                String result = res;
-                return expression + " = " + result;
+                return expression + " = " + res;
             }
         }
         return null;
@@ -1228,8 +1232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
         View shareView = toolbar.findViewById(R.id.share);
         TapTarget delete = TapTarget.forView(mainLayout.findViewById(R.id.del),
-                "Delete Button", "Simply LONG PRESS DELETE button to clear the " +
-                        "calculator screen")
+                getString(R.string.delete_button), getString(R.string.delete_button_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1239,9 +1242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
                 .cancelable(false);
-        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, "Angle Button",
-                "This is the angle button. Click here to change angle from " +
-                        "DEGREES to RADIANS and vice versa.")
+        TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, getString(R.string.angle_button),
+                getString(R.string.angle_button_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.9f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1251,9 +1253,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
                 .cancelable(false);
-        TapTarget options = TapTarget.forToolbarOverflow(toolbar, "Options Menu", "This is options " +
-                "menu. This will help you to change app settings and preferences. Click " +
-                "here to open the menu.")
+        TapTarget options = TapTarget.forToolbarOverflow(toolbar,
+                getString(R.string.options_menu), getString(R.string.options_menu_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1263,8 +1264,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .descriptionTextSize(18)
                 .cancelable(false);
         if(shareView!=null) {
-            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, "Share Button",
-                    "This is the share button. Click here to share your equations.")
+            TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, getString(R.string.share_button),
+                    getString(R.string.share_button_desc))
                     .outerCircleColor(R.color.colorBluePrimary)
                     .outerCircleAlpha(0.9f)
                     .targetCircleColor(R.color.colorWhite)
@@ -1299,45 +1300,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPadViewPager = findViewById(R.id.pad_pager);
         equation = findViewById(R.id.et_display1);
         result = findViewById(R.id.tv_display);
-        b1 = mainLayout.findViewById(R.id.one);
-        b2 = mainLayout.findViewById(R.id.two);
-        b3 = mainLayout.findViewById(R.id.three);
-        b4 = mainLayout.findViewById(R.id.four);
-        b5 = mainLayout.findViewById(R.id.five);
-        b6 = mainLayout.findViewById(R.id.six);
-        b7 = mainLayout.findViewById(R.id.seven);
-        b8 = mainLayout.findViewById(R.id.eight);
-        b9 = mainLayout.findViewById(R.id.nine);
-        b0 = mainLayout.findViewById(R.id.zero);
-        badd = mainLayout.findViewById(R.id.add);
-        bsub = mainLayout.findViewById(R.id.sub);
-        bmul = mainLayout.findViewById(R.id.mul);
-        bdiv = mainLayout.findViewById(R.id.div);
-        bequal = mainLayout.findViewById(R.id.equal);
+        Button b1 = mainLayout.findViewById(R.id.one);
+        Button b2 = mainLayout.findViewById(R.id.two);
+        Button b3 = mainLayout.findViewById(R.id.three);
+        Button b4 = mainLayout.findViewById(R.id.four);
+        Button b5 = mainLayout.findViewById(R.id.five);
+        Button b6 = mainLayout.findViewById(R.id.six);
+        Button b7 = mainLayout.findViewById(R.id.seven);
+        Button b8 = mainLayout.findViewById(R.id.eight);
+        Button b9 = mainLayout.findViewById(R.id.nine);
+        Button b0 = mainLayout.findViewById(R.id.zero);
+        Button badd = mainLayout.findViewById(R.id.add);
+        Button bsub = mainLayout.findViewById(R.id.sub);
+        Button bmul = mainLayout.findViewById(R.id.mul);
+        Button bdiv = mainLayout.findViewById(R.id.div);
+        Button bequal = mainLayout.findViewById(R.id.equal);
         bdel = mainLayout.findViewById(R.id.del);
-        bdecimal = mainLayout.findViewById(R.id.decimal);
-        open = mainLayout.findViewById(R.id.open);
-        close = mainLayout.findViewById(R.id.close);
-        percent = mainLayout.findViewById(R.id.percent);
+        Button bdecimal = mainLayout.findViewById(R.id.decimal);
+        Button open = mainLayout.findViewById(R.id.open);
+        Button close = mainLayout.findViewById(R.id.close);
+        Button percent = mainLayout.findViewById(R.id.percent);
 
-        sin = slidingLayout.findViewById(R.id.sin);
-        cos = slidingLayout.findViewById(R.id.cos);
-        tan = slidingLayout.findViewById(R.id.tan);
-        asin = slidingLayout.findViewById(R.id.asin);
-        acos = slidingLayout.findViewById(R.id.acos);
-        atan = slidingLayout.findViewById(R.id.atan);
-        exp = slidingLayout.findViewById(R.id.exp);
-        log = slidingLayout.findViewById(R.id.log);
-        ln = slidingLayout.findViewById(R.id.ln);
-        pow = slidingLayout.findViewById(R.id.pow);
-        factorial = slidingLayout.findViewById(R.id.fact);
-        sqrt = slidingLayout.findViewById(R.id.sqroot);
-        cbrt = slidingLayout.findViewById(R.id.cuberoot);
-        pi = slidingLayout.findViewById(R.id.pi);
-        ms = slidingLayout.findViewById(R.id.ms);
-        mr = slidingLayout.findViewById(R.id.mr);
-        mPlus = slidingLayout.findViewById(R.id.mplus);
-        mMinus = slidingLayout.findViewById(R.id.mminus);
+        Button sin = slidingLayout.findViewById(R.id.sin);
+        Button cos = slidingLayout.findViewById(R.id.cos);
+        Button tan = slidingLayout.findViewById(R.id.tan);
+        Button asin = slidingLayout.findViewById(R.id.asin);
+        Button acos = slidingLayout.findViewById(R.id.acos);
+        Button atan = slidingLayout.findViewById(R.id.atan);
+        Button exp = slidingLayout.findViewById(R.id.exp);
+        Button log = slidingLayout.findViewById(R.id.log);
+        Button ln = slidingLayout.findViewById(R.id.ln);
+        Button pow = slidingLayout.findViewById(R.id.pow);
+        Button factorial = slidingLayout.findViewById(R.id.fact);
+        Button sqrt = slidingLayout.findViewById(R.id.sqroot);
+        Button cbrt = slidingLayout.findViewById(R.id.cuberoot);
+        Button pi = slidingLayout.findViewById(R.id.pi);
+        Button ms = slidingLayout.findViewById(R.id.ms);
+        Button mr = slidingLayout.findViewById(R.id.mr);
+        Button mPlus = slidingLayout.findViewById(R.id.mplus);
+        Button mMinus = slidingLayout.findViewById(R.id.mminus);
 
         view = findViewById(R.id.view2);
         toolbar = findViewById(R.id.toolbar);
@@ -1388,7 +1389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isOperator(char c) {
-        if (c == '+' ||
+        return c == '+' ||
                 c == '/' ||
                 c == '*' ||
                 c == '%' ||
@@ -1398,36 +1399,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 c == '\u221b' ||
                 c == '÷' ||
                 c == '\u00d7' ||
-                c == '-')
-            return true;
-        return false;
+                c == '-';
     }
 
     //adds number formatter (,) to the equation
     private String formatEquation(String equation) {
         Stack<String> stack = new Stack<>();
         char c;
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for (int i = 0; i < equation.length(); i++) {
             c = equation.charAt(i);
             if (isOperator(c)) {
-                if (!temp.equals(""))
-                    stack.push(temp);
+                if (!temp.toString().equals(""))
+                    stack.push(temp.toString());
                 stack.push(c + "");
-                temp = "";
+                temp = new StringBuilder();
             } else if (c == '(' || c == ')') {
-                if (!temp.equals("")) {
-                    stack.push(temp);
-                    temp = "";
+                if (!temp.toString().equals("")) {
+                    stack.push(temp.toString());
+                    temp = new StringBuilder();
                 }
                 stack.push(c + "");
             } else {
-                temp = temp + c;
+                temp.append(c);
             }
         }
 
-        if (!temp.equals(""))
-            stack.push(temp);
+        if (!temp.toString().equals(""))
+            stack.push(temp.toString());
 
         Stack<String> abc = new Stack<>();
         while (!stack.empty()) {
@@ -1476,7 +1475,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         preferences.setBooleanPreference(AppPreferences.APP_ANGLE, ifDegree);
         preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING,
-                equation.getText().toString().trim());
+                Objects.requireNonNull(equation.getText()).toString().trim());
     }
 
     @Override
@@ -1506,5 +1505,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             equ = equ.replaceAll(",", "");
         }
         equation.setText(equ);
+    }
+
+    @Override
+    public void onTextSizeChanged(TextView textView, float oldSize) {
+
+        // Calculate the values needed to perform the scale and translation animations,
+        // maintaining the same apparent baseline for the displayed text.
+        final float textScale = oldSize / textView.getTextSize();
+        final float translationX = (1.0f - textScale) *
+                (textView.getWidth() / 2.0f - textView.getPaddingEnd());
+        final float translationY = (1.0f - textScale) *
+                (textView.getHeight() / 2.0f - textView.getPaddingBottom());
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(textView, View.SCALE_X, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.SCALE_Y, textScale, 1.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_X, translationX, 0.0f),
+                ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, translationY, 0.0f));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
+    }
+
+    private void onResult(final String answer) {
+        // Calculate the values needed to perform the scale and translation animations,
+        // accounting for how the scale will affect the final position of the text.
+        final float resultScale =
+                equation.getVariableTextSize(answer) / result.getTextSize();
+        final float resultTranslationX = (1.0f - resultScale) *
+                (result.getWidth() / 2.0f - result.getPaddingEnd());
+        final float resultTranslationY = (1.0f - resultScale) *
+                (result.getHeight() / 2.0f - result.getPaddingBottom()) +
+                (equation.getBottom() - result.getBottom()) +
+                (result.getPaddingBottom() - equation.getPaddingBottom());
+        final float formulaTranslationY = -equation.getBottom();
+
+        // Use a value animator to fade to the final text color over the course of the animation.
+        final int resultTextColor = result.getCurrentTextColor();
+        final int formulaTextColor = equation.getCurrentTextColor();
+        final ValueAnimator textColorAnimator =
+                ValueAnimator.ofObject(new ArgbEvaluator(), resultTextColor, formulaTextColor);
+        textColorAnimator.addUpdateListener(valueAnimator ->
+                result.setTextColor((int) valueAnimator.getAnimatedValue()));
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                textColorAnimator,
+                ObjectAnimator.ofFloat(result, View.SCALE_X, resultScale),
+                ObjectAnimator.ofFloat(result, View.SCALE_Y, resultScale),
+                ObjectAnimator.ofFloat(result, View.TRANSLATION_X, resultTranslationX),
+                ObjectAnimator.ofFloat(result, View.TRANSLATION_Y, resultTranslationY),
+                ObjectAnimator.ofFloat(equation, View.TRANSLATION_Y, formulaTranslationY));
+        animatorSet.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                result.setText(answer);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Reset all of the values modified during the animation.
+                result.setTextColor(resultTextColor);
+                result.setScaleX(1.0f);
+                result.setScaleY(1.0f);
+                result.setTranslationX(0.0f);
+                result.setTranslationY(0.0f);
+                equation.setTranslationY(0.0f);
+
+                // Finally update the formula to use the current result.
+                equation.setText(answer);
+                mCurrentAnimator = null;
+            }
+        });
+
+        mCurrentAnimator = animatorSet;
+        animatorSet.start();
     }
 }

@@ -24,13 +24,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         void OnSettingClick(ListData data, int position);
     }
 
-    public ListAdapter(Context context, ArrayList<ListData> list, ListAdapter.OnSettingClickListener listener) {
+    ListAdapter(Context context, ArrayList<ListData> list, ListAdapter.OnSettingClickListener listener) {
         ctx = context;
         this.list = list;
         this.listener = listener;
     }
 
-    public void setList(ArrayList<ListData> list) {
+    void setList(ArrayList<ListData> list) {
         this.list = list;
     }
 
@@ -40,8 +40,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.setting_list_layout, parent, false);
-        SettingViewHolder holder = new SettingViewHolder(view);
-        return holder;
+        return new SettingViewHolder(view);
     }
 
     @Override
@@ -66,20 +65,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.SettingViewHol
         TextView title, body;
         ImageView icon;
 
-        public SettingViewHolder(View itemView) {
+        SettingViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             body = itemView.findViewById(R.id.desc);
             icon = itemView.findViewById(R.id.iv_icon);
         }
 
-        public void bind(final ListData data, final ListAdapter.OnSettingClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.OnSettingClick(data, getAdapterPosition());
-                }
-            });
+        void bind(final ListData data, final ListAdapter.OnSettingClickListener listener) {
+            itemView.setOnClickListener(v -> listener.OnSettingClick(data, getAdapterPosition()));
         }
     }
 

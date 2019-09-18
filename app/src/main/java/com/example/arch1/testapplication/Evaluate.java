@@ -5,30 +5,30 @@ import android.content.Context;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
-public class Evaluate {
+class Evaluate {
 
     static String errMsg = "Invalid Expression";
     private static String calculatedExpression = "";
-    private static AppPreferences preferences = null;
     private static Boolean ifDegree = true;
 
     //called from activity to get result
-    public static String calculateResult(String equ, Boolean enableNumberFormatter, Context context) {
-
-        preferences = AppPreferences.getInstance(context);
+    static String calculateResult(String equ, Boolean enableNumberFormatter, Context context) {
+        AppPreferences preferences = AppPreferences.getInstance(context);
         ifDegree = preferences.getBooleanPreference(AppPreferences.APP_ANGLE);
         if (!equ.equals("")) {
             equ = equ.replace("÷", "/");
             equ = equ.replace("\u00d7", "*");
             equ = equ.replace(",", "");
 
-            String ans = new Evaluate().getAnswer(equ);
+            String ans = new Evaluate().getAnswer(equ, context);
             if (ans.equals("-0"))
                 ans = "0";
-            if (enableNumberFormatter)
+            if (enableNumberFormatter && !(ans.contains("E")))
                 return formatString(ans);
             return ans;
         }
@@ -36,8 +36,8 @@ public class Evaluate {
     }
 
     //checks if the equation is balanced or not
-    public static boolean balancedParenthesis(String s) {
-        Stack<Character> stack = new Stack<Character>();
+    static boolean balancedParenthesis(String s) {
+        Stack<Character> stack = new Stack<>();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c == '(') {
@@ -52,7 +52,7 @@ public class Evaluate {
     }
 
     //tries to balance the equations with smart balancing
-    public static String tryBalancingBrackets(String equ) {
+    static String tryBalancingBrackets(String equ) {
         String tempEqu = equ;
         int a = 0, b = 0;
 
@@ -137,29 +137,35 @@ public class Evaluate {
 
     //checks if the string provided is a sqroot or cbroot
     private boolean isRoot(String string) {
-        if (string.equals("\u221a") || string.equals("\u221b")) {
-            return true;
-        }
-        return false;
+        return string.equals("\u221a") || string.equals("\u221b");
     }
 
     //rounds the provided number to user preference digits
-    public static String roundMyAnswer(String ans) {
+    static String roundMyAnswer(String ans, Context context) {
 
+        AppPreferences preferences = AppPreferences.getInstance(context);
         String precision = preferences.getStringPreference(AppPreferences.APP_ANSWER_PRECISION);
         BigDecimal num = new BigDecimal(ans);
 
-        num = num.setScale(getPrecision(precision), RoundingMode.HALF_UP);
+        BigDecimal temp = num;
+        num = num.setScale(getPrecision(precision, preferences), RoundingMode.HALF_UP);
         num = num.stripTrailingZeros();
 
-        if (num.compareTo(new BigDecimal("0")) == 0)
+        if (num.compareTo(new BigDecimal("0")) == 0) {
+            if(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT)
+                    && (temp.compareTo(new BigDecimal("0")) != 0)) {
+                return format(temp, 2);
+            }
             return "0";
+        }
+        if(preferences.getBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT)) {
+            return toScientific(num.toPlainString());
+        }
         return num.toPlainString();
     }
 
     //get user defined number precision
-    private static int getPrecision(String precision) {
-
+    private static int getPrecision(String precision, AppPreferences preferences) {
         if (precision.equals("")) {
             preferences.setStringPreference(AppPreferences.APP_ANSWER_PRECISION, "six");
             return 6;
@@ -191,7 +197,7 @@ public class Evaluate {
 
     //solves sqroots and cbroots
     private Double solveRoot(Stack<String> gg) {
-        Double num = Double.parseDouble(gg.pop());
+        double num = Double.parseDouble(gg.pop());
         while (!gg.empty()) {
             String kk = gg.pop();
             if (kk.equals("\u221a")) {
@@ -227,25 +233,21 @@ public class Evaluate {
     //part of the number
     //eg: '500' - '400' = '500' + '-400'
     private boolean isOperator(char c) {
-        if (c == '+' ||
+        return c == '+' ||
                 c == '/' ||
                 c == '*' ||
                 c == '%' ||
                 c == '!' ||
                 c == '^' ||
                 c == '\u221a' ||
-                c == '\u221b')
-            return true;
-        return false;
+                c == '\u221b';
     }
 
     //checks if the char can be a last character in a valid equation
     private boolean canBeLastChar(char c) {
         if (isNumber(c))
             return true;
-        if (c == ')' || c == '%' || c == '!')
-            return true;
-        return false;
+        return c == ')' || c == '%' || c == '!';
     }
 
     //checks if the given char is a number or a constant
@@ -268,8 +270,28 @@ public class Evaluate {
         return false;
     }
 
+    private static String format(BigDecimal x, int scale) {
+        NumberFormat formatter = new DecimalFormat("0.0E0");
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+        formatter.setMinimumFractionDigits(scale);
+        formatter.setMinimumIntegerDigits(1);
+        return formatter.format(x);
+    }
+
+    private static String toScientific(String ans) {
+        String temp = ans;
+        int scale = 7;
+        while (temp.length()>11) {
+            temp = format(new BigDecimal(temp), scale);
+            scale--;
+            if(scale==1)
+                break;
+        }
+        return temp;
+    }
+
     //you provide the equation, it will give the result
-    private String getAnswer(String equation) {
+    private String getAnswer(String equation, Context context) {
 
         equation = equation.replaceAll("e", Math.E + "");
         equation = equation.replaceAll("\u03c0", "" + Math.PI);
@@ -330,7 +352,7 @@ public class Evaluate {
                 stack.pop();
                 String dd;
                 try {
-                    dd = getValue(abc);
+                    dd = getValue(abc, context);
                 } catch (Exception e) {
                     e.printStackTrace();
                     dd = null;
@@ -354,7 +376,7 @@ public class Evaluate {
 
         String dd;
         try {
-            dd = getValue(abc);
+            dd = getValue(abc, context);
         } catch (Exception e) {
             e.printStackTrace();
             dd = null;
@@ -368,85 +390,84 @@ public class Evaluate {
 
     //solves sub-equations without brackets
     //this is the method where actual calculations happen
-    private String getValue(Stack<String> token) throws Exception {
+    private String getValue(Stack<String> token, Context context) throws Exception {
         String temp;
         Stack<String> stack = new Stack<>();
-        Stack<String> workingStack = token;
 
-        if (workingStack.contains("-")) {
-            while (!workingStack.empty()) {
-                temp = workingStack.pop();
+        if (token.contains("-")) {
+            while (!token.empty()) {
+                temp = token.pop();
                 if (temp.equals("-")) {
-                    Double negative = -Double.parseDouble(workingStack.pop());
-                    temp = negative.toString();
+                    double negative = -Double.parseDouble(token.pop());
+                    temp = Double.toString(negative);
                 }
                 stack.push(temp);
             }
 
             while (!stack.empty()) {
-                workingStack.push(stack.pop());
+                token.push(stack.pop());
             }
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
-            return roundMyAnswer(tt);
+        if (token.size() == 1) {
+            String tt = token.peek();
+            return roundMyAnswer(tt, context);
         }
 
         //solve for pre unary operators
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
             Double num1;
 
             switch (temp) {
                 case "sin":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         num1 = Math.toRadians(num1);
                     stack.push(Math.sin(num1) + "");
                     break;
                 case "-sin":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         num1 = Math.toRadians(num1);
                     stack.push("-" + Math.sin(num1) + "");
                     break;
                 case "cos":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         num1 = Math.toRadians(num1);
                     stack.push(Math.cos(num1) + "");
                     break;
                 case "-cos":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         num1 = Math.toRadians(num1);
                     stack.push("-" + Math.cos(num1) + "");
                     break;
                 case "tan":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree) {
                         if (num1 % 90 == 0) {
                             errMsg = "Domain error";
@@ -462,11 +483,11 @@ public class Evaluate {
                     stack.push(Math.tan(num1) + "");
                     break;
                 case "-tan":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree) {
                         if (num1 % 90 == 0) {
                             errMsg = "Domain error";
@@ -482,11 +503,11 @@ public class Evaluate {
                     stack.push("-" + Math.tan(num1) + "");
                     break;
                 case "asin":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 > 1 || num1 < -1) {
                         errMsg = "Domain error";
                         return null;
@@ -497,11 +518,11 @@ public class Evaluate {
                         stack.push(Math.asin(num1) + "");
                     break;
                 case "-asin":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 > 1 || num1 < -1) {
                         errMsg = "Domain error";
                         return null;
@@ -512,11 +533,11 @@ public class Evaluate {
                         stack.push("-" + Math.asin(num1) + "");
                     break;
                 case "acos":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 > 1 || num1 < -1) {
                         errMsg = "Domain error";
                         return null;
@@ -527,11 +548,11 @@ public class Evaluate {
                         stack.push(Math.acos(num1) + "");
                     break;
                 case "-acos":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 > 1 || num1 < -1) {
                         errMsg = "Domain error";
                         return null;
@@ -542,33 +563,33 @@ public class Evaluate {
                         stack.push("-" + Math.acos(num1) + "");
                     break;
                 case "atan":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         stack.push(Math.toDegrees(Math.atan(num1)) + "");
                     else
                         stack.push(Math.atan(num1) + "");
                     break;
                 case "-atan":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (ifDegree)
                         stack.push("-" + Math.toDegrees(Math.atan(num1)) + "");
                     else
                         stack.push("-" + Math.atan(num1) + "");
                     break;
                 case "log":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 < 0) {
                         errMsg = "Domain error";
                         return null;
@@ -576,11 +597,11 @@ public class Evaluate {
                     stack.push(Math.log10(num1) + "");
                     break;
                 case "-log":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 < 0) {
                         errMsg = "Domain error";
                         return null;
@@ -588,11 +609,11 @@ public class Evaluate {
                     stack.push("-" + Math.log10(num1) + "");
                     break;
                 case "ln":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 < 0) {
                         errMsg = "Domain error";
                         return null;
@@ -600,11 +621,11 @@ public class Evaluate {
                     stack.push(Math.log(num1) + "");
                     break;
                 case "-ln":
-                    if (!isNumber(workingStack.peek())) {
+                    if (!isNumber(token.peek())) {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     if (num1 < 0) {
                         errMsg = "Domain error";
                         return null;
@@ -612,17 +633,17 @@ public class Evaluate {
                     stack.push("-" + Math.log(num1) + "");
                     break;
                 case "\u221a":
-                    if (!isNumber(workingStack.peek())) {
-                        String ll = workingStack.peek();
+                    if (!isNumber(token.peek())) {
+                        String ll = token.peek();
                         if (ll.equals("\u221a") || ll.equals("\u221b")) {
                             Stack<String> gg = new Stack<>();
-                            while (!workingStack.empty() && isRoot(ll)) {
-                                gg.push(workingStack.pop());
-                                if (!workingStack.empty())
-                                    ll = workingStack.peek();
+                            while (!token.empty() && isRoot(ll)) {
+                                gg.push(token.pop());
+                                if (!token.empty())
+                                    ll = token.peek();
                             }
-                            if (isNumber(workingStack.peek())) {
-                                gg.push(workingStack.pop());
+                            if (isNumber(token.peek())) {
+                                gg.push(token.pop());
                             }
                             num1 = solveRoot(gg);
                             stack.push(Math.sqrt(num1) + "");
@@ -631,21 +652,21 @@ public class Evaluate {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     stack.push(Math.sqrt(num1) + "");
                     break;
                 case "-\u221a":
-                    if (!isNumber(workingStack.peek())) {
-                        String ll = workingStack.peek();
+                    if (!isNumber(token.peek())) {
+                        String ll = token.peek();
                         if (ll.equals("\u221a") || ll.equals("\u221b")) {
                             Stack<String> gg = new Stack<>();
-                            while (!workingStack.empty() && isRoot(ll)) {
-                                gg.push(workingStack.pop());
-                                if (!workingStack.empty())
-                                    ll = workingStack.peek();
+                            while (!token.empty() && isRoot(ll)) {
+                                gg.push(token.pop());
+                                if (!token.empty())
+                                    ll = token.peek();
                             }
-                            if (isNumber(workingStack.peek())) {
-                                gg.push(workingStack.pop());
+                            if (isNumber(token.peek())) {
+                                gg.push(token.pop());
                             }
                             num1 = solveRoot(gg);
                             stack.push("-" + Math.sqrt(num1) + "");
@@ -654,21 +675,21 @@ public class Evaluate {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     stack.push("-" + Math.sqrt(num1) + "");
                     break;
                 case "\u221b":
-                    if (!isNumber(workingStack.peek())) {
-                        String ll = workingStack.peek();
+                    if (!isNumber(token.peek())) {
+                        String ll = token.peek();
                         if (ll.equals("\u221a") || ll.equals("\u221b")) {
                             Stack<String> gg = new Stack<>();
-                            while (!workingStack.empty() && isRoot(ll)) {
-                                gg.push(workingStack.pop());
-                                if (!workingStack.empty())
-                                    ll = workingStack.peek();
+                            while (!token.empty() && isRoot(ll)) {
+                                gg.push(token.pop());
+                                if (!token.empty())
+                                    ll = token.peek();
                             }
-                            if (isNumber(workingStack.peek())) {
-                                gg.push(workingStack.pop());
+                            if (isNumber(token.peek())) {
+                                gg.push(token.pop());
                             }
                             num1 = solveRoot(gg);
                             stack.push(Math.cbrt(num1) + "");
@@ -677,21 +698,21 @@ public class Evaluate {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     stack.push(Math.cbrt(num1) + "");
                     break;
                 case "-\u221b":
-                    if (!isNumber(workingStack.peek())) {
-                        String ll = workingStack.peek();
+                    if (!isNumber(token.peek())) {
+                        String ll = token.peek();
                         if (ll.equals("\u221a") || ll.equals("\u221b")) {
                             Stack<String> gg = new Stack<>();
-                            while (!workingStack.empty() && isRoot(ll)) {
-                                gg.push(workingStack.pop());
-                                if (!workingStack.empty())
-                                    ll = workingStack.peek();
+                            while (!token.empty() && isRoot(ll)) {
+                                gg.push(token.pop());
+                                if (!token.empty())
+                                    ll = token.peek();
                             }
-                            if (isNumber(workingStack.peek())) {
-                                gg.push(workingStack.pop());
+                            if (isNumber(token.peek())) {
+                                gg.push(token.pop());
                             }
                             num1 = solveRoot(gg);
                             stack.push("-" + Math.cbrt(num1) + "");
@@ -700,7 +721,7 @@ public class Evaluate {
                         errMsg = "Invalid Expression";
                         return null;
                     }
-                    num1 = Double.parseDouble(workingStack.pop());
+                    num1 = Double.parseDouble(token.pop());
                     stack.push("-" + Math.cbrt(num1) + "");
                     break;
                 default:
@@ -710,14 +731,14 @@ public class Evaluate {
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -726,8 +747,8 @@ public class Evaluate {
 
         //solve for post unary operators
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
             Double num1;
 
             switch (temp) {
@@ -742,7 +763,7 @@ public class Evaluate {
                             tempStack.push(stack.pop());
                         }
 
-                        String tempAns = getValue(tempStack);
+                        String tempAns = getValue(tempStack, context);
                         if (tempAns == null) {
                             errMsg = "Invalid Expression";
                             return null;
@@ -769,7 +790,7 @@ public class Evaluate {
                         return null;
                     }
                     int a = Integer.parseInt(stack.pop());
-                    if (a > 50) {
+                    if (a > 90) {
                         errMsg = "Number too large";
                         return null;
                     }
@@ -782,14 +803,14 @@ public class Evaluate {
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -798,26 +819,41 @@ public class Evaluate {
 
         //power  ^
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
 
             if (temp.equals("^")) {
-                Double num1 = Double.parseDouble(stack.pop());
-                Double num2 = Double.parseDouble(workingStack.pop());
-                stack.push(Math.pow(num1, num2) + "");
+                BigDecimal num1 = new BigDecimal(stack.pop());
+                int num2 = Integer.parseInt(token.pop());
+                if(num2 >= 0) {
+                    try {
+                        stack.push(num1.pow(num2).toPlainString());
+                    } catch (ArithmeticException e) {
+                        errMsg = "Number too large";
+                        return null;
+                    }
+                } else {
+                    try {
+                        BigDecimal inter = num1.pow(-num2);
+                        stack.push(BigDecimal.ONE.divide(inter, 100, RoundingMode.HALF_UP).toPlainString());
+                    } catch (ArithmeticException e) {
+                        errMsg = "Number too large";
+                        return null;
+                    }
+                }
             } else
                 stack.push(temp);
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -826,12 +862,12 @@ public class Evaluate {
 
         //division
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
 
             if (temp.length() == 1 && temp.charAt(0) == '/') {
                 String val1 = stack.pop();
-                String val2 = workingStack.pop();
+                String val2 = token.pop();
                 BigDecimal num1 = new BigDecimal(val1);
                 BigDecimal num2 = new BigDecimal(val2);
 
@@ -840,7 +876,7 @@ public class Evaluate {
                     return null;
                 }
 
-                num1 = num1.divide(num2, 15, RoundingMode.HALF_UP);
+                num1 = num1.divide(num2, 100, RoundingMode.HALF_UP);
                 val1 = num1.toPlainString();
                 stack.push(val1);
             } else {
@@ -849,14 +885,14 @@ public class Evaluate {
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -865,12 +901,12 @@ public class Evaluate {
 
         //multiplication
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
 
             if (temp.length() == 1 && temp.charAt(0) == '*') {
                 String val1 = stack.pop();
-                String val2 = workingStack.pop();
+                String val2 = token.pop();
                 BigDecimal num1 = new BigDecimal(val1);
                 BigDecimal num2 = new BigDecimal(val2);
 
@@ -883,14 +919,14 @@ public class Evaluate {
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;
@@ -899,12 +935,12 @@ public class Evaluate {
 
         //addition
         stack.clear();
-        while (!workingStack.empty()) {
-            temp = workingStack.pop();
+        while (!token.empty()) {
+            temp = token.pop();
 
             if (temp.length() == 1 && temp.charAt(0) == '+') {
                 String val1 = stack.pop();
-                String val2 = workingStack.pop();
+                String val2 = token.pop();
                 BigDecimal num1 = new BigDecimal(val1);
                 BigDecimal num2 = new BigDecimal(val2);
 
@@ -917,14 +953,14 @@ public class Evaluate {
         }
 
         while (!stack.empty()) {
-            workingStack.push(stack.pop());
+            token.push(stack.pop());
         }
 
         //check if solved
-        if (workingStack.size() == 1) {
-            String tt = workingStack.peek();
+        if (token.size() == 1) {
+            String tt = token.peek();
             try {
-                return roundMyAnswer(tt);
+                return roundMyAnswer(tt, context);
             } catch (NumberFormatException e) {
                 errMsg = "Invalid Expression";
                 return null;

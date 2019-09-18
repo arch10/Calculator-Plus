@@ -3,33 +3,34 @@ package com.example.arch1.testapplication;
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class History {
+import static java.text.DateFormat.getDateInstance;
+
+class History {
 
     private String jsonString;
+    private Context context;
     private AppPreferences preferences;
 
-    public History(Context context) {
+    History(Context context) {
+        this.context = context;
         preferences = AppPreferences.getInstance(context);
         jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
     }
 
-    public void setJsonString(String jsonString) {
+    void setJsonString(String jsonString) {
         this.jsonString = jsonString;
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }
 
-    public void addToHistory(String title, String body, Long date) {
+    void addToHistory(String title, String body, Long date) {
         jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
         JSONArray array;
         if (jsonString.equals("")) {
@@ -71,8 +72,7 @@ public class History {
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }
 
-    public ArrayList<Calculations> showHistory() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    ArrayList<Calculations> showHistory() {
         jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
 
         ArrayList<Calculations> calcArray = new ArrayList<>();
@@ -85,11 +85,11 @@ public class History {
                 boolean isYesterday = isYesterday(Long.parseLong(object.getString("date")));
                 String dateString;
                 if (isToday)
-                    dateString = "Today";
+                    dateString = context.getString(R.string.today);
                 else if (isYesterday)
-                    dateString = "Yesterday";
+                    dateString = context.getString(R.string.yesterday);
                 else
-                    dateString = DateFormat.getDateInstance().format(date);//sdf.format(date);
+                    dateString = getDateInstance().format(date);
 
                 Calculations calc = new Calculations(object.getString("title"), object.getString("body"), dateString);
                 calcArray.add(calc);
@@ -134,6 +134,37 @@ public class History {
             testObj.put("date", System.currentTimeMillis());
 
         ary.put(testObj);
+        jsonString = ary.toString();
+        preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+    }
+
+    public void deleteHistory(String title) {
+        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
+
+        if (jsonString.contains("\"title\":\"" + title + "\"")) {
+            String js = jsonString;
+            try {
+                delete(title);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                jsonString = js;
+                preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+            }
+        }
+    }
+
+    private void delete(String title) throws JSONException {
+        JSONArray ary = new JSONArray();
+
+        JSONArray jsonArray = new JSONArray(jsonString);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject object = jsonArray.getJSONObject(i);
+            if (object.getString("title").equals(title)) {
+                continue;
+            }
+            ary.put(object);
+        }
+
         jsonString = ary.toString();
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }

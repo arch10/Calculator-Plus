@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -10,23 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="24dp"
-        android:paddingTop="56dp"
+        android:paddingTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Delete history after (days): "
+            android:fontFamily="@font/productsans"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.warkiz.widget.IndicatorSeekBar
             android:id="@+id/indicatorSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="16dp"
             app:isb_indicator_color="?colorAccent"
             app:isb_indicator_text_size="18dp"
-            app:isb_max="10"
-            app:isb_min="2"
-            app:isb_progress="5"
             app:isb_show_tick_marks_type="oval"
             app:isb_show_tick_texts="true"
             app:isb_thumb_color="?colorAccent"
@@ -35,13 +48,13 @@
             app:isb_tick_marks_size="6dp"
             app:isb_tick_texts_color="?colorAccent"
             app:isb_tick_texts_size="18sp"
-            app:isb_ticks_count="9"
+            app:isb_ticks_count="5"
             app:isb_track_background_color="@color/gray"
             app:isb_track_progress_color="?colorAccent"
             app:isb_track_progress_size="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <Button
             android:id="@+id/buttonCancel"
