@@ -36,61 +36,6 @@ It is very efficient battery wise. It uses about 20% less battery compared to a 
 <br/><br/>
 >Uses **Smart Brackets resolution** to solve all types of equations
 
-Here is the java code snippet for balancing the equation.
-The code here tries to balance the user equation by checking the brackets pairs and then adding the rest open or close bracket to balance the equation.
-```java
-private  void  tryBalancingBrackets(String equ) {
-	tempEqu = equ;
-	int  a = 0, b = 0;
-	
-	if (tempEqu.charAt(tempEqu.length() - 1) == '(') {
-		while (tempEqu.charAt(tempEqu.length() - 1) == '(') {
-			tempEqu =  tempEqu.substring(0, tempEqu.length() - 1);
-				if (tempEqu.length() == 0)
-					return;
-		}
-	}
-	int  numOfPairs = 0;
-	int  openBracketCount = 0;
-
-	for (int  i = 0; i < tempEqu.length(); i++) {
-		char  c = tempEqu.charAt(i);
-		
-		if (c == '(') 
-			openBracketCount++;
-		
-		if (c == ')'  && openBracketCount > 0) {
-			openBracketCount--;
-			numOfPairs++;
-		}
-	}
-
-	for (int  i = 0; i < tempEqu.length(); i++) {
-		char  c = tempEqu.charAt(i);
-		
-		if (c == '(')
-			a++;
-
-		if (c == ')')
-			b++;
-	}
-
-	int  reqOpen = b - numOfPairs;
-
-	int  reqClose = a - numOfPairs;
-
-	while (reqOpen > 0) {
-		tempEqu = "(" + tempEqu;
-		reqOpen--;
-	}
-
-	while (reqClose > 0) {
-		tempEqu = tempEqu + ")";
-		reqClose--;
-	}
-}
-```
-
 ## Download
 Download the latest Version of the app from the play store.  
 <a href='https://play.google.com/store/apps/details?id=com.gigaworks.tech.calculator&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="100" width="250"/>
