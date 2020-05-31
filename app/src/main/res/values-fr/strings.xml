@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calculator Plus</string>
+    <string name="title_activity_settings">Réglages</string>
+    <string name="title_activity_theme">Thèmes</string>
+    <string name="title_activity_about">À propos de</string>
+    <string name="title_activity_history">Histoire</string>
+    <string name="title_activity_general_settings">Réglages généraux</string>
+
+    <string name="share_error">Impossible de partager une expression non valide</string>
+    <string name="choose">Choisissez-en un</string>
+    <string name="delete_button">Bouton Supprimer</string>
+    <string name="delete_button_desc">Bouton LONG PRESS DELETE pour effacer l\'écran de la calculatrice</string>
+    <string name="angle_button">Bouton d\'angle</string>
+    <string name="angle_button_desc">Ceci est le bouton d\'angle. Cliquez ici pour changer l\'angle de DEGRÉS à RADIANS et vice versa.</string>
+    <string name="options_menu">Menu d\'options</string>
+    <string name="options_menu_desc">Ceci est le menu des options. Cela vous aidera à modifier les paramètres et les préférences de l\'application. Cliquez ici pour ouvrir le menu.</string>
+    <string name="share_button">Bouton Partager</string>
+    <string name="share_button_desc">Ceci est le bouton de partage. Cliquez ici pour partager vos équations.</string>
+
+    <string name="error_invalid">Expression invalide</string>
+
+    <string name="version">Version :</string>
+    <string name="release_date">Date de construction :</string>
+    <string name="privacy_policy"><u>Politique de confidentialité</u></string>
+
+    <string name="smart_calculations">Calculs intelligents</string>
+    <string name="smart_calculations_desc">Active l\'équation de complétion automatique</string>
+    <string name="number_formatter">Format de nombre</string>
+    <string name="number_formatter_desc">Active le séparateur de milliers de groupes</string>
+    <string name="scientific_result">Résultat scientifique</string>
+    <string name="scientific_result_desc">Active la notation scientifique dans le résultat</string>
+    <string name="no_history">Pas d\'histoire</string>
+
+    <string name="degrees">Degrés</string>
+    <string name="radians">Radians</string>
+    <string name="cancel">Annuler</string>
+    <string name="set">Ensemble</string>
+
+    <string name="today">Aujourd\'hui</string>
+    <string name="yesterday">Hier</string>
+    <string name="settings_general">Général</string>
+    <string name="settings_general_desc">Préférences générales de l\'utilisateur</string>
+    <string name="settings_precision">Réponse de précision</string>
+    <string name="settings_precision_desc">Précision</string>
+    <string name="settings_angle">Angle</string>
+    <string name="settings_share">Partager</string>
+    <string name="settings_share_desc">Partagez cette application</string>
+    <string name="settings_translate">Traduire</string>
+    <string name="settings_translate_desc">Aidez à traduire Calculator Plus dans votre langue</string>
+    <string name="settings_report">Signaler un problème</string>
+    <string name="settings_report_desc">Signaler un bug au développeur</string>
+    <string name="warning">Attention</string>
+    <string name="smart_calculation_warning">Cette action désactivera les calculs intelligents. Calculator Plus ne pourra plus compléter ou corriger automatiquement vos équations. Nous vous recommandons d\'activer cette fonction pour une utilisation plus rapide et facile de Calculator Plus.</string>
+    <string name="ok">D\'accord</string>
+    <string name="show_tutorial">Afficher le didacticiel</string>
+
+</resources>
