@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
             preferences.setStringPreference(AppPreferences.APP_HISTORY, "");
             preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING, "");
-            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, true);
+            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, false);
         }
 
         //getting primary color of the theme
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
                         break;
-                    }else {
+                    } else {
                         String historyEqu = Evaluate.getCalculatedExpression();
                         history.addToHistory(historyEqu, res, System.currentTimeMillis());
                         tempResult = res;
@@ -901,7 +901,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.mr:
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
-                if(!isNumber(memory)) {
+                if (!isNumber(memory)) {
                     preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                     break;
                 }
@@ -926,10 +926,10 @@ public class MainActivity extends AppCompatActivity
                         String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
                         m2 = m2.replace(",", "");
-                        if(!isNumber(m2)) {
+                        if (!isNumber(m2)) {
                             break;
                         }
-                        if(!isNumber(m1)) {
+                        if (!isNumber(m1)) {
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
@@ -948,10 +948,10 @@ public class MainActivity extends AppCompatActivity
                                 .getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
                         m2 = m2.replace(",", "");
-                        if(!isNumber(m2)) {
+                        if (!isNumber(m2)) {
                             break;
                         }
-                        if(!isNumber(m1)) {
+                        if (!isNumber(m1)) {
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
@@ -1080,21 +1080,19 @@ public class MainActivity extends AppCompatActivity
         int b = viewRoot.getWidth();
         int finalRadius = (int) Math.sqrt((l * l) + (b * b));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Animator anim = ViewAnimationUtils
-                    .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
-            viewRoot.setVisibility(View.VISIBLE);
-            anim.setDuration(300);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    view.setVisibility(View.INVISIBLE);
-                    mCurrentAnimator = null;
-                }
-            });
-            mCurrentAnimator = anim;
-            anim.start();
-        }
+        Animator anim = ViewAnimationUtils
+                .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+        viewRoot.setVisibility(View.VISIBLE);
+        anim.setDuration(300);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.setVisibility(View.INVISIBLE);
+                mCurrentAnimator = null;
+            }
+        });
+        mCurrentAnimator = anim;
+        anim.start();
     }
 
     @Override
@@ -1142,9 +1140,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
         this.menu = menu;
-        for(int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(getTextColor(), PorterDuff.Mode.SRC_ATOP);
             }
@@ -1187,7 +1185,7 @@ public class MainActivity extends AppCompatActivity
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
                 String msg = shareExpression();
-                if(msg == null) {
+                if (msg == null) {
                     Toast.makeText(this, getString(R.string.share_error),
                             Toast.LENGTH_SHORT).show();
                     break;
@@ -1263,7 +1261,7 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
                 .cancelable(false);
-        if(shareView!=null) {
+        if (shareView != null) {
             TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, getString(R.string.share_button),
                     getString(R.string.share_button_desc))
                     .outerCircleColor(R.color.colorBluePrimary)
