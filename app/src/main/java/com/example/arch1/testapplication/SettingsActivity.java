@@ -103,15 +103,6 @@ public class SettingsActivity extends AppCompatActivity {
                     startActivity(Intent.createChooser(intent, "Choose one"));
                     break;
                 case 5:
-                    CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                            .addDefaultShareMenuItem()
-                            .setToolbarColor(finalColor)
-                            .setShowTitle(true)
-                            .build();
-                    CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
-                    CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(SURVEY_URL), new WebViewFallback());
-                    break;
-                case 6:
                     intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
@@ -122,7 +113,7 @@ public class SettingsActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     break;
-                case 7:
+                case 6:
                     intent = new Intent(SettingsActivity.this, AboutActivity.class);
                     startActivity(intent);
                     break;
@@ -243,8 +234,6 @@ public class SettingsActivity extends AppCompatActivity {
         data = new ListData(getString(R.string.settings_angle), getAngle(), R.drawable.ic_outline_track_changes_24px);
         list.add(data);
         data = new ListData(getString(R.string.settings_share), getString(R.string.settings_share_desc), R.drawable.ic_outline_share_24px);
-        list.add(data);
-        data = new ListData(getString(R.string.settings_translate), getString(R.string.settings_translate_desc), R.drawable.ic_translate_black_24dp);
         list.add(data);
         data = new ListData(getString(R.string.settings_report), getString(R.string.settings_report_desc), R.drawable.ic_outline_feedback_24px);
         list.add(data);

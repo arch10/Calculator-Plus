@@ -33,7 +33,7 @@
             android:includeFontPadding="false"
             android:fontFamily="@font/productsans"
             android:cursorVisible="false"
-            tools:text="00" />
+            tools:text="200" />
 
         <com.example.arch1.testapplication.CalculatorEditText
             android:id="@+id/tv_display"

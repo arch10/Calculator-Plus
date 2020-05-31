@@ -6,10 +6,14 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity
             preferences.setBooleanPreference(AppPreferences.APP_SMART_CALCULATIONS, true);
             preferences.setStringPreference(AppPreferences.APP_HISTORY, "");
             preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING, "");
-            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, true);
+            preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, false);
         }
 
         //getting primary color of the theme
@@ -139,6 +143,16 @@ public class MainActivity extends AppCompatActivity
         //adding text change listener
         equation.addTextChangedListener(this);
         equation.setOnTextSizeChangeListener(this);
+
+        result.setOnClickListener(click-> {
+            String exp = shareExpression();
+            if(exp != null) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Result", exp);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, "Copied!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -211,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         result.startAnimation(shake);
                         break;
-                    }else {
+                    } else {
                         String historyEqu = Evaluate.getCalculatedExpression();
                         history.addToHistory(historyEqu, res, System.currentTimeMillis());
                         tempResult = res;
@@ -896,12 +910,13 @@ public class MainActivity extends AppCompatActivity
                     if (isNumber(answerString)) {
                         preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE,
                                 answerString);
+                        Toast.makeText(this, "Memory : " + answerString, Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
             case R.id.mr:
                 String memory = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
-                if(!isNumber(memory)) {
+                if (!isNumber(memory)) {
                     preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                     break;
                 }
@@ -926,10 +941,10 @@ public class MainActivity extends AppCompatActivity
                         String m1 = preferences.getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
                         m2 = m2.replace(",", "");
-                        if(!isNumber(m2)) {
+                        if (!isNumber(m2)) {
                             break;
                         }
-                        if(!isNumber(m1)) {
+                        if (!isNumber(m1)) {
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
@@ -948,10 +963,10 @@ public class MainActivity extends AppCompatActivity
                                 .getStringPreference(AppPreferences.APP_MEMORY_VALUE);
                         String m2 = result.getText().toString();
                         m2 = m2.replace(",", "");
-                        if(!isNumber(m2)) {
+                        if (!isNumber(m2)) {
                             break;
                         }
-                        if(!isNumber(m1)) {
+                        if (!isNumber(m1)) {
                             preferences.setStringPreference(AppPreferences.APP_MEMORY_VALUE, "");
                             break;
                         }
@@ -1080,21 +1095,19 @@ public class MainActivity extends AppCompatActivity
         int b = viewRoot.getWidth();
         int finalRadius = (int) Math.sqrt((l * l) + (b * b));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Animator anim = ViewAnimationUtils
-                    .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
-            viewRoot.setVisibility(View.VISIBLE);
-            anim.setDuration(300);
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    view.setVisibility(View.INVISIBLE);
-                    mCurrentAnimator = null;
-                }
-            });
-            mCurrentAnimator = anim;
-            anim.start();
-        }
+        Animator anim = ViewAnimationUtils
+                .createCircularReveal(viewRoot, cx, cy, 0, finalRadius);
+        viewRoot.setVisibility(View.VISIBLE);
+        anim.setDuration(300);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.setVisibility(View.INVISIBLE);
+                mCurrentAnimator = null;
+            }
+        });
+        mCurrentAnimator = anim;
+        anim.start();
     }
 
     @Override
@@ -1142,9 +1155,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_menu, menu);
         this.menu = menu;
-        for(int i = 0; i < menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
-            if(drawable != null) {
+            if (drawable != null) {
                 drawable.mutate();
                 drawable.setColorFilter(getTextColor(), PorterDuff.Mode.SRC_ATOP);
             }
@@ -1187,7 +1200,7 @@ public class MainActivity extends AppCompatActivity
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression");
                 String msg = shareExpression();
-                if(msg == null) {
+                if (msg == null) {
                     Toast.makeText(this, getString(R.string.share_error),
                             Toast.LENGTH_SHORT).show();
                     break;
@@ -1229,6 +1242,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startTutorial() {
 
+        mPadViewPager.setCurrentItem(0);
         TapTargetSequence tapTargetSequence = new TapTargetSequence(this);
         View shareView = toolbar.findViewById(R.id.share);
         TapTarget delete = TapTarget.forView(mainLayout.findViewById(R.id.del),
@@ -1241,7 +1255,7 @@ public class MainActivity extends AppCompatActivity
                 .titleTextColor(R.color.colorWhite)
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
-                .cancelable(false);
+                .cancelable(true);
         TapTarget angle = TapTarget.forToolbarMenuItem(toolbar, R.id.deg, getString(R.string.angle_button),
                 getString(R.string.angle_button_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
@@ -1252,18 +1266,41 @@ public class MainActivity extends AppCompatActivity
                 .titleTextColor(R.color.colorWhite)
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
-                .cancelable(false);
+                .cancelable(true);
         TapTarget options = TapTarget.forToolbarOverflow(toolbar,
                 getString(R.string.options_menu), getString(R.string.options_menu_desc))
                 .outerCircleColor(R.color.colorBluePrimary)
                 .outerCircleAlpha(0.90f)
+                .id(53)
                 .targetCircleColor(R.color.colorWhite)
                 .titleTextSize(28)
                 .titleTextColor(R.color.colorWhite)
                 .descriptionTextColor(R.color.colorWhite)
                 .descriptionTextSize(18)
-                .cancelable(false);
-        if(shareView!=null) {
+                .cancelable(true);
+        TapTarget ms = TapTarget.forView(slidingLayout.findViewById(R.id.ms),
+                "Memory Store", "This is memory store button. It will store the current result in the memory.")
+                .outerCircleColor(R.color.colorOffWhite)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(false)
+                .titleTextColor(R.color.colorBlack)
+                .descriptionTextColor(R.color.darkGray)
+                .descriptionTextSize(18)
+                .cancelable(true);
+        TapTarget mr = TapTarget.forView(slidingLayout.findViewById(R.id.mr),
+                "Memory Restore", "This is memory restore button. It will put the result from the memory onto the screen.")
+                .outerCircleColor(R.color.colorOffWhite)
+                .outerCircleAlpha(0.90f)
+                .targetCircleColor(R.color.colorWhite)
+                .titleTextSize(28)
+                .tintTarget(false)
+                .titleTextColor(R.color.colorBlack)
+                .descriptionTextColor(R.color.darkGray)
+                .descriptionTextSize(18)
+                .cancelable(true);
+        if (shareView != null) {
             TapTarget share = TapTarget.forToolbarMenuItem(toolbar, R.id.share, getString(R.string.share_button),
                     getString(R.string.share_button_desc))
                     .outerCircleColor(R.color.colorBluePrimary)
@@ -1274,14 +1311,32 @@ public class MainActivity extends AppCompatActivity
                     .titleTextColor(R.color.colorWhite)
                     .descriptionTextColor(R.color.colorWhite)
                     .descriptionTextSize(18)
-                    .cancelable(false);
+                    .cancelable(true);
 
-            tapTargetSequence.targets(delete, angle, share, options);
+            tapTargetSequence.targets(delete, angle, share, options, ms, mr);
         } else {
-            tapTargetSequence.targets(delete, angle, options);
+            tapTargetSequence.targets(delete, angle, options, ms, mr);
         }
 
-        tapTargetSequence.start();
+        tapTargetSequence.listener(new TapTargetSequence.Listener() {
+            @Override
+            public void onSequenceFinish() {
+
+            }
+
+            @Override
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                if (lastTarget.id() == 53) {
+                    mPadViewPager.setCurrentItem(1);
+                }
+            }
+
+            @Override
+            public void onSequenceCanceled(TapTarget lastTarget) {
+
+            }
+        });
+        tapTargetSequence.continueOnCancel(true).start();
     }
 
     private int getTextColor() {

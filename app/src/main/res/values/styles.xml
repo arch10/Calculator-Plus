@@ -145,7 +145,7 @@
     </style>
 
     <style name="Material2SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorOffWhite</item>
+        <item name="android:background">@drawable/primary_btn_bg</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
@@ -181,21 +181,21 @@
     </style>
 
     <style name="DarkButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorDarkBackground</item>
+        <item name="android:background">@drawable/primary_btn_bg1</item>
         <item name="android:textColor">@color/colorOffWhite</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DarkSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorDarkBackground</item>
+        <item name="android:background">@drawable/primary_btn_bg1</item>
         <item name="android:textColor">@color/colorOffWhite</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DarkAdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">?colorAccent</item>
+        <item name="android:background">@drawable/adv_btn_bg</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
@@ -217,7 +217,7 @@
     <style name="DefAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorMaterialDarkGrey</item>
-        <item name="colorAccent">@color/colorMaterialOrange</item>
+        <item name="colorAccent">@color/colorMaterialBlue</item>
         <item name="actionBarStyle">@style/DefMyActionBar</item>
         <item name="buttonPrimary">@style/DefButtonStyle</item>
         <item name="buttonSecondary">@style/DefSecondaryButtonStyle</item>
@@ -231,21 +231,21 @@
     </style>
 
     <style name="DefButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/darkGray</item>
+        <item name="android:background">@drawable/primary_btn_def</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DefSecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/gray</item>
+        <item name="android:background">@drawable/secondary_btn_def</item>
         <item name="android:textColor">?colorPrimary</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="DefAdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorMaterialBlue</item>
+        <item name="android:background">@drawable/adv_btn_bg</item>
         <item name="android:textColor">?colorPrimary</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
@@ -301,21 +301,21 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorOffWhite</item>
+        <item name="android:background">@drawable/primary_btn_bg</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="SecondaryButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/colorOffWhite</item>
+        <item name="android:background">@drawable/primary_btn_bg</item>
         <item name="android:textColor">?colorPrimary</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="AdvButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:background">?colorAccent</item>
+        <item name="android:background">@drawable/adv_btn_bg</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/productsans</item>
         <item name="android:textAllCaps">false</item>
