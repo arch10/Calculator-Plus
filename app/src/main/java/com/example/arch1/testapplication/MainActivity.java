@@ -13,9 +13,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +40,7 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import java.util.Objects;
 import java.util.Stack;
 
+import static com.example.arch1.testapplication.AppPreferences.NEVER;
 import static com.example.arch1.testapplication.Evaluate.formatString;
 import static com.example.arch1.testapplication.Evaluate.isAnError;
 import static com.example.arch1.testapplication.Evaluate.isNumber;
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity
             preferences.setStringPreference(AppPreferences.APP_HISTORY, "");
             preferences.setStringPreference(AppPreferences.APP_EQUATION_STRING, "");
             preferences.setBooleanPreference(AppPreferences.APP_SCIENTIFIC_RESULT, false);
+            preferences.setStringPreference(AppPreferences.APP_DELETE_HISTORY_DAYS, NEVER);
         }
 
         //getting primary color of the theme
@@ -1279,7 +1279,7 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextSize(18)
                 .cancelable(true);
         TapTarget ms = TapTarget.forView(slidingLayout.findViewById(R.id.ms),
-                "Memory Store", "This is memory store button. It will store the current result in the memory.")
+                getString(R.string.memory_store), getString(R.string.memory_store_desc))
                 .outerCircleColor(R.color.colorOffWhite)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)
@@ -1290,7 +1290,7 @@ public class MainActivity extends AppCompatActivity
                 .descriptionTextSize(18)
                 .cancelable(true);
         TapTarget mr = TapTarget.forView(slidingLayout.findViewById(R.id.mr),
-                "Memory Restore", "This is memory restore button. It will put the result from the memory onto the screen.")
+                getString(R.string.memory_restore), getString(R.string.memory_restore_desc))
                 .outerCircleColor(R.color.colorOffWhite)
                 .outerCircleAlpha(0.90f)
                 .targetCircleColor(R.color.colorWhite)

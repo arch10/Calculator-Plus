@@ -15,7 +15,6 @@ import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +24,8 @@ import com.warkiz.widget.IndicatorSeekBar;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import saschpe.android.customtabs.CustomTabsHelper;
-import saschpe.android.customtabs.WebViewFallback;
+import static com.example.arch1.testapplication.AppPreferences.APP_DELETE_HISTORY_DAYS;
+import static com.example.arch1.testapplication.AppPreferences.NEVER;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -78,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
         int finalColor = color;
         mAdapter = new ListAdapter(this, setListData(), (data, position) -> {
             switch (position) {
-                case 0 :
+                case 0:
                     intent = new Intent(SettingsActivity.this, GeneralSettingsActivity.class);
                     startActivity(intent);
                     break;
@@ -93,6 +92,9 @@ public class SettingsActivity extends AppCompatActivity {
                     showAngleDialog();
                     break;
                 case 4:
+                    showDeleteHistoryDialog();
+                    break;
+                case 5:
                     intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus");
@@ -102,7 +104,7 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_TEXT, msg);
                     startActivity(Intent.createChooser(intent, "Choose one"));
                     break;
-                case 5:
+                case 6:
                     intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"));
                     intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"arch1824@gmail.com"});
@@ -113,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     break;
-                case 6:
+                case 7:
                     intent = new Intent(SettingsActivity.this, AboutActivity.class);
                     startActivity(intent);
                     break;
@@ -233,14 +235,14 @@ public class SettingsActivity extends AppCompatActivity {
         list.add(getPrecisionData());
         data = new ListData(getString(R.string.settings_angle), getAngle(), R.drawable.ic_outline_track_changes_24px);
         list.add(data);
+        data = new ListData(getString(R.string.delete_history), getHistoryDelString(), R.drawable.ic_history_black_24dp);
+        list.add(data);
         data = new ListData(getString(R.string.settings_share), getString(R.string.settings_share_desc), R.drawable.ic_outline_share_24px);
         list.add(data);
         data = new ListData(getString(R.string.settings_report), getString(R.string.settings_report_desc), R.drawable.ic_outline_feedback_24px);
         list.add(data);
-        data = new ListData(getString(R.string.title_activity_about),  getString(R.string.version) + " " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
+        data = new ListData(getString(R.string.title_activity_about), getString(R.string.version) + " " + BuildConfig.VERSION_NAME, R.drawable.ic_outline_info_24px);
         list.add(data);
-//        data = new ListData("Delete History", "Never", R.drawable.ic_history_black_24dp);
-//        list.add(data);
 
         return list;
     }
@@ -312,18 +314,75 @@ public class SettingsActivity extends AppCompatActivity {
         Button setButton = precisionDialog.findViewById(R.id.buttonSet);
         final IndicatorSeekBar indicatorSeekBar = precisionDialog.findViewById(R.id.indicatorSeekBar);
 
-        indicatorSeekBar.setProgress(getPrecision());
-        indicatorSeekBar.customTickTexts(new String[] {"1", "7", "15", "30", "Never"});
+        String[] ticks = new String[]{"7", "15", "30", getString(R.string.never)};
+        indicatorSeekBar.setProgress(getHistoryDeletePreference());
+        indicatorSeekBar.customTickTexts(ticks);
+        indicatorSeekBar.setIndicatorTextFormat("${TICK_TEXT}");
+        indicatorSeekBar.setTickCount(ticks.length);
 
         cancelButton.setOnClickListener(v -> precisionDialog.dismiss());
 
         setButton.setOnClickListener(v -> {
-            setPrecision(indicatorSeekBar.getProgress());
+            setHistoryDeletePreference(indicatorSeekBar.getProgress());
             precisionDialog.dismiss();
         });
         precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;
         precisionDialog.show();
+    }
+
+    private String getHistoryDelString() {
+        int selected = getHistoryDeletePreference();
+        switch (selected) {
+            case 0:
+                return getString(R.string.seven_days);
+            case 30:
+                return getString(R.string.fifteen_days);
+            case 60:
+                return getString(R.string.thirty_days);
+            default:
+                return getString(R.string.never);
+        }
+    }
+
+    private void setHistoryDeletePreference(int seekProgress) {
+        String historyDelPref;
+        switch (seekProgress) {
+            case 0:
+                historyDelPref = "7";
+                break;
+            case 33:
+                historyDelPref = "15";
+                break;
+            case 67:
+                historyDelPref = "30";
+                break;
+            case 100:
+                historyDelPref = NEVER;
+                break;
+            default:
+                historyDelPref = NEVER;
+        }
+        preferences.setStringPreference(APP_DELETE_HISTORY_DAYS, historyDelPref);
+        mAdapter.setList(setListData());
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    private int getHistoryDeletePreference() {
+        String days = preferences.getStringPreference(APP_DELETE_HISTORY_DAYS);
+
+        switch (days) {
+            case NEVER:
+                return 100;
+            case "7":
+                return 0;
+            case "15":
+                return 30;
+            case "30":
+                return 60;
+            default:
+                return 100;
+        }
     }
 
 }

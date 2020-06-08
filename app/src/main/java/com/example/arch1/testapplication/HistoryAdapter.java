@@ -64,7 +64,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return list.size();
     }
 
-    class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    static class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         TextView title, body, date;
         LinearLayout historyItem;

@@ -20,6 +20,9 @@ public class AppPreferences {
     final static String APP_HISTORY_EQUATION = "app.history.equation";
     final static String APP_MEMORY_VALUE = "app.memory.value";
     final static String APP_SCIENTIFIC_RESULT = "app.scientific.string";
+    final static String APP_DELETE_HISTORY_DAYS = "app.delete.history.after.x.days";
+
+    final static String NEVER = "never";
 
     public AppPreferences(Context context) {
         String SHARED_PREF_STRING = "com.example.arch1.testapplication";

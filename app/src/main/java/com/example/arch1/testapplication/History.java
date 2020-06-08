@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.example.arch1.testapplication.AppPreferences.NEVER;
 import static java.text.DateFormat.getDateInstance;
 
 class History {
@@ -30,8 +31,12 @@ class History {
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }
 
+    String getJsonString() {
+        return preferences.getStringPreference(AppPreferences.APP_HISTORY);
+    }
+
     void addToHistory(String title, String body, Long date) {
-        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
+        jsonString = getJsonString();
         JSONArray array;
         if (jsonString.equals("")) {
             array = new JSONArray();
@@ -73,8 +78,12 @@ class History {
     }
 
     ArrayList<Calculations> showHistory() {
-        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
-
+        jsonString = getJsonString();
+        String delHistory = preferences.getStringPreference(AppPreferences.APP_DELETE_HISTORY_DAYS);
+        if (!delHistory.equals("") && !delHistory.equals(NEVER)) {
+            int days = Integer.parseInt(delHistory);
+            deleteHistory(days);
+        }
         ArrayList<Calculations> calcArray = new ArrayList<>();
         try {
             JSONArray array = new JSONArray(jsonString);
@@ -138,8 +147,33 @@ class History {
         preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
     }
 
+    public void deleteHistory(long days) {
+        jsonString = getJsonString();
+        String js = jsonString;
+        long milliSec = days * 24 * 60 * 60 * 1000L;
+
+        JSONArray ary = new JSONArray();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                long historyTime = Long.parseLong(object.getString("date"));
+                long currentTime = System.currentTimeMillis();
+                if((historyTime + milliSec) < currentTime) {
+                    continue;
+                }
+                ary.put(object);
+            }
+            jsonString = ary.toString();
+            setJsonString(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            setJsonString(js);
+        }
+    }
+
     public void deleteHistory(String title) {
-        jsonString = preferences.getStringPreference(AppPreferences.APP_HISTORY);
+        jsonString = getJsonString();
 
         if (jsonString.contains("\"title\":\"" + title + "\"")) {
             String js = jsonString;
@@ -147,8 +181,7 @@ class History {
                 delete(title);
             } catch (JSONException e) {
                 e.printStackTrace();
-                jsonString = js;
-                preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+                setJsonString(js);
             }
         }
     }
@@ -166,7 +199,7 @@ class History {
         }
 
         jsonString = ary.toString();
-        preferences.setStringPreference(AppPreferences.APP_HISTORY, jsonString);
+        setJsonString(jsonString);
     }
 
 }

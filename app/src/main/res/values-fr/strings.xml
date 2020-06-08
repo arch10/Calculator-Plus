@@ -54,5 +54,15 @@
     <string name="smart_calculation_warning">Cette action désactivera les calculs intelligents. Calculator Plus ne pourra plus compléter ou corriger automatiquement vos équations. Nous vous recommandons d\'activer cette fonction pour une utilisation plus rapide et facile de Calculator Plus.</string>
     <string name="ok">D\'accord</string>
     <string name="show_tutorial">Afficher le didacticiel</string>
+    <string name="delete_history">Effacer l\'historique</string>
+    <string name="seven_days">7 journées</string>
+    <string name="fifteen_days">15 journées</string>
+    <string name="thirty_days">30 journées</string>
+    <string name="never">Jamais</string>
+    <string name="automatically_deletes_history">Supprime automatiquement l\'historique après les jours sélectionnés</string>
+    <string name="memory_store_desc">Il s\'agit du bouton de mémorisation. Il stockera le résultat actuel dans la mémoire.</string>
+    <string name="memory_store">Magasin de mémoire</string>
+    <string name="memory_restore_desc">Il s\'agit du bouton de restauration de la mémoire. Il mettra le résultat de la mémoire sur l\'écran.</string>
+    <string name="memory_restore">Restauration de la mémoire</string>
 
 </resources>

@@ -53,5 +53,15 @@
     <string name="smart_calculation_warning">This action will disable smart calculations. Calculator Plus will no longer be able to auto-complete or auto-correct your equations. We recommend to enable this feature for faster and easy usage of Calculator Plus.</string>
     <string name="ok">Ok</string>
     <string name="show_tutorial">Show Tutorial</string>
+    <string name="delete_history">Delete History</string>
+    <string name="seven_days">7 days</string>
+    <string name="fifteen_days">15 days</string>
+    <string name="thirty_days">30 days</string>
+    <string name="never">Never</string>
+    <string name="automatically_deletes_history">Automatically deletes history after selected days</string>
+    <string name="memory_store_desc">This is memory store button. It will store the current result in the memory.</string>
+    <string name="memory_store">Memory Store</string>
+    <string name="memory_restore_desc">This is memory restore button. It will put the result from the memory onto the screen.</string>
+    <string name="memory_restore">Memory Restore</string>
 
 </resources>

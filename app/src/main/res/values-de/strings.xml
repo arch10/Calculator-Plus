@@ -54,5 +54,15 @@
     <string name="smart_calculation_warning">Diese Aktion deaktiviert intelligente Berechnungen. Calculator Plus kann Ihre Gleichungen nicht mehr automatisch vervollständigen oder korrigieren. Wir empfehlen, diese Funktion für eine schnellere und einfachere Verwendung von Calculator Plus zu aktivieren.</string>
     <string name="ok">OK</string>
     <string name="show_tutorial">Tutorial anzeigen</string>
+    <string name="delete_history">Verlauf löschen</string>
+    <string name="seven_days">7 Tage</string>
+    <string name="fifteen_days">15 Tage</string>
+    <string name="thirty_days">30 Tage</string>
+    <string name="never">Noch nie</string>
+    <string name="automatically_deletes_history">Löscht den Verlauf nach ausgewählten Tagen automatisch</string>
+    <string name="memory_store_desc">Dies ist die Speicherschaltfläche. Das aktuelle Ergebnis wird im Speicher gespeichert.</string>
+    <string name="memory_store">Speicher speichern</string>
+    <string name="memory_restore_desc">Dies ist die Schaltfläche zum Wiederherstellen des Speichers. Das Ergebnis aus dem Speicher wird auf dem Bildschirm angezeigt.</string>
+    <string name="memory_restore">Speicherwiederherstellung</string>
 
 </resources>
