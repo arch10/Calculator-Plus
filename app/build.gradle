@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def version = "1.10.7"
+def version = "1.11.1"
 
 android {
     compileSdkVersion 29
@@ -9,8 +9,9 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 37
+        versionCode 39
         versionName version
+        setProperty("archivesBaseName", "CalculatorPlus-v$versionName")
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,7 +30,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-core:17.4.2'
+    implementation 'com.google.firebase:firebase-core:17.4.3'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
