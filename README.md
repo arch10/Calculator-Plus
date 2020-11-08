@@ -1,4 +1,6 @@
 # Calculator App
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Farch10%2FCalculator-Plus&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=PAGE+VIEWS&edge_flat=false)](https://hits.seeyoufarm.com)
+
 A Simple Calculator with rich features for daily use.
 
 The Calculator Plus provides simple and advanced mathematical functions for day to day use. It is packed with different themes and designs for everyone. Its design is inspired by Google's Material Design. It is very efficient calculator with advanced error handling. It is designed to handle errors intelligently.
