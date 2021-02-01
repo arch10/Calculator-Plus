@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="textPrimary" format="color" />
+    <attr name="textSecondary" format="color" />
+    <attr name="textAccent" format="color" />
+    <attr name="textDisable" format="color" />
+    <attr name="border" format="color" />
+    <attr name="numPadPrimary" format="color" />
+    <attr name="operatorBtnColor" format="color" />
+    <attr name="clearColor" format="color" />
+
+    <declare-styleable name="CalculatorEditText">
+        <attr name="minTextSize" format="dimension" />
+        <attr name="maxTextSize" format="dimension" />
+        <attr name="stepTextSize" format="dimension" />
+    </declare-styleable>
+
+</resources>

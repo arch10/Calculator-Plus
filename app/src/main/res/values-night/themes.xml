@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme -->
+    <style name="Theme.CalculatorPlus" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Color Themes -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorOnError">@color/textAccent</item>
+        <!-- Custom Color Themes -->
+        <item name="textPrimary">@color/textPrimary</item>
+        <item name="textSecondary">@color/textSecondary</item>
+        <item name="textAccent">@color/textAccent</item>
+        <item name="border">@color/border</item>
+        <item name="textDisable">@color/textDisable</item>
+        <item name="numPadPrimary">@color/numPadPrimary</item>
+        <item name="operatorBtnColor">@color/primaryLight</item>
+        <item name="clearColor">@color/clear</item>
+        <!-- Status bar Themes -->
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
+    </style>
+</resources>

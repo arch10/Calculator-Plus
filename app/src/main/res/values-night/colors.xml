@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#174EA6</color>
+    <color name="primaryDark">#1F41B6</color>
+    <color name="primaryLight">#2f9ef8</color>
+    <color name="surface">#2D3033</color>
+    <color name="background">#202124</color>
+    <color name="border">#3E3E3E</color>
+    <color name="clear">#424547</color>
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textSecondary">#E1E1E1</color>
+    <color name="textAccent">#3A444A</color>
+    <color name="textDisable">#9AA0A6</color>
+    <color name="error">#E75E65</color>
+    <color name="numPadPrimary">#202124</color>98
+</resources>

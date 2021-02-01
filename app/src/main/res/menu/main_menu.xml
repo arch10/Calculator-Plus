@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/share"
+        android:title="@string/settings_share"
+        android:icon="@drawable/share"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deg"
+        android:onClick="changeAngleType"
+        android:title="@string/deg"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/settings"
+        android:title="@string/title_activity_settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/history"
+        android:title="@string/title_activity_history"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/tutorial"
+        android:title="@string/show_tutorial"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/about"
+        android:title="@string/title_activity_about"
+        app:showAsAction="never" />
+</menu>

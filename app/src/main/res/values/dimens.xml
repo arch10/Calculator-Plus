@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_corner_radius">0dp</dimen>
+    <dimen name="space_sm">4dp</dimen>
+    <dimen name="space_m">8dp</dimen>
+    <dimen name="space_l">16dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+    <dimen name="space_xxxl">40dp</dimen>
+    <dimen name="space_xxxxl">48dp</dimen>
+</resources>

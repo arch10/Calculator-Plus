@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Calculator Plus</string>
+    <string name="settings_share">Share</string>
+    <string name="deg">DEG</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_history">History</string>
+    <string name="show_tutorial">Show Tutorial</string>
+    <string name="title_activity_about">About</string>
+</resources>
