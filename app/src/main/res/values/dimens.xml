@@ -8,4 +8,5 @@
     <dimen name="space_xxl">32dp</dimen>
     <dimen name="space_xxxl">40dp</dimen>
     <dimen name="space_xxxxl">48dp</dimen>
+    <dimen name="pad_page_margin">-24dp</dimen>
 </resources>

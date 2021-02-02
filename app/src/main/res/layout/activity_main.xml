@@ -35,15 +35,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBar" />
 
-    <include
-        android:id="@+id/numPad"
-        layout="@layout/num_pad"
+    <com.gigaworks.tech.calculator.ui.view.CalculatorPadViewPager
+        android:id="@+id/calculatorPadViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <include
+            android:id="@+id/numPad"
+            layout="@layout/num_pad" />
+
+        <include
+            android:id="@+id/scientificPad"
+            layout="@layout/scientific_pad" />
+
+    </com.gigaworks.tech.calculator.ui.view.CalculatorPadViewPager>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
