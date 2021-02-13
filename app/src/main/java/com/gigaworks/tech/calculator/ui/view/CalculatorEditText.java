@@ -16,6 +16,7 @@
 
 package com.gigaworks.tech.calculator.ui.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
@@ -49,17 +50,18 @@ public class CalculatorEditText extends AppCompatEditText {
                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                     // Prevents the selection action mode on double tap.
                     return false;
-        }
+                }
 
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-        }
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    //Empty method
+                }
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-    };
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
+            };
 
     private final float mMaximumTextSize;
     private final float mMinimumTextSize;
@@ -102,6 +104,7 @@ public class CalculatorEditText extends AppCompatEditText {
         setMinHeight(getLineHeight() + getCompoundPaddingBottom() + getCompoundPaddingTop());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getActionMasked() == MotionEvent.ACTION_UP) {

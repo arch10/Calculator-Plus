@@ -1,5 +1,3 @@
-package com.gigaworks.tech.calculator.ui.view;
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -15,6 +13,8 @@ package com.gigaworks.tech.calculator.ui.view;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.gigaworks.tech.calculator.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
