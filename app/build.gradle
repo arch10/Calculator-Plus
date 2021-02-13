@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "org.sonarqube" version "3.1.1"
 
 def version = "1.10.7"
 
@@ -24,6 +25,14 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "arch10_Calculator-Plus"
+    property "sonar.organization", "arch10"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
 
 dependencies {
