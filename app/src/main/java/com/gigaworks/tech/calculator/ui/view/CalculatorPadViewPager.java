@@ -110,7 +110,6 @@ public class CalculatorPadViewPager extends ViewPager {
         super(context, attrs);
 
         setAdapter(mStaticPagerAdapter);
-        //setBackgroundColor(getResources().getColor(android.R.color.black));
         setOnPageChangeListener(mOnPageChangeListener);
         setPageMargin(getResources().getDimensionPixelSize(R.dimen.pad_page_margin));
         setPageTransformer(false, mPageTransformer);

@@ -14,13 +14,3 @@ suspend fun <T> safeCacheCall(
         }
     }
 }
-
-//fun <T> safeCacheCall(
-//    cacheCall: () -> T
-//): Response<T> {
-//    return try {
-//        Response.Success(cacheCall.invoke())
-//    } catch (e: Exception) {
-//        Response.Failure(e.message)
-//    }
-//}

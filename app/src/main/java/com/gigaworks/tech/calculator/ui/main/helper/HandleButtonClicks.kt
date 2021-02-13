@@ -24,7 +24,6 @@ fun handleClick(expression: String, string: String, isPrevResult: Boolean = fals
         "log",
         "ln"
     )
-    val memorySet = setOf("MS", "MR", "M+", "M-")
     val rightUnarySet = setOf("%", "!")
     val leftUnarySet = setOf("\u221a", "\u221b")
     val constantSet = setOf("\u03C0", "e")
@@ -32,7 +31,6 @@ fun handleClick(expression: String, string: String, isPrevResult: Boolean = fals
     return when (string) {
         in numberSet -> handleNumberClick(expression, string, isPrevResult)
         in trigonometricSet -> handleTrigonometricClick(expression, string)
-        in memorySet -> handleMemoryClick(expression, string)
         in rightUnarySet -> handleRightUnaryClick(expression, string, isPrevResult)
         in leftUnarySet -> handleLeftUnaryClick(expression, string)
         in constantSet -> handleConstantClick(expression, string, isPrevResult)
@@ -51,14 +49,13 @@ private fun handleMinusClick(expression: String, string: String): String {
     if (lastChar.isNumber() || lastChar.isUnaryOperator() || lastChar == ')' || lastChar == '(')
         return "$expression$string"
     if (lastChar == '.') return "${expression}0$string"
-    if (lastChar.isBinaryOperator()) {
-        if (expression.length > 1 && expression[expression.lastIndex - 1].isNumber()) {
-            if (lastChar == '\u2212') {
-                val exp = expression.dropLast(1)
-                return "$exp+"
-            }
-            return "$expression$string"
+    if (lastChar.isBinaryOperator() && expression.length > 1 && expression[expression.lastIndex - 1].isNumber()) {
+        if (lastChar == '\u2212') {
+            val exp = expression.dropLast(1)
+            return "$exp+"
         }
+        return "$expression$string"
+
     }
     return expression
 }
@@ -138,10 +135,6 @@ private fun handleLeftUnaryClick(expression: String, string: String): String {
         return "$expression×$string"
     if (lastChar.isOperator() || lastChar == '(') return "$expression$string"
     if (lastChar == '.') return "${expression}0×$string"
-    return expression
-}
-
-private fun handleMemoryClick(expression: String, string: String): String {
     return expression
 }
 

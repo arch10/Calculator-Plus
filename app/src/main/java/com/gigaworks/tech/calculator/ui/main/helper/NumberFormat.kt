@@ -46,14 +46,14 @@ private fun addSeparator(string: String, separator: Char, isIndian: Boolean): St
     var switch = true
     for (i in decimalIndex - 1 downTo 1) {
         temp++
-        if (temp % 3 == 0 && switch) {
+        if (switch && temp % 3 == 0) {
             temp = 0
             switch = !isIndian
             if (i == 1 && (string[0] == '-' || string[0] == '\u2212')) break
             str = str.substring(0, i) + separator + str.substring(i)
             continue
         }
-        if (temp % 2 == 0 && !switch) {
+        if (!switch && temp % 2 == 0) {
             temp = 0
             if (i == 1 && (string[0] == '-' || string[0] == '\u2212')) break
 

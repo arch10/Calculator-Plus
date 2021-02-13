@@ -38,17 +38,17 @@ import com.gigaworks.tech.calculator.R;
 
 public class CalculatorEditText extends AppCompatEditText {
 
-    private final static ActionMode.Callback NO_SELECTION_ACTION_MODE_CALLBACK =
+    private static final ActionMode.Callback NO_SELECTION_ACTION_MODE_CALLBACK =
             new ActionMode.Callback() {
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return false;
-        }
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    return false;
+                }
 
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Prevents the selection action mode on double tap.
-            return false;
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    // Prevents the selection action mode on double tap.
+                    return false;
         }
 
         @Override
