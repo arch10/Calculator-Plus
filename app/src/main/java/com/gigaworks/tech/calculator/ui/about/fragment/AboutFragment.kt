@@ -74,9 +74,9 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
 
     companion object {
         const val PRIVACY_URL =
-            "https://raw.githubusercontent.com/arch10/Calculator-Plus/master/docs/en/privacy_policy.md"
+            "https://raw.githubusercontent.com/arch10/Calculator-Plus/main/docs/en/privacy_policy.md"
         const val TERMS_OF_USE_URL =
-            "https://raw.githubusercontent.com/arch10/Calculator-Plus/master/docs/en/terms_and_conditions.md"
+            "https://raw.githubusercontent.com/arch10/Calculator-Plus/main/docs/en/terms_and_conditions.md"
         const val BETA_TESTING_LINK =
             "https://play.google.com/apps/testing/com.gigaworks.tech.calculator"
     }
