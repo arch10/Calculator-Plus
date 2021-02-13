@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false"
+    android:background="?attr/colorSurface">
+
+    <com.gigaworks.tech.calculator.ui.view.CalculatorEditText
+        android:id="@+id/expression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="center|end"
+        android:includeFontPadding="false"
+        android:paddingEnd="@dimen/space_l"
+        android:paddingBottom="@dimen/space_xl"
+        android:singleLine="true"
+        android:cursorVisible="false"
+        android:inputType="textNoSuggestions"
+        android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline3"
+        android:fontFamily="@font/lato"
+        custom:maxTextSize="50sp"
+        custom:minTextSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/result"
+        tools:text="200+50058" />
+
+    <com.gigaworks.tech.calculator.ui.view.CalculatorEditText
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="bottom|end"
+        android:includeFontPadding="false"
+        android:paddingEnd="@dimen/space_xl"
+        android:paddingBottom="@dimen/space_xl"
+        android:singleLine="true"
+        android:cursorVisible="false"
+        android:inputType="textNoSuggestions"
+        android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+        android:fontFamily="@font/lato"
+        android:textColor="?attr/textDisable"
+        custom:maxTextSize="36sp"
+        custom:minTextSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expression"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="700" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -114,9 +114,9 @@ public class CalculatorEditText extends AppCompatEditText {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
+        int deviceWidth = MeasureSpec.getSize(widthMeasureSpec);
         mWidthConstraint =
-                MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
+                deviceWidth - getPaddingLeft() - getPaddingRight() - (int) (0.2 * deviceWidth);
         setTextSize(TypedValue.COMPLEX_UNIT_PX, getVariableTextSize(getText().toString()));
     }
 

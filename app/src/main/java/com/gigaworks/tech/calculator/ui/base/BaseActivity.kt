@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
-
     private var _binding: B? = null
     protected val binding get() = _binding!!
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/history_trash"
+        app:showAsAction="always"
+        android:title="Clear"
+        android:icon="@drawable/trash" />
+    <item
+        android:id="@+id/history_test"
+        app:showAsAction="always"
+        android:title="Clear"
+        android:icon="@drawable/chevron_right" />
+</menu>

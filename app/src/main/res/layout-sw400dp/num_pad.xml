@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/firstRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/secondRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/percent"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="%"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/openBracket"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openBracket"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="("
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/closeBracket"
+            app:layout_constraintStart_toEndOf="@id/percent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/closeBracket"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text=")"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/delete"
+            app:layout_constraintStart_toEndOf="@id/openBracket"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/delete"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary.IconOnly"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/closeBracket"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/closeBracket"
+            app:layout_constraintEnd_toStartOf="@id/delete" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/secondRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/thirdRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/firstRow">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/seven"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="7"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/eight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/eight"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="8"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/nine"
+            app:layout_constraintStart_toEndOf="@id/seven"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nine"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="9"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/divide"
+            app:layout_constraintStart_toEndOf="@id/eight"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/divide"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="\u00F7"
+            android:textColor="?attr/operatorBtnColor"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/nine"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/nine"
+            app:layout_constraintEnd_toStartOf="@id/divide" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/thirdRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/fourthRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/secondRow">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/four"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="4"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/five"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/five"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="5"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/six"
+            app:layout_constraintStart_toEndOf="@id/four"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/six"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="6"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/multiply"
+            app:layout_constraintStart_toEndOf="@id/five"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/multiply"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="\u00D7"
+            android:textColor="?attr/operatorBtnColor"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/six"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/six"
+            app:layout_constraintEnd_toStartOf="@id/multiply" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fourthRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/fifthRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/thirdRow">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/one"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="1"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/two"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/two"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="2"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/three"
+            app:layout_constraintStart_toEndOf="@id/one"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/three"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="3"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/plus"
+            app:layout_constraintStart_toEndOf="@id/two"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/plus"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="\u002B"
+            android:textColor="?attr/operatorBtnColor"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/three"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/three"
+            app:layout_constraintEnd_toStartOf="@id/plus" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fifthRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fourthRow">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/decimal"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="."
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/zero"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/zero"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="0"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/equal"
+            app:layout_constraintStart_toEndOf="@id/decimal"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/equal"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="="
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
+            app:layout_constraintEnd_toStartOf="@id/minus"
+            app:layout_constraintStart_toEndOf="@id/zero"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/minus"
+            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="\u2212"
+            android:textColor="?attr/operatorBtnColor"
+            android:stateListAnimator="@null"
+            android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/equal"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/equal"
+            app:layout_constraintEnd_toStartOf="@id/minus" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

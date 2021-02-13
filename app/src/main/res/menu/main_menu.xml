@@ -5,9 +5,9 @@
         android:id="@+id/share"
         android:title="@string/settings_share"
         android:icon="@drawable/share"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
-        android:id="@+id/deg"
+        android:id="@+id/angleType"
         android:onClick="changeAngleType"
         android:title="@string/deg"
         app:showAsAction="always" />

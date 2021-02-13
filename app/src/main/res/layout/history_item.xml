@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_l">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Yesterday"
+        android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
+        android:textColor="?attr/operatorBtnColor"
+        android:gravity="start"
+        android:layout_marginStart="@dimen/space_xl"
+        android:layout_marginEnd="@dimen/space_xl" />
+
+    <TextView
+        android:id="@+id/expression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="3+3"
+        android:textColor="?attr/textPrimary"
+        android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline3"
+        android:singleLine="true"
+        android:background="@null"
+        android:focusable="false"
+        android:gravity="end"
+        android:scrollHorizontally="true"
+        android:layout_marginStart="@dimen/space_xl"
+        android:layout_marginEnd="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_m" />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="6"
+        android:textColor="?attr/textDisable"
+        android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline4"
+        android:singleLine="true"
+        android:background="@null"
+        android:focusable="false"
+        android:gravity="end"
+        android:scrollHorizontally="true"
+        android:layout_marginStart="@dimen/space_xl"
+        android:layout_marginEnd="@dimen/space_xl"
+        android:layout_marginTop="@dimen/space_sm"
+        android:layout_marginBottom="@dimen/space_m" />
+
+    <View
+        android:id="@+id/border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/border" />
+
+</LinearLayout>

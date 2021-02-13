@@ -20,6 +20,11 @@
         <item name="numPadPrimary">@color/numPadPrimary</item>
         <item name="operatorBtnColor">@color/primary</item>
         <item name="clearColor">@color/clear</item>
+        <!-- Widget Themes -->
+        <item name="materialAlertDialogTheme">
+            @style/ThemeOverlay.CalculatorPlus.MaterialAlertDialog
+        </item>
+        <item name="switchStyle">@style/Widget.CalculatorPlus.Switch</item>
         <!-- Status bar Themes -->
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
@@ -54,93 +59,60 @@
         <item name="android:background">@drawable/button_ripple</item>
     </style>
 
+    <style name="ThemeOverlay.CalculatorPlus.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">?attr/operatorBtnColor</item>
+        <item name="colorSecondary">?attr/operatorBtnColor</item>
+        <item name="colorSurface">@color/background</item>
+        <item name="colorOnSurface">@color/textPrimary</item>
+    </style>
+
+    <style name="Widget.CalculatorPlus.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.CalculatorPlus.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.CalculatorPlus.Switch" parent="">
+        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorSecondary">?attr/operatorBtnColor</item>
+    </style>
+
     <!-- Text Styles -->
     <style name="TextAppearance.CalculatorPlus.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">63sp</item>
-        <item name="android:letterSpacing">-0.005</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
+
     <style name="TextAppearance.CalculatorPlus.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">50sp</item>
-        <item name="android:letterSpacing">0.0</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
+
     <style name="TextAppearance.CalculatorPlus.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">36sp</item>
-        <item name="android:letterSpacing">0.0025</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:letterSpacing">0.0</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">21sp</item>
-        <item name="android:letterSpacing">0.0015</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:letterSpacing">0.0015</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:letterSpacing">0.001</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Body1" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:letterSpacing">0.005</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Body2" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:letterSpacing">0.0025</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Button" parent="TextAppearance.MaterialComponents.Button">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:letterSpacing">0.0125</item>
-        <item name="android:textAllCaps">false</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Caption" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:letterSpacing">0.004</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Overline" parent="TextAppearance.MaterialComponents.Overline">
-        <item name="fontFamily">@font/lato</item>
-        <item name="android:fontFamily">@font/lato</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:letterSpacing">0.015</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
 
