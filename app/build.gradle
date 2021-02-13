@@ -1,5 +1,7 @@
-apply plugin: 'com.android.application'
-apply plugin: "org.sonarqube" version "3.1.1"
+plugins { 
+    id "com.android.application"
+    id "org.sonarqube" version "3.1.1"
+}
 
 def version = "1.10.7"
 
