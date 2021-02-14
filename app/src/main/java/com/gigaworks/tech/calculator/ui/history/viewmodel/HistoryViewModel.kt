@@ -76,24 +76,6 @@ class HistoryViewModel @Inject constructor(
         return newList
     }
 
-    fun addSomeHistory() {
-        val h1 = History(System.currentTimeMillis(), "6+6", "12")
-        val h2 = History((System.currentTimeMillis() - (MILLI_SECONDS_IN_DAYS)), "1+1", "2")
-        val h3 = History((System.currentTimeMillis() - (MILLI_SECONDS_IN_DAYS * 18)), "2+2", "4")
-        val h4 = History((System.currentTimeMillis() - (MILLI_SECONDS_IN_DAYS * 35)), "3+3", "6")
-
-        insertHistory(h1)
-        insertHistory(h2)
-        insertHistory(h3)
-        insertHistory(h4)
-    }
-
-    private fun insertHistory(history: History) {
-        viewModelScope.launch {
-            historyRepository.saveHistory(history)
-        }
-    }
-
     fun saveExpression(value: String) {
         appPreference.setStringPreference(AppPreference.EXPRESSION, value)
     }

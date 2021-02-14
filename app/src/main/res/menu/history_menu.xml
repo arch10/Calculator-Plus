@@ -6,9 +6,4 @@
         app:showAsAction="always"
         android:title="Clear"
         android:icon="@drawable/trash" />
-    <item
-        android:id="@+id/history_test"
-        app:showAsAction="always"
-        android:title="Clear"
-        android:icon="@drawable/chevron_right" />
 </menu>

@@ -71,7 +71,6 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.history_trash -> viewModel.clearHistory()
-            R.id.history_test -> viewModel.addSomeHistory()
         }
         return super.onOptionsItemSelected(item)
     }
