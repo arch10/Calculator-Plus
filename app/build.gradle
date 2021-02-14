@@ -17,7 +17,7 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 40
+        versionCode 41
         versionName "2.0.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
