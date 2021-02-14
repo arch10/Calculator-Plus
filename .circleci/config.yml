@@ -13,4 +13,13 @@ jobs:
           name: chmod permissions
           command: chmod +x ./gradlew
       - run:
-          command: ./gradlew build
+          name: Run unit tests
+          command: ./gradlew test
+      - store_test_results:
+                path: app/build/test-results
+      - run:
+          name: Assemble debug APK
+          command: ./gradlew assembleDebug
+      - store_artifacts:
+          path: app/build/outputs/apk/debug/
+          destination: app-debug.apk
