@@ -84,8 +84,8 @@ fun separateOutExpression(expression: String): List<String> {
 
 fun removeFromEndUntil(expression: String, condition: (Char) -> Boolean): String {
     if (expression.isNotEmpty()) {
-        var lastChar = expression.last()
         var exp = expression
+        var lastChar = exp.last()
         while (condition(lastChar)) {
             exp = exp.dropLast(1)
             if (exp.isEmpty()) return ""

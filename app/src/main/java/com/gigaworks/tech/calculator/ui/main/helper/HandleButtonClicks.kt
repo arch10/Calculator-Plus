@@ -50,7 +50,7 @@ private fun handleMinusClick(expression: String, string: String): String {
         return "$expression$string"
     if (lastChar == '.') return "${expression}0$string"
     if (lastChar.isBinaryOperator() && expression.length > 1 && expression[expression.lastIndex - 1].isNumber()) {
-        if (lastChar == '\u2212') {
+        if (lastChar == '\u2212' || lastChar == '-') {
             val exp = expression.dropLast(1)
             return "$exp+"
         }
@@ -67,6 +67,11 @@ private fun handleBinaryOperatorClick(expression: String, string: String): Strin
     if (lastChar.isNumber() || lastChar.isRightUnaryOperator() || lastChar == ')') return "$expression$string"
     if (lastChar == '.') return "${expression}0$string"
     if (lastChar.isOperator() && expression.length > 1) {
+        if (lastChar == '\u2212' || lastChar == '-') {
+            val secondLast = expression[expression.lastIndex - 1]
+            if (secondLast == '(' || secondLast.isLeftUnaryOperator())
+                return expression
+        }
         val exp = removeFromEndUntil(expression) {
             it.isBinaryOperator() || it.isLeftUnaryOperator()
         }
