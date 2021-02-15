@@ -1,12 +1,10 @@
 package com.gigaworks.tech.calculator.ui.main.helper
 
-import android.util.Log
 import ch.obermuhlner.math.big.BigDecimalMath
 import com.gigaworks.tech.calculator.util.AngleType
 import com.gigaworks.tech.calculator.util.CalculationException
 import java.lang.Math.cbrt
 import java.math.BigDecimal
-import java.math.BigInteger
 import java.math.MathContext
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -106,23 +104,6 @@ fun formatNumber(x: BigDecimal, scale: Int): String {
     return formatter.format(x)
 }
 
-fun BigDecimal.toScientific(): String {
-    var temp = this.toPlainString()
-    var scale = 8
-    Log.d("DEBUG", "converting to scientific: $temp")
-    val numberLength = temp.length
-    if (numberLength > 20) {
-        temp = temp.substring(0, 21)
-    }
-    while (temp.length > 13) {
-        temp = formatNumber(BigDecimalMath.toBigDecimal(temp), scale)
-        scale--
-        if (scale == 1) break
-    }
-    Log.d("DEBUG", "scientific formatting done. ${numberLength - 20}")
-    return temp
-}
-
 fun isExpressionBalanced(expression: String): Boolean {
     val stack = Stack<Char>()
     for (char in expression) {
@@ -149,12 +130,22 @@ fun tryBalancingBrackets(expression: String): String {
         }
     }
 
+    var openBracketCount = 0
+    var numOfPairs = 0
+
     for (element in exp) {
-        if (element == '(') a++
-        if (element == ')') b++
+        if (element == '(') {
+            openBracketCount++
+            a++
+        } else if (element == ')') {
+            b++
+            if (openBracketCount > 0) {
+                openBracketCount--
+                numOfPairs++
+            }
+        }
     }
 
-    val numOfPairs = min(a, b)
     var reqOpen = b - numOfPairs
     var reqClose = a - numOfPairs
     while (reqOpen > 0) {
@@ -559,24 +550,6 @@ private fun solvePower(stack: Stack<String>): Stack<String> {
     }
     tempStack.reverse()
     return tempStack
-}
-
-//returns factorial of a number
-private fun factorial(num: Int): BigInteger {
-    var offset = BigInteger("1")
-    var n = num
-    if (n < 0) {
-        offset = BigInteger("-1")
-        n = -num
-    }
-    // Initialize result
-    var result = BigInteger.ONE
-
-    // Multiply f with 2, 3, ...N
-    for (i in 2..n)
-        result = result.multiply(BigInteger.valueOf(i.toLong()))
-
-    return result.multiply(offset)
 }
 
 private fun solveRoots(stack: Stack<String>): Double {
