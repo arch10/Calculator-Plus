@@ -98,7 +98,7 @@ fun getResult(expression: String, angleType: String): String {
 }
 
 //rounds the provided number to the given precision
-fun roundMyAnswer(ans: String, precision: Int): String {
+fun roundMyAnswer(ans: String, precision: Int = 6): String {
     if (ans.isEmpty())
         return ""
     var num = BigDecimalMath.toBigDecimal(ans)
