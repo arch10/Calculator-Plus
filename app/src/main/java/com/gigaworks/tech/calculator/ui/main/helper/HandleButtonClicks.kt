@@ -18,16 +18,16 @@ fun handleClick(expression: String, string: String, isPrevResult: Boolean = fals
         "sin",
         "cos",
         "tan",
-        "sin\u207B\u00b9",
-        "cos\u207B\u00b9",
-        "tan\u207B\u00b9",
+        "sin⁻¹",
+        "cos⁻¹",
+        "tan⁻¹",
         "log",
         "ln"
     )
     val rightUnarySet = setOf("%", "!")
-    val leftUnarySet = setOf("\u221a", "\u221b")
-    val constantSet = setOf("\u03C0", "e")
-    val binaryOperatorSet = setOf("\u00F7", "\u00D7", "\u002B", "^")
+    val leftUnarySet = setOf("√", "∛")
+    val constantSet = setOf("π", "e")
+    val binaryOperatorSet = setOf("÷", "×", "+", "^")
     return when (string) {
         in numberSet -> handleNumberClick(expression, string, isPrevResult)
         in trigonometricSet -> handleTrigonometricClick(expression, string)
@@ -127,8 +127,14 @@ private fun handleRightUnaryClick(
     if (lastChar.isRightUnaryOperator()) return "${expression.dropLast(1)}$string"
     if (lastChar == '.') return "${expression}0$string"
     if (lastChar.isOperator() && expression.length > 1) {
+        if (lastChar == '\u2212' || lastChar == '-') {
+            val secondLast = expression[expression.lastIndex - 1]
+            if (secondLast == '(' || secondLast.isLeftUnaryOperator())
+                return expression
+        }
         val exp = removeFromEndUntil(expression) { it.isOperator() }
-        if (exp.isNotEmpty()) return "$exp$string"
+        if (exp.isNotEmpty())
+            return "$exp$string"
     }
     return expression
 }
