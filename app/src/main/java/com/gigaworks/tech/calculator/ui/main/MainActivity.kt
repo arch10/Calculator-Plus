@@ -333,6 +333,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun showTutorial() {
+        //close side panel before starting tutorial
+        if (binding.calculatorPadViewPager?.currentItem == 1) {
+            binding.calculatorPadViewPager?.currentItem = 0
+        }
         val tapTargetSequence = TapTargetSequence(this)
         val delete = TapTarget
             .forView(
