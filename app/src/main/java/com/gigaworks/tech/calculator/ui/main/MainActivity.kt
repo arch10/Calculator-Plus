@@ -192,7 +192,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             val expression = removeNumberSeparator(getExpression())
             val result = getResult()
             if (expression.isNotEmpty()) {
-                if (result.isEmpty() || !result.containsNumber()) {
+                if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
                     val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
                     getResultEditText().setTextColor(getResultTextColor(true))
                     setResult(viewModel.error.value ?: getString(R.string.invalid))
@@ -449,7 +449,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun getShareEquation(): String {
         if (getExpression().isNotEmpty()) {
             val result = getResult()
-            return if (result == "" || !result.containsNumber()) {
+            return if (result == "" || !removeNumberSeparator(result).isNumber()) {
                 ""
             } else {
                 val expression = viewModel.getCalculatedExpression()

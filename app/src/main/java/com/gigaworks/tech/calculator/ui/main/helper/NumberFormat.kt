@@ -3,6 +3,7 @@ package com.gigaworks.tech.calculator.ui.main.helper
 import ch.obermuhlner.math.big.BigDecimalMath
 import com.gigaworks.tech.calculator.util.AngleType
 import com.gigaworks.tech.calculator.util.CalculationException
+import com.gigaworks.tech.calculator.util.CalculationMessage.*
 import java.lang.Math.cbrt
 import java.math.BigDecimal
 import java.math.MathContext
@@ -227,7 +228,7 @@ fun solveExpression(
     //check if solved
     if (stack.size == 1) return stack.pop()
 
-    throw CalculationException("Invalid expression")
+    throw CalculationException(INVALID_EXPRESSION)
 }
 
 fun solveAddition(stack: Stack<String>): Stack<String> {
@@ -278,7 +279,7 @@ fun solveDivision(stack: Stack<String>): Stack<String> {
             val num1 = BigDecimalMath.toBigDecimal(tempStack.pop())
             val num2 = BigDecimalMath.toBigDecimal(stack.pop())
             if (num2.compareTo(BigDecimal.ZERO) == 0)
-                throw CalculationException("Cannot divide by 0")
+                throw CalculationException(DIVIDE_BY_ZERO)
             val result = num1.divide(num2, precision)
             tempStack.push(result.toString())
         } else {
@@ -299,7 +300,7 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "sin", "-sin" -> {
                 var num = stack.pop().toDouble()
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 if (isDegree) {
                     if (num.rem(180) == 0.0) {
                         tempStack.push("0.0")
@@ -320,7 +321,7 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "cos", "-cos" -> {
                 var num = stack.pop().toDouble()
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 if (isDegree) {
                     if (num.rem(90) == 0.0 && num.rem(180) != 0.0) {
                         tempStack.push("0.0")
@@ -341,20 +342,20 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "tan", "-tan" -> {
                 var num = stack.pop().toDouble()
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 if (isDegree) {
                     if (num.rem(180) == 0.0) {
                         tempStack.push("0.0")
                         continue
                     } else if (num.rem(90) == 0.0)
-                        throw CalculationException("Domain error")
+                        throw CalculationException(DOMAIN_ERROR)
                     num = Math.toRadians(num)
                 } else {
                     if (num.rem(Math.PI) == 0.0) {
                         tempStack.push("0.0")
                         continue
                     } else if (num.rem(Math.PI / 2) == 0.0)
-                        throw CalculationException("Domain error")
+                        throw CalculationException(DOMAIN_ERROR)
                 }
                 num = tan(num)
                 if (temp == "-tan")
@@ -364,9 +365,9 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "sin⁻¹", "-sin⁻¹" -> {
                 var num = stack.pop().toDouble()
                 if (num > 1 || num < -1)
-                    throw CalculationException("Domain error")
+                    throw CalculationException(DOMAIN_ERROR)
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 num = if (isDegree) {
                     Math.toDegrees(asin(num))
                 } else {
@@ -379,7 +380,7 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "cos⁻¹", "-cos⁻¹" -> {
                 var num = stack.pop().toDouble()
                 if (num > 1 || num < -1)
-                    throw CalculationException("Domain error")
+                    throw CalculationException(DOMAIN_ERROR)
                 num = if (isDegree) {
                     Math.toDegrees(acos(num))
                 } else {
@@ -392,7 +393,7 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "tan⁻¹", "-tan⁻¹" -> {
                 var num = stack.pop().toDouble()
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 num = if (isDegree) {
                     Math.toDegrees(atan(num))
                 } else {
@@ -405,9 +406,9 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "log", "-log" -> {
                 var num = stack.pop().toDouble()
                 if (num < 0)
-                    throw CalculationException("Domain error")
+                    throw CalculationException(DOMAIN_ERROR)
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 num = log10(num)
                 if (temp == "-log")
                     num = num.unaryMinus()
@@ -416,9 +417,9 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
             "ln", "-ln" -> {
                 var num = stack.pop().toDouble()
                 if (num < 0)
-                    throw CalculationException("Domain error")
+                    throw CalculationException(DOMAIN_ERROR)
                 if (!num.isFinite())
-                    throw CalculationException("Value too large")
+                    throw CalculationException(VALUE_TOO_LARGE)
                 num = ln(num)
                 if (temp == "-ln")
                     num = num.unaryMinus()
@@ -457,7 +458,7 @@ private fun solveLeftUnary(stack: Stack<String>): Stack<String> {
                 } else {
                     val number = stack.pop().toDouble()
                     if (!number.isFinite())
-                        throw CalculationException("Value too large")
+                        throw CalculationException(VALUE_TOO_LARGE)
                     if (temp == "∛" || temp == "-∛") {
                         cbrt(number).toString()
                     } else {
@@ -502,7 +503,7 @@ private fun solveRightUnary(stack: Stack<String>): Stack<String> {
             }
             "!" -> {
                 if (!Pattern.matches("-?\\d+(\\.0)?", tempStack.peek())) {
-                    throw CalculationException("Domain error")
+                    throw CalculationException(DOMAIN_ERROR)
                 }
                 val precision = MathContext(20)
                 var number = tempStack.pop()
@@ -577,16 +578,6 @@ fun canPlaceDecimal(expression: String): Boolean {
         j--
     }
     return count == 0
-}
-
-fun String.containsNumber(): Boolean {
-    for (i in this.indices) {
-        val char = this[i]
-        if (char.isNumber()) {
-            return true
-        }
-    }
-    return false
 }
 
 fun String.isNumber(): Boolean {

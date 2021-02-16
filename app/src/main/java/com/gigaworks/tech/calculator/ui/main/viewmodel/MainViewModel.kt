@@ -4,17 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ch.obermuhlner.math.big.BigDecimalMath
 import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.repository.HistoryRepository
 import com.gigaworks.tech.calculator.ui.main.helper.*
 import com.gigaworks.tech.calculator.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import java.math.RoundingMode
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,164 +40,48 @@ class MainViewModel @Inject constructor(
 
     fun calculateExpression(expression: String) {
         val exp = if (isExpressionBalanced(expression)) {
-            _error.value = ""
+            setError("")
+            calculatedExpression = expression
             prepareExpression(expression)
         } else {
             val exp = tryBalancingBrackets(expression)
             if (getSmartCalculation() && isExpressionBalanced(exp)) {
-                _error.value = ""
+                setError("")
+                calculatedExpression = expression
                 prepareExpression(exp)
             } else {
-                _error.value = "Invalid expression"
+                setError("Invalid expression")
                 ""
             }
         }
-        try {
-            val rawResult = getResult(exp)
-            val result = roundMyAnswer(rawResult)
-            val formattedResult = if (getNumberSeparator() != NumberSeparator.OFF) {
-                addNumberSeparator(
-                    expression = result,
-                    isIndian = (getNumberSeparator() == NumberSeparator.INDIAN)
-                )
-            } else {
-                result
-            }
-            setResult(formattedResult)
-        } catch (e: Exception) {
-            when (e) {
-                is TimeoutCancellationException, is OutOfMemoryError -> {
-                    setError("Timed Out")
-                }
-                else -> {
-                    setError("Error")
-                }
-            }
+        val rawResult = getResult(exp)
+        val result = roundMyAnswer(rawResult, getAnswerPrecision())
+        val formattedResult = if (getNumberSeparator() != NumberSeparator.OFF) {
+            addNumberSeparator(
+                expression = result,
+                isIndian = (getNumberSeparator() == NumberSeparator.INDIAN)
+            )
+        } else {
+            result
         }
-    }
-
-    private fun prepareExpression(expression: String): String {
-        if (expression.isEmpty()) return ""
-
-        var exp = expression
-        calculatedExpression = exp
-
-        //remove number separator
-        exp = removeNumberSeparator(exp)
-
-        //replace human readable operator characters with computer readable operator characters
-        exp = exp.replace("÷", "/")
-        exp = exp.replace("×", "*")
-        exp = exp.replace("+", "+")
-        exp = exp.replace("−", "-")
-
-        //replace constants with their values
-        exp = exp.replace("e", Math.E.toString())
-        exp = exp.replace("π", Math.PI.toString())
-
-        exp = exp.replace("-", "+-")
-
-        //corrective replace
-        exp = exp.replace("^+-", "^-")
-        exp = exp.replace("(+-", "(-")
-        exp = exp.replace("*+", "*")
-        exp = exp.replace("/+", "/")
-        exp = exp.replace("++", "+")
-
-        exp = exp.replace("+)", ")")
-        exp = exp.replace("-)", ")")
-        exp = exp.replace("/)", ")")
-        exp = exp.replace("*)", ")")
-        exp = exp.replace(".)", ")")
-        exp = exp.replace("^)", ")")
-
-        return exp
+        setResult(formattedResult)
     }
 
     private fun getResult(expression: String): String {
-        if (expression.isEmpty()) return ""
-        var exp = expression
-        var lastChar = exp.last()
-
-        while (!canBeLastChar(lastChar)) {
-            exp = exp.dropLast(1)
-            if (exp.isNotEmpty()) {
-                lastChar = exp.last()
-            } else {
-                setError("Invalid expression")
-                return ""
-            }
-        }
-
-        if (exp[0] == '+' || exp[0] == '-') {
-            exp = "0$exp"
-        }
-
-        val stack = Stack<String>()
-        val temp = StringBuilder()
-        for (i in exp.indices) {
-            val char = exp[i]
-            if (char.isOperator() || char == '(') {
-                if (temp.isNotEmpty()) {
-                    stack.push(temp.toString())
-                    temp.clear()
-                }
-                stack.push(char.toString())
-            } else if (char == ')') {
-                if (temp.isNotEmpty()) {
-                    stack.push(temp.toString())
-                    temp.clear()
-                }
-                val newStack = Stack<String>()
-                while (!stack.empty() && stack.peek() != "(") {
-                    newStack.push(stack.pop())
-                }
-                stack.pop()
-                try {
-                    stack.push(solveExpression(newStack, getAngleType()))
-                } catch (e: CalculationException) {
-                    setError(e.msg)
-                    return ""
-                } catch (e: Exception) {
-                    setError("Invalid expression")
-                    return ""
-                }
-            } else {
-                temp.append(char)
-            }
-        }
-        if (temp.isNotEmpty()) {
-            stack.push(temp.toString())
-        }
-        stack.reverse()
-
         return try {
-            solveExpression(stack, getAngleType())
-        } catch (e: Exception) {
-            when (e) {
-                is CalculationException -> setError(e.msg)
-                else -> setError("Invalid expression")
+            getResult(expression, getAngleType())
+        } catch (e: CalculationException) {
+            val errorMessage = when (e.msg) {
+                CalculationMessage.INVALID_EXPRESSION -> "Invalid expression"
+                CalculationMessage.DIVIDE_BY_ZERO -> "Cannot divide by 0"
+                CalculationMessage.VALUE_TOO_LARGE -> "Value too large"
+                CalculationMessage.DOMAIN_ERROR -> "Domain error"
             }
+            setError(errorMessage)
             ""
-        }
-    }
-
-    //rounds the provided number to user preference digits
-    private fun roundMyAnswer(ans: String): String {
-        if (ans.isEmpty())
-            return ""
-        var num = BigDecimalMath.toBigDecimal(ans)
-        return if (ans.contains("E"))
-            formatNumber(num, 7)
-        else {
-            val precision = getAnswerPrecision()
-            num = num.setScale(precision, RoundingMode.HALF_UP)
-            num = num.stripTrailingZeros()
-            if (num.compareTo(BigDecimal.ZERO) == 0) {
-                "0"
-            } else {
-                num.toPlainString()
-            }
+        } catch (e: Exception) {
+            setError("Error")
+            ""
         }
     }
 
