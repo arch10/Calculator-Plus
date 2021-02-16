@@ -44,13 +44,6 @@ class ExtensionUnitTest {
     }
 
     @Test
-    fun testContainsNumber() {
-        assertEquals(true, "abc34".containsNumber())
-        assertEquals(true, "abc55cdw34".containsNumber())
-        assertEquals(false, "abc".containsNumber())
-    }
-
-    @Test
     fun testIsTrigonometricChar() {
         assertEquals(true, 's'.isTrigonometricChar())
         assertEquals(true, 'c'.isTrigonometricChar())
