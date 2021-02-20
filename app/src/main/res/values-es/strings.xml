@@ -9,7 +9,7 @@
     <string name="share_error">No se puede compartir expresión no válida</string>
     <string name="choose">Escoger</string>
     <string name="delete_button">Botón de eliminación</string>
-    <string name="delete_button_desc">Simplemente LARGO DE PRENSA bot�n BORRAR para borrar la pantalla de la calculadora</string>
+    <string name="delete_button_desc">Simplemente LARGO DE PRENSA botón BORRAR para borrar la pantalla de la calculadora</string>
     <string name="angle_button">Botón ángulo</string>
     <string name="angle_button_desc">Este es el botón de ángulo. Haga clic aquí para cambiar el ángulo de grados a radianes y viceversa.</string>
     <string name="options_menu">Menú de opciones</string>
@@ -47,7 +47,7 @@
     <string name="follow_desc">Sigueme en Twitter</string>
     <string name="whats_new">¿Qué hay de nuevo?</string>
     <string name="join_beta">Participar en el programa beta</string>
-    <string name="open_source">licencias de c�digo abierto</string>
+    <string name="open_source">licencias de código abierto</string>
     <string name="privacy_policy">Política de privacidad</string>
     <string name="version">Versión</string>
     <string name="terms_of_use">Condiciones de uso</string>
