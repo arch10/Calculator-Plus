@@ -59,19 +59,19 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             binding.deleteHistorySubtitle.text = it.getString()
         }
         viewModel.precision.observe(this) {
-            val precisionSubtitle = "Precision: $it"
+            val precisionSubtitle = "${getString(R.string.precision)}: $it"
             binding.precisionSubtitle.text = precisionSubtitle
         }
     }
 
     private fun setUpView() {
         binding.toolbar.setNavigationOnClickListener { handleBackPress() }
-        val appVersion = "Version: ${BuildConfig.VERSION_NAME}"
+        val appVersion = "${getString(R.string.version)}: ${BuildConfig.VERSION_NAME}"
         binding.aboutSubtitle.text = appVersion
         binding.themeCard.setOnClickListener {
             var selectedThemeChoice = viewModel.selectedTheme.value!!.ordinal
             dialog = MaterialAlertDialogBuilder(this)
-                .setTitle("Choose theme")
+                .setTitle(getString(R.string.choose_theme))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.changeTheme(selectedThemeChoice)
                     dialog.dismiss()
@@ -99,7 +99,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                     .map { it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT) }
                     .toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
-                .setTitle("Choose number separator")
+                .setTitle(getString(R.string.choose_number_separator))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.changeNumberSeparator(numberSeparator)
                     dialog.dismiss()
@@ -120,7 +120,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             val list =
                 HistoryAutoDelete.values().map { it.getString() }.toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
-                .setTitle("Auto delete history")
+                .setTitle(getString(R.string.delete_history))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.setAutoDeleteHistory(deleteHistory)
                     dialog.dismiss()
@@ -142,8 +142,8 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             precisionDialogLayout.precisionSlider.value = precision.toFloat()
             dialog = MaterialAlertDialogBuilder(this)
                 .setView(precisionDialogLayout.root)
-                .setTitle("Set answer precision")
-                .setMessage("Current precision: $precision")
+                .setTitle(getString(R.string.set_answer_precision))
+                .setMessage("${getString(R.string.current_precision)}: $precision")
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     val newPrecision = precisionDialogLayout.precisionSlider.value.toInt()
                     viewModel.setAnswerPrecision(newPrecision)

@@ -58,4 +58,9 @@
     <string name="value_too_large">Valor muito grande</string>
     <string name="domain_error">erro de domínio</string>
     <string name="error">Erro</string>
+    <string name="choose_theme">Escolha tema</string>
+    <string name="choose_number_separator">Escolha número separador</string>
+    <string name="set_answer_precision">Set precisão resposta</string>
+    <string name="current_precision">precisão atual</string>
+    <string name="precision">Precisão</string>
 </resources>
