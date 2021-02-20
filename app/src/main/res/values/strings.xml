@@ -10,7 +10,7 @@
 
     <!-- Menu and Tutorial String -->
     <string name="settings_share">Share</string>
-    <string name="deg">DEG</string>
+    <string name="deg" translatable="false">DEG</string>
     <string name="share_error">Cannot share invalid expression</string>
     <string name="choose">Choose</string>
     <string name="delete_button">Delete Button</string>
@@ -59,4 +59,6 @@
     <string name="version">Version</string>
     <string name="terms_of_use">Terms of Use</string>
     <string name="no_history">No History</string>
+    <string name="arrow">Arrow</string>
+    <string name="clear">Clear</string>
 </resources>

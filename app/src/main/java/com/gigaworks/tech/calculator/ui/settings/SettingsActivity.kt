@@ -19,6 +19,7 @@ import com.gigaworks.tech.calculator.util.HistoryAutoDelete
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
@@ -51,7 +52,8 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             binding.smartCalculationSwitch.isChecked = it
         }
         viewModel.numberSeparator.observe(this) {
-            binding.numberSeparatorSubtitle.text = it.name.toLowerCase().capitalize()
+            binding.numberSeparatorSubtitle.text =
+                it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT)
         }
         viewModel.autoDeleteHistory.observe(this) {
             binding.deleteHistorySubtitle.text = it.getString()
@@ -93,7 +95,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         binding.numberSeparatorCard.setOnClickListener {
             var numberSeparator = viewModel.getNumberSeparator()
             val list =
-                NumberSeparator.values().map { it.name.toLowerCase().capitalize() }.toTypedArray()
+                NumberSeparator.values()
+                    .map { it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT) }
+                    .toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
                 .setTitle("Choose number separator")
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->

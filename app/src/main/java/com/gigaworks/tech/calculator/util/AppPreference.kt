@@ -5,11 +5,8 @@ import android.content.SharedPreferences
 import com.gigaworks.tech.calculator.BuildConfig
 
 class AppPreference(context: Context) {
-    private val sharedPreferences: SharedPreferences
-
-    init {
-        sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
-    }
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
 
     fun setStringPreference(key: String, value: String) {
         sharedPreferences.edit().putString(key, value).apply()
@@ -40,7 +37,6 @@ class AppPreference(context: Context) {
         const val ANGLE_TYPE = "app_angle_type"
         const val NUMBER_SEPARATOR = "app_number_separator"
         const val SMART_CALCULATION = "app_smart_calculation"
-        const val SCIENTIFIC_CALCULATION = "app_scientific_calculation"
         const val ANSWER_PRECISION = "app_answer_precision"
         const val MEMORY = "app_memory_store"
         const val EXPRESSION = "app_expression_string"

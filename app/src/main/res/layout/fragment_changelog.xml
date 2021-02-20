@@ -42,7 +42,7 @@
                 android:layout_marginStart="@dimen/space_l"
                 android:layout_marginEnd="@dimen/space_l"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
-                android:text="Build: 16th Feb 2021" />
+                tools:text="Build: 16th Feb 2021" />
 
         </LinearLayout>
 

@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/firstRow"
@@ -22,7 +23,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintEnd_toStartOf="@id/cos"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cos"
@@ -33,7 +35,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintEnd_toStartOf="@id/tan"
             app:layout_constraintStart_toEndOf="@id/sin"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tan"
@@ -44,7 +47,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cos"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +69,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/acos"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/acos"
@@ -76,7 +81,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/atan"
-            app:layout_constraintStart_toEndOf="@id/asin" />
+            app:layout_constraintStart_toEndOf="@id/asin"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/atan"
@@ -87,7 +93,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/acos" />
+            app:layout_constraintStart_toEndOf="@id/acos"
+            tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,7 +115,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/log"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/log"
@@ -119,7 +127,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/naturalLog"
-            app:layout_constraintStart_toEndOf="@id/exponential" />
+            app:layout_constraintStart_toEndOf="@id/exponential"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/naturalLog"
@@ -130,7 +139,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/pi"
-            app:layout_constraintStart_toEndOf="@id/log" />
+            app:layout_constraintStart_toEndOf="@id/log"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/pi"
@@ -141,7 +151,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/naturalLog" />
+            app:layout_constraintStart_toEndOf="@id/naturalLog"
+            tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -162,7 +173,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/squareRoot"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/squareRoot"
@@ -173,7 +185,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cubeRoot"
-            app:layout_constraintStart_toEndOf="@id/factorial" />
+            app:layout_constraintStart_toEndOf="@id/factorial"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cubeRoot"
@@ -184,7 +197,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/power"
-            app:layout_constraintStart_toEndOf="@id/squareRoot" />
+            app:layout_constraintStart_toEndOf="@id/squareRoot"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/power"
@@ -195,7 +209,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cubeRoot" />
+            app:layout_constraintStart_toEndOf="@id/cubeRoot"
+            tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -216,7 +231,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/memoryRestore"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/memoryRestore"
@@ -227,7 +243,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/memoryAdd"
-            app:layout_constraintStart_toEndOf="@id/memoryStore" />
+            app:layout_constraintStart_toEndOf="@id/memoryStore"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/memoryAdd"
@@ -238,7 +255,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/memorySub"
-            app:layout_constraintStart_toEndOf="@id/memoryRestore" />
+            app:layout_constraintStart_toEndOf="@id/memoryRestore"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/memorySub"
@@ -249,7 +267,8 @@
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/memoryAdd" />
+            app:layout_constraintStart_toEndOf="@id/memoryAdd"
+            tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
@@ -268,7 +287,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/chevron_left"
             android:layout_gravity="center"
-            app:tint="?attr/colorOnPrimary" />
+            app:tint="?attr/colorOnPrimary"
+            android:contentDescription="@string/arrow" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
