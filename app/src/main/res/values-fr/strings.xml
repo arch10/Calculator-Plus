@@ -54,4 +54,8 @@
     <string name="no_history">Histoire Non</string>
     <string name="arrow">Flèche</string>
     <string name="clear">Dégager</string>
+    <string name="divide_by_zero">Impossible de diviser par 0</string>
+    <string name="value_too_large">Valeur trop grande</string>
+    <string name="domain_error">erreur de domaine</string>
+    <string name="error">Erreur</string>
 </resources>

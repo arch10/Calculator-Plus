@@ -195,7 +195,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
                     val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
                     getResultEditText().setTextColor(getResultTextColor(true))
-                    setResult(viewModel.error.value ?: getString(R.string.invalid))
+                    val errorStringId = viewModel.error.value ?: R.string.invalid
+                    setResult(getString(errorStringId))
                     getResultEditText().startAnimation(shake)
                 } else {
                     val balancedExpression = viewModel.getCalculatedExpression()

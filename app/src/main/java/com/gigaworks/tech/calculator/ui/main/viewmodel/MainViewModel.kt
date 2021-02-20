@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.repository.HistoryRepository
 import com.gigaworks.tech.calculator.ui.main.helper.*
@@ -26,31 +27,31 @@ class MainViewModel @Inject constructor(
     val result: LiveData<String>
         get() = _result
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String>
+    private val _error = MutableLiveData(-1)
+    val error: LiveData<Int>
         get() = _error
 
     private fun setResult(result: String) {
         _result.value = result
     }
 
-    private fun setError(error: String) {
+    private fun setError(error: Int) {
         _error.value = error
     }
 
     fun calculateExpression(expression: String) {
         val exp = if (isExpressionBalanced(expression)) {
-            setError("")
+            setError(-1)
             calculatedExpression = expression
             prepareExpression(expression)
         } else {
             val exp = tryBalancingBrackets(expression)
             if (getSmartCalculation() && isExpressionBalanced(exp)) {
-                setError("")
+                setError(-1)
                 calculatedExpression = expression
                 prepareExpression(exp)
             } else {
-                setError("Invalid expression")
+                setError(R.string.invalid)
                 ""
             }
         }
@@ -72,15 +73,15 @@ class MainViewModel @Inject constructor(
             getResult(expression, getAngleType())
         } catch (e: CalculationException) {
             val errorMessage = when (e.msg) {
-                CalculationMessage.INVALID_EXPRESSION -> "Invalid expression"
-                CalculationMessage.DIVIDE_BY_ZERO -> "Cannot divide by 0"
-                CalculationMessage.VALUE_TOO_LARGE -> "Value too large"
-                CalculationMessage.DOMAIN_ERROR -> "Domain error"
+                CalculationMessage.INVALID_EXPRESSION -> R.string.invalid
+                CalculationMessage.DIVIDE_BY_ZERO -> R.string.divide_by_zero
+                CalculationMessage.VALUE_TOO_LARGE -> R.string.value_too_large
+                CalculationMessage.DOMAIN_ERROR -> R.string.domain_error
             }
             setError(errorMessage)
             ""
         } catch (e: Exception) {
-            setError("Error")
+            setError(R.string.error)
             ""
         }
     }

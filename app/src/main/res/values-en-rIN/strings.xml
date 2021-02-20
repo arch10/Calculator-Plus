@@ -6,6 +6,10 @@
 
     <!-- Calculation Exception errors -->
     <string name="invalid">Invalid expression</string>
+    <string name="divide_by_zero">Cannot divide by 0</string>
+    <string name="value_too_large">Value too large</string>
+    <string name="domain_error">Domain error</string>
+    <string name="error">Error</string>
 
     <!-- Menu and Tutorial String -->
     <string name="settings_share">Share</string>
