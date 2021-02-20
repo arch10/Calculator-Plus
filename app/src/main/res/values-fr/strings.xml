@@ -18,7 +18,7 @@
     <string name="share_button_desc">Ceci est le bouton de partage. Cliquez ici pour partager vos équations.</string>
     <string name="memory_store">mémoire magasin</string>
     <string name="memory_store_desc">Ce bouton est magasin de mémoire. Il stocke le résultat courant dans la mémoire.</string>
-    <string name="memory_restore">restauration m�moire</string>
+    <string name="memory_restore">restauration mémoire</string>
     <string name="memory_restore_desc">C\'est le bouton de restauration mémoire. Il mettra le résultat de la mémoire sur l\'écran.</string>
     <string name="user_interface">Interface utilisateur</string>
     <string name="theme">Thème</string>
