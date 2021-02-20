@@ -10,7 +10,7 @@
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Yesterday"
+        tools:text="Yesterday"
         android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
         android:textColor="?attr/operatorBtnColor"
         android:gravity="start"

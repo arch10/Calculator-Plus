@@ -39,7 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="92dp"
                 android:layout_marginTop="@dimen/space_xxl"
-                android:src="@drawable/about_icon" />
+                android:src="@drawable/about_icon"
+                android:contentDescription="@string/app_name" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                 android:layout_marginTop="@dimen/space_m"
                 android:layout_marginEnd="@dimen/space_l"
                 android:gravity="center"
-                android:text="Version: 2.0.0"
+                tools:text="Version: 2.0.0"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
                 android:textColor="?attr/textSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +109,8 @@
                         android:src="@drawable/chevron_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/whats_new" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -150,7 +152,8 @@
                         android:src="@drawable/chevron_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/join_beta" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -191,7 +194,8 @@
                         android:src="@drawable/chevron_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/open_source" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -232,7 +236,8 @@
                         android:src="@drawable/chevron_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/privacy_policy" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -274,7 +279,8 @@
                         android:src="@drawable/chevron_right"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/terms_of_use" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

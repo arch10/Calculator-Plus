@@ -50,7 +50,7 @@ public class CalculatorPadViewPager extends ViewPager {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NotNull View view, @NotNull Object object) {
             return view == object;
         }
 

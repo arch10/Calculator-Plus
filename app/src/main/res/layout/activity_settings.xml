@@ -252,7 +252,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/theme" />
 
                 <TextView
                     android:id="@+id/theme"
@@ -317,7 +318,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/share" />
 
                 <TextView
                     android:id="@+id/share"
@@ -369,7 +371,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/rate" />
 
                 <TextView
                     android:id="@+id/rate"
@@ -421,7 +424,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/bug" />
 
                 <TextView
                     android:id="@+id/bug"
@@ -473,7 +477,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/contact" />
 
                 <TextView
                     android:id="@+id/contact"
@@ -525,7 +530,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/follow" />
 
                 <TextView
                     android:id="@+id/follow"
@@ -577,7 +583,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/title_activity_about" />
 
                 <TextView
                     android:id="@+id/about"
@@ -602,7 +609,7 @@
                     android:layout_marginEnd="@dimen/space_l"
                     android:gravity="top"
                     android:paddingTop="2dp"
-                    android:text="Version: 2.0.0"
+                    tools:text="Version: 2.0.0"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
                     android:textColor="?attr/textDisable"
                     app:layout_constraintBottom_toBottomOf="parent"
