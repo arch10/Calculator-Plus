@@ -46,10 +46,10 @@
     <string name="follow">Folge mir</string>
     <string name="follow_desc">Folge mir auf Twitter</string>
     <string name="whats_new">Was gibt\'s Neues?</string>
-    <string name="join_beta">Schlie�en Sie sich das Beta-Programm</string>
+    <string name="join_beta">Schließen Sie sich das Beta-Programm</string>
     <string name="open_source">Open-Source-Lizenzen</string>
     <string name="privacy_policy">Datenschutz-Bestimmungen</string>
-    <string name="version">Ausf�hrung</string>
+    <string name="version">Ausführung</string>
     <string name="terms_of_use">Nutzungsbedingungen</string>
     <string name="no_history">keine Geschichte</string>
     <string name="arrow">Pfeil</string>
@@ -58,4 +58,9 @@
     <string name="value_too_large">Wert zu groß</string>
     <string name="domain_error">Bereichsfehler</string>
     <string name="error">Error</string>
+    <string name="choose_theme">Thema wählen</string>
+    <string name="choose_number_separator">Wählen Sie die Anzahl Separator</string>
+    <string name="set_answer_precision">Set Antwort Präzision</string>
+    <string name="current_precision">aktuelle Präzision</string>
+    <string name="precision">Präzision</string>
 </resources>

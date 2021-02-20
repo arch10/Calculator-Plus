@@ -63,4 +63,9 @@
     <string name="no_history">No History</string>
     <string name="arrow">Arrow</string>
     <string name="clear">Clear</string>
+    <string name="choose_theme">Choose theme</string>
+    <string name="choose_number_separator">Choose number separator</string>
+    <string name="set_answer_precision">Set answer precision</string>
+    <string name="current_precision">Current precision</string>963.
+    <string name="precision">Precision</string>
 </resources>
