@@ -196,7 +196,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
                     getResultEditText().setTextColor(getResultTextColor(true))
                     val errorStringId = viewModel.error.value ?: R.string.invalid
-                    setResult(getString(errorStringId))
+                    if (errorStringId == -1) {
+                        setResult("")
+                    } else {
+                        setResult(getString(errorStringId))
+                    }
                     getResultEditText().startAnimation(shake)
                 } else {
                     val balancedExpression = viewModel.getCalculatedExpression()
