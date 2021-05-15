@@ -200,8 +200,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         setResult("")
                     } else {
                         setResult(getString(errorStringId))
+                        getResultEditText().startAnimation(shake)
                     }
-                    getResultEditText().startAnimation(shake)
                 } else {
                     val balancedExpression = viewModel.getCalculatedExpression()
                     val history = History(

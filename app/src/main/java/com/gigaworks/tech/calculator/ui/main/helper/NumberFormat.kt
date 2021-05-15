@@ -581,7 +581,7 @@ fun canPlaceDecimal(expression: String): Boolean {
 }
 
 fun String.isNumber(): Boolean {
-    return Pattern.matches("-?\\d+(\\.\\d+)?", this)
+    return Pattern.matches("-?\\d+(\\.\\d+(E\\d+)?)?", this)
 }
 
 fun Char.isNumber(): Boolean {

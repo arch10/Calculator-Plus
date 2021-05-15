@@ -15,7 +15,7 @@
         android:background="@null"
         android:gravity="center|end"
         android:includeFontPadding="false"
-        android:paddingEnd="@dimen/space_l"
+        android:paddingEnd="@dimen/space_xl"
         android:paddingBottom="@dimen/space_xl"
         android:singleLine="true"
         android:cursorVisible="false"
