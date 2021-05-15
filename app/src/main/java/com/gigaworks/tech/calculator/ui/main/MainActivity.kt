@@ -48,9 +48,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setClickListener()
         setAppTheme()
 
-        binding.calculatorPadViewPager?.addScientificPadStateChangeListener {
-            binding.scientificPad.arrow.animate().rotationBy(180F).setDuration(300).start()
-        }
     }
 
     private val buttonClick = View.OnClickListener {
@@ -265,6 +262,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 viewModel.setMemory(newMemory.toString())
             }
         }
+
+        binding.calculatorPadViewPager?.addScientificPadStateChangeListener {
+            binding.scientificPad.arrow.animate().rotationBy(180F).setDuration(300).start()
+        }
+
     }
 
     /**
