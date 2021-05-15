@@ -6,7 +6,6 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
     id "com.google.gms.google-services"
-    id "org.sonarqube" version "3.1.1"
 }
 
 android {
@@ -41,14 +40,6 @@ android {
     }
 }
 
-sonarqube {
-  properties {
-    property "sonar.projectKey", "arch10_Calculator-Plus"
-    property "sonar.organization", "arch10"
-    property "sonar.host.url", "https://sonarcloud.io"
-  }
-}
-
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -56,8 +47,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+
+    //navigation
+    def navVersion = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
     //big-math
     def bigMathVersion = "2.3.0"
@@ -65,7 +59,7 @@ dependencies {
 
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:${hilt_version}"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //ktx extensions
     implementation 'androidx.activity:activity-ktx:1.2.3'
