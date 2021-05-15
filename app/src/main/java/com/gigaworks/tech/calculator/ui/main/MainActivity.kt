@@ -480,17 +480,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private fun getResultTextColor(isError: Boolean = false): Int {
         val typedValue = TypedValue()
-        return if (isError) {
-            val typedArray = obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorError))
-            val color = typedArray.getColor(0, 0)
-            typedArray.recycle()
-            color
+        val typedArray = if (isError) {
+            obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorError))
         } else {
-            val typedArray = obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.textDisable))
-            val color = typedArray.getColor(0, 0)
-            typedArray.recycle()
-            color
+            obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.textDisable))
         }
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 
     private fun animateClear() {
@@ -503,7 +500,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             val anim = ViewAnimationUtils
                 .createCircularReveal(clearView, cx, cy, 0f, finalRadius.toFloat())
             clearView.visibility = View.VISIBLE
-            anim.duration = 300
+            anim.duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
             anim.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     setExpression("")
