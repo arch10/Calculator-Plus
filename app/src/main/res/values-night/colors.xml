@@ -12,5 +12,25 @@
     <color name="textAccent">#3A444A</color>
     <color name="textDisable">#9AA0A6</color>
     <color name="error">#E75E65</color>
-    <color name="numPadPrimary">#202124</color>98
+    <color name="numPadPrimary">#202124</color>
+
+    <!-- Material Green Theme -->
+    <color name="primaryGreen">#388E3C</color>
+    <color name="primaryGreenVariant">#66BB6A</color>
+
+    <!-- Material Red Theme -->
+    <color name="primaryRed">#d32f2f</color>
+    <color name="primaryRedVariant">#ef5350</color>
+
+    <!-- Material Purple Theme -->
+    <color name="primaryPurple">#512DA8</color>
+    <color name="primaryPurpleVariant">#7E57C2</color>
+
+    <!-- Material Grey Theme -->
+    <color name="primaryGrey">#455A64</color>
+    <color name="primaryGreyVariant">#78909C</color>
+
+    <!-- Material Pink Theme -->
+    <color name="primaryPink">#C2185B</color>
+    <color name="primaryPinkVariant">#EC407A</color>
 </resources>

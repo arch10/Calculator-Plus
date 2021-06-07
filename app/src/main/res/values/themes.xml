@@ -30,6 +30,41 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
     </style>
 
+    <style name="MaterialGreenTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryGreen</item>
+        <item name="colorPrimaryVariant">@color/primaryGreenVariant</item>
+        <item name="operatorBtnColor">@color/primaryGreen</item>
+        <item name="clearColor">@color/primaryGreenClear</item>
+    </style>
+
+    <style name="MaterialRedTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryRed</item>
+        <item name="colorPrimaryVariant">@color/primaryRedVariant</item>
+        <item name="operatorBtnColor">@color/primaryRed</item>
+        <item name="clearColor">@color/primaryRedClear</item>
+    </style>
+
+    <style name="MaterialPurpleTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryPurple</item>
+        <item name="colorPrimaryVariant">@color/primaryPurpleVariant</item>
+        <item name="operatorBtnColor">@color/primaryPurple</item>
+        <item name="clearColor">@color/primaryPurpleClear</item>
+    </style>
+
+    <style name="MaterialGreyTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryGrey</item>
+        <item name="colorPrimaryVariant">@color/primaryGreyVariant</item>
+        <item name="operatorBtnColor">@color/primaryGrey</item>
+        <item name="clearColor">@color/primaryGreyClear</item>
+    </style>
+
+    <style name="MaterialPinkTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryPink</item>
+        <item name="colorPrimaryVariant">@color/primaryPinkVariant</item>
+        <item name="operatorBtnColor">@color/primaryPink</item>
+        <item name="clearColor">@color/primaryPinkClear</item>
+    </style>
+
     <!-- Widget Styles -->
     <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
