@@ -14,4 +14,29 @@
     <color name="error">#E2363F</color>
     <color name="numPadPrimary">#F1F3F4</color>
     <color name="white">#FFFFFF</color>
+
+    <!-- Material Green Theme -->
+    <color name="primaryGreen">#4CAF50</color>
+    <color name="primaryGreenVariant">#388E3C</color>
+    <color name="primaryGreenClear">#dbefdc</color>
+
+    <!-- Material Red Theme -->
+    <color name="primaryRed">#f44336</color>
+    <color name="primaryRedVariant">#d32f2f</color>
+    <color name="primaryRedClear">#fdd9d7</color>
+
+    <!-- Material Purple Theme -->
+    <color name="primaryPurple">#673AB7</color>
+    <color name="primaryPurpleVariant">#512DA8</color>
+    <color name="primaryPurpleClear">#e1d8f1</color>
+
+    <!-- Material Grey Theme -->
+    <color name="primaryGrey">#607D8B</color>
+    <color name="primaryGreyVariant">#455A64</color>
+    <color name="primaryGreyClear">#dfe5e8</color>
+
+    <!-- Material Pink Theme -->
+    <color name="primaryPink">#E91E63</color>
+    <color name="primaryPinkVariant">#C2185B</color>
+    <color name="primaryPinkClear">#fbd2e0</color>
 </resources>

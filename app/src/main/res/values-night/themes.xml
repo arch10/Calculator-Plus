@@ -30,4 +30,35 @@
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
     </style>
+
+    <style name="MaterialGreenTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryGreen</item>
+        <item name="colorPrimaryVariant">@color/primaryGreen</item>
+        <item name="operatorBtnColor">@color/primaryGreenVariant</item>
+    </style>
+
+    <style name="MaterialRedTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryRed</item>
+        <item name="colorPrimaryVariant">@color/primaryRed</item>
+        <item name="operatorBtnColor">@color/primaryRedVariant</item>
+    </style>
+
+    <style name="MaterialPurpleTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryPurple</item>
+        <item name="colorPrimaryVariant">@color/primaryPurple</item>
+        <item name="operatorBtnColor">@color/primaryPurpleVariant</item>
+    </style>
+
+    <style name="MaterialGreyTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryGrey</item>
+        <item name="colorPrimaryVariant">@color/primaryGrey</item>
+        <item name="operatorBtnColor">@color/primaryGreyVariant</item>
+    </style>
+
+    <style name="MaterialPinkTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primaryPink</item>
+        <item name="colorPrimaryVariant">@color/primaryPink</item>
+        <item name="operatorBtnColor">@color/primaryPinkVariant</item>
+    </style>
+
 </resources>
