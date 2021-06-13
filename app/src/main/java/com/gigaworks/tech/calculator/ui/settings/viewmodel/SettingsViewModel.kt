@@ -5,11 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gigaworks.tech.calculator.ui.settings.helper.getDays
-import com.gigaworks.tech.calculator.util.AppPreference
+import com.gigaworks.tech.calculator.util.*
+import com.gigaworks.tech.calculator.util.AppPreference.Companion.ACCENT_THEME
 import com.gigaworks.tech.calculator.util.AppPreference.Companion.APP_THEME
-import com.gigaworks.tech.calculator.util.AppTheme
-import com.gigaworks.tech.calculator.util.HistoryAutoDelete
-import com.gigaworks.tech.calculator.util.NumberSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -37,6 +35,26 @@ class SettingsViewModel @Inject constructor(
     private val _precision = MutableLiveData(getAnswerPrecision())
     val precision: LiveData<Int>
         get() = _precision
+
+    private val _accentTheme = MutableLiveData(getAccentTheme())
+    val accentTheme: LiveData<AccentTheme>
+        get() = _accentTheme
+
+    var selectedAccentTheme: AccentTheme = _accentTheme.value!!
+
+    private fun getAccentTheme(): AccentTheme {
+        val accentTheme = appPreference.getStringPreference(ACCENT_THEME, AccentTheme.BLUE.name)
+        return try {
+            AccentTheme.valueOf(accentTheme)
+        } catch (e: IllegalArgumentException) {
+            AccentTheme.BLUE
+        }
+    }
+
+    fun setAccentTheme(accentTheme: AccentTheme) {
+        appPreference.setStringPreference(ACCENT_THEME, accentTheme.name)
+        _accentTheme.value = accentTheme
+    }
 
     fun changeTheme(themeId: Int) {
         val theme = getAppThemeByOrdinal(themeId)

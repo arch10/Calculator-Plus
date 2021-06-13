@@ -5,18 +5,20 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.ActivitySettingsBinding
+import com.gigaworks.tech.calculator.databinding.ColorDialogBinding
 import com.gigaworks.tech.calculator.databinding.PrecisionDialogBinding
 import com.gigaworks.tech.calculator.ui.about.AboutActivity
 import com.gigaworks.tech.calculator.ui.base.BaseActivity
+import com.gigaworks.tech.calculator.ui.main.MainActivity
 import com.gigaworks.tech.calculator.ui.settings.helper.getString
 import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
-import com.gigaworks.tech.calculator.util.HistoryAutoDelete
-import com.gigaworks.tech.calculator.util.NumberSeparator
+import com.gigaworks.tech.calculator.util.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -36,6 +38,10 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private var dialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val appPreference = AppPreference(this)
+        val accentTheme =
+            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
+        setTheme(getAccentTheme(accentTheme))
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(binding.toolbar)
@@ -62,9 +68,58 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             val precisionSubtitle = "${getString(R.string.precision)}: $it"
             binding.precisionSubtitle.text = precisionSubtitle
         }
+        viewModel.accentTheme.observe(this) {
+            val accentTheme = it.name.lowercase().capitalize()
+            binding.colorSubtitle.text = accentTheme
+        }
     }
 
     private fun setUpView() {
+        val colorDialog = ColorDialogBinding.inflate(layoutInflater, null, false)
+        colorDialog.colorDefault.setOnClickListener {
+            checkAccentTheme(AccentTheme.BLUE, colorDialog)
+        }
+        colorDialog.colorGreen.setOnClickListener {
+            checkAccentTheme(AccentTheme.GREEN, colorDialog)
+        }
+        colorDialog.colorPurple.setOnClickListener {
+            checkAccentTheme(AccentTheme.PURPLE, colorDialog)
+        }
+        colorDialog.colorPink.setOnClickListener {
+            checkAccentTheme(AccentTheme.PINK, colorDialog)
+        }
+        colorDialog.colorRed.setOnClickListener {
+            checkAccentTheme(AccentTheme.RED, colorDialog)
+        }
+        colorDialog.colorGrey.setOnClickListener {
+            checkAccentTheme(AccentTheme.GREY, colorDialog)
+        }
+        binding.colorCard.setOnClickListener {
+            if (colorDialog.root.parent != null) {
+                ((colorDialog.root.parent) as ViewGroup).removeView(colorDialog.root)
+            }
+            checkAccentTheme(viewModel.selectedAccentTheme, colorDialog);
+            dialog = MaterialAlertDialogBuilder(this)
+                .setView(colorDialog.root)
+                .setTitle(getString(R.string.select_accent_color))
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                    viewModel.setAccentTheme(viewModel.selectedAccentTheme)
+                    dialog.dismiss()
+                    val intent = arrayOfNulls<Intent>(2)
+                    intent[1] = Intent(this, SettingsActivity::class.java)
+                    intent[0] = Intent(
+                        this,
+                        MainActivity::class.java
+                    ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivities(intent)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    finish()
+                }
+                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }.show()
+        }
+
         binding.toolbar.setNavigationOnClickListener { handleBackPress() }
         val appVersion = "${getString(R.string.version)}: ${BuildConfig.VERSION_NAME}"
         binding.aboutSubtitle.text = appVersion
@@ -201,6 +256,36 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         binding.aboutCard.setOnClickListener {
             startActivity(Intent(this, AboutActivity::class.java))
         }
+    }
+
+    private fun checkAccentTheme(accentTheme: AccentTheme, colorDialog: ColorDialogBinding) {
+        colorDialog.defaultCheck.visible(false)
+        colorDialog.greenCheck.visible(false)
+        colorDialog.purpleCheck.visible(false)
+        colorDialog.pinkCheck.visible(false)
+        colorDialog.redCheck.visible(false)
+        colorDialog.greyCheck.visible(false)
+        when (accentTheme) {
+            AccentTheme.BLUE -> {
+                colorDialog.defaultCheck.visible(true)
+            }
+            AccentTheme.GREEN -> {
+                colorDialog.greenCheck.visible(true)
+            }
+            AccentTheme.PURPLE -> {
+                colorDialog.purpleCheck.visible(true)
+            }
+            AccentTheme.PINK -> {
+                colorDialog.pinkCheck.visible(true)
+            }
+            AccentTheme.RED -> {
+                colorDialog.redCheck.visible(true)
+            }
+            AccentTheme.GREY -> {
+                colorDialog.greyCheck.visible(true)
+            }
+        }
+        viewModel.selectedAccentTheme = accentTheme
     }
 
     override fun onBackPressed() {

@@ -70,4 +70,6 @@
     <string name="set_answer_precision">Set answer precision</string>
     <string name="current_precision">Current precision</string>
     <string name="precision">Precision</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="select_accent_color">Select accent color</string>
 </resources>

@@ -288,6 +288,59 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/colorCard"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/colorIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:src="@drawable/palette"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/textPrimary"
+                    android:contentDescription="@string/accent_color" />
+
+                <TextView
+                    android:id="@+id/color"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:layout_marginEnd="@dimen/space_l"
+                    android:gravity="bottom"
+                    android:text="@string/accent_color"
+                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                    android:textColor="?attr/textPrimary"
+                    app:layout_constraintBottom_toTopOf="@id/colorSubtitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/colorIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/colorSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:layout_marginEnd="@dimen/space_l"
+                    android:gravity="top"
+                    android:paddingTop="2dp"
+                    tools:text="Blue"
+                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                    android:textColor="?attr/textDisable"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/colorIcon"
+                    app:layout_constraintTop_toBottomOf="@+id/color" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
