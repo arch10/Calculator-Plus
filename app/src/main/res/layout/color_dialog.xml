@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/space_xxl">
+
+    <FrameLayout
+        android:id="@+id/color_default"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/color_green"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/default_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/color_green"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primaryGreen"
+        app:layout_constraintEnd_toStartOf="@id/color_purple"
+        app:layout_constraintStart_toEndOf="@+id/color_default"
+        app:layout_constraintTop_toTopOf="@+id/color_default">
+
+        <ImageView
+            android:id="@+id/green_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/color_purple"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primaryPurple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/color_green"
+        app:layout_constraintTop_toTopOf="@+id/color_default">
+
+        <ImageView
+            android:id="@+id/purple_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/color_pink"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primaryPink"
+        android:layout_marginTop="@dimen/space_xl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/color_red"
+        app:layout_constraintTop_toBottomOf="@id/color_default">
+
+        <ImageView
+            android:id="@+id/pink_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/color_red"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primaryRed"
+        app:layout_constraintEnd_toStartOf="@id/color_grey"
+        app:layout_constraintStart_toEndOf="@+id/color_pink"
+        app:layout_constraintTop_toTopOf="@+id/color_pink">
+
+        <ImageView
+            android:id="@+id/red_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/color_grey"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/primaryGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/color_red"
+        app:layout_constraintTop_toTopOf="@+id/color_pink">
+
+        <ImageView
+            android:id="@+id/grey_check"
+            android:visibility="invisible"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

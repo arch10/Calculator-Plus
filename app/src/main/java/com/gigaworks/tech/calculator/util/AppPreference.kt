@@ -42,5 +42,6 @@ class AppPreference(context: Context) {
         const val EXPRESSION = "app_expression_string"
         const val APP_THEME = "app_theme"
         const val HISTORY_AUTO_DELETE = "app_history_auto_delete"
+        const val ACCENT_THEME = "app_accent_theme"
     }
 }

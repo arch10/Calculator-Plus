@@ -25,9 +25,7 @@ import com.gigaworks.tech.calculator.ui.main.helper.*
 import com.gigaworks.tech.calculator.ui.main.viewmodel.MainViewModel
 import com.gigaworks.tech.calculator.ui.settings.SettingsActivity
 import com.gigaworks.tech.calculator.ui.view.CalculatorEditText
-import com.gigaworks.tech.calculator.util.AngleType
-import com.gigaworks.tech.calculator.util.AppTheme
-import com.gigaworks.tech.calculator.util.NumberSeparator
+import com.gigaworks.tech.calculator.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.math.sqrt
@@ -40,6 +38,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val appPreference = AppPreference(this)
+        val accentTheme =
+            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
+        setTheme(getAccentTheme(accentTheme))
         super.onCreate(savedInstanceState)
         setupActionBar(binding.toolbar)
 
