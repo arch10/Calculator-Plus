@@ -55,22 +55,18 @@ class MainViewModel @Inject constructor(
                 ""
             }
         }
-        val rawResult = getResult(exp)
-        val result = roundMyAnswer(rawResult, getAnswerPrecision())
-        val formattedResult = if (getNumberSeparator() != NumberSeparator.OFF) {
-            addNumberSeparator(
-                expression = result,
-                isIndian = (getNumberSeparator() == NumberSeparator.INDIAN)
-            )
-        } else {
-            result
-        }
-        setResult(formattedResult)
-    }
-
-    private fun getResult(expression: String): String {
-        return try {
-            getResult(expression, getAngleType())
+        try {
+            val rawResult = getResult(exp)
+            val result = roundMyAnswer(rawResult, getAnswerPrecision())
+            val formattedResult = if (getNumberSeparator() != NumberSeparator.OFF) {
+                addNumberSeparator(
+                    expression = result,
+                    isIndian = (getNumberSeparator() == NumberSeparator.INDIAN)
+                )
+            } else {
+                result
+            }
+            setResult(formattedResult)
         } catch (e: CalculationException) {
             val errorMessage = when (e.msg) {
                 CalculationMessage.INVALID_EXPRESSION -> R.string.invalid
@@ -79,11 +75,16 @@ class MainViewModel @Inject constructor(
                 CalculationMessage.DOMAIN_ERROR -> R.string.domain_error
             }
             setError(errorMessage)
-            ""
+            setResult("")
         } catch (e: Exception) {
             setError(R.string.error)
-            ""
+            setResult("")
         }
+
+    }
+
+    private fun getResult(expression: String): String {
+        return getResult(expression, getAngleType())
     }
 
     fun getAppTheme(): String {

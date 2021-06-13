@@ -99,18 +99,22 @@ fun getResult(expression: String, angleType: String): String {
 
 //rounds the provided number to the given precision
 fun roundMyAnswer(ans: String, precision: Int = 6): String {
-    if (ans.isEmpty())
-        return ""
-    var num = BigDecimalMath.toBigDecimal(ans)
-    return if (ans.contains("E"))
-        formatNumber(num, 7)
-    else {
-        num = num.setScale(precision, RoundingMode.HALF_UP)
-        num = num.stripTrailingZeros()
-        if (num.compareTo(BigDecimal.ZERO) == 0) {
-            "0"
-        } else {
-            num.toPlainString()
+    try {
+        if (ans.isEmpty())
+            return ""
+        var num = BigDecimalMath.toBigDecimal(ans)
+        return if (ans.contains("E"))
+            formatNumber(num, 7)
+        else {
+            num = num.setScale(precision, RoundingMode.HALF_UP)
+            num = num.stripTrailingZeros()
+            if (num.compareTo(BigDecimal.ZERO) == 0) {
+                "0"
+            } else {
+                num.toPlainString()
+            }
         }
+    } catch (e: NumberFormatException) {
+        throw CalculationException(INVALID_EXPRESSION)
     }
 }
