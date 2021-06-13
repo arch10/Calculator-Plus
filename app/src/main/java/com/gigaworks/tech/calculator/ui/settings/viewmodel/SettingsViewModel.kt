@@ -42,6 +42,24 @@ class SettingsViewModel @Inject constructor(
 
     var selectedAccentTheme: AccentTheme = _accentTheme.value!!
 
+    fun shouldAskUserRating(): Boolean {
+        val launchCount = appPreference.getLongPreference(AppPreference.LAUNCH_COUNT)
+        val lastLaunchDate = appPreference.getLongPreference(AppPreference.LAST_LAUNCH_DAY)
+
+        val currentDateTime = System.currentTimeMillis()
+        val diff = currentDateTime - lastLaunchDate
+
+        //86400000 = Milliseconds in 1 day
+        if (diff >= (DAYS_UNTIL_PROMPT * 8_64_00_000L) && (launchCount >= LAUNCHES_UNTIL_PROMPT)) {
+            //show rating prompt
+            appPreference.setLongPreference(AppPreference.LAUNCH_COUNT, 0)
+            appPreference.setLongPreference(AppPreference.LAST_LAUNCH_DAY, currentDateTime)
+            logD("Asking for user rating")
+            return true
+        }
+        return false
+    }
+
     private fun getAccentTheme(): AccentTheme {
         val accentTheme = appPreference.getStringPreference(ACCENT_THEME, AccentTheme.BLUE.name)
         return try {

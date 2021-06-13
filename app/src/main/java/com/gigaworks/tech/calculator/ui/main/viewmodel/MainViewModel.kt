@@ -39,6 +39,17 @@ class MainViewModel @Inject constructor(
         _error.value = error
     }
 
+    fun updateLaunchStatistics() {
+        var launchCount = appPreference.getLongPreference(AppPreference.LAUNCH_COUNT)
+        val lastLaunchDate = appPreference.getLongPreference(AppPreference.LAST_LAUNCH_DAY)
+        if (lastLaunchDate == 0L) {
+            val currentDateTime = System.currentTimeMillis()
+            appPreference.setLongPreference(AppPreference.LAST_LAUNCH_DAY, currentDateTime)
+        }
+        launchCount += 1
+        appPreference.setLongPreference(AppPreference.LAUNCH_COUNT, launchCount)
+    }
+
     fun calculateExpression(expression: String) {
         val exp = if (isExpressionBalanced(expression)) {
             setError(-1)
