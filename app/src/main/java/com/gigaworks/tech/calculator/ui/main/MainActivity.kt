@@ -284,6 +284,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
      * Setup the views with saved or initial values
      * */
     private fun setupView() {
+        viewModel.updateLaunchStatistics()
         binding.resultPad.expression.setOnTextSizeChangeListener(textSizeChangeListener)
         binding.resultPad.expression.addTextChangedListener(expressionChangeListener)
     }

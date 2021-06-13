@@ -20,6 +20,7 @@ import com.gigaworks.tech.calculator.ui.settings.helper.getString
 import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
 import com.gigaworks.tech.calculator.util.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -75,6 +76,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     }
 
     private fun setUpView() {
+        if (viewModel.shouldAskUserRating()) {
+            askUserRating()
+        }
         val colorDialog = ColorDialogBinding.inflate(layoutInflater, null, false)
         colorDialog.colorDefault.setOnClickListener {
             checkAccentTheme(AccentTheme.BLUE, colorDialog)
@@ -286,6 +290,24 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             }
         }
         viewModel.selectedAccentTheme = accentTheme
+    }
+
+    private fun askUserRating() {
+        val manager = ReviewManagerFactory.create(this)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val reviewInfo = task.result
+                val flow = manager.launchReviewFlow(this, reviewInfo)
+                flow.addOnCompleteListener { flowTask ->
+                    if (flowTask.isComplete) {
+                        logD("Review process complete")
+                    }
+                }
+            } else {
+                logE("Failed to initiate user review. ${task.exception?.message}")
+            }
+        }
     }
 
     override fun onBackPressed() {

@@ -24,6 +24,14 @@ class AppPreference(context: Context) {
         return sharedPreferences.getInt(key, def)
     }
 
+    fun setLongPreference(key: String, value: Long) {
+        sharedPreferences.edit().putLong(key, value).apply()
+    }
+
+    fun getLongPreference(key: String, def: Long = 0): Long {
+        return sharedPreferences.getLong(key, def)
+    }
+
     fun setBooleanPreference(key: String, value: Boolean) {
         sharedPreferences.edit().putBoolean(key, value).apply()
     }
@@ -43,5 +51,7 @@ class AppPreference(context: Context) {
         const val APP_THEME = "app_theme"
         const val HISTORY_AUTO_DELETE = "app_history_auto_delete"
         const val ACCENT_THEME = "app_accent_theme"
+        const val LAUNCH_COUNT = "app_launch_count"
+        const val LAST_LAUNCH_DAY = "app_last_launch_day"
     }
 }
