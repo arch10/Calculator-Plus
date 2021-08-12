@@ -12,12 +12,17 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Setup JDK
-      uses: actions/setup-java@v2
+    #- name: Setup JDK
+    #  uses: actions/setup-java@v2
+    #  with:
+    #    java-version: '11'
+    #    distribution: 'adopt'
+    #- name: Grant execute permission for gradlew
+    #  run: chmod +x gradlew
+    #- name: Build with Gradle
+    #  run: ./gradlew clean build assembleDebug
+    - name: Conventional Changelog Action
+      uses: TriPSs/conventional-changelog-action@v3
       with:
-        java-version: '11'
-        distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew clean build assembleDebug
+        github-token: ${{ secrets.github_token }}
+
