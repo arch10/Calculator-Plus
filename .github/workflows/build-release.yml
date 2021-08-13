@@ -1,0 +1,35 @@
+name: Create Github Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        default: 'v2.1.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
+    - uses: ncipollo/release-action@v1
+      with:
+        name: "Calculator Plus"
+        bodyFile: "CHANGELOG.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: true
+        tag: ${{ github.event.inputs.version }}
+        artifacts: "app/build/outputs/apk/debug/*.apk"
+        artifactContentType: application/vnd.android.package-archive
+
