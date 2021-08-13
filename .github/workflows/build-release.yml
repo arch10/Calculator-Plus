@@ -21,8 +21,11 @@ jobs:
     #  run: chmod +x gradlew
     #- name: Build with Gradle
     #  run: ./gradlew clean build assembleDebug
-    - name: Conventional Changelog Action
-      uses: TriPSs/conventional-changelog-action@v3
+    - uses: ncipollo/release-action@v1
       with:
-        github-token: ${{ secrets.github_token }}
+        name: "Calculator Plus"
+        bodyFile: "CHANGELOG.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: true
+        tag: v2.1.${{ github.run_number }}
 
