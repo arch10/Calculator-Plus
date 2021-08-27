@@ -2,11 +2,6 @@ name: Create Github Release
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Release version"
-        required: true
-        default: "v2.1.x"
 
 jobs:
   build:
@@ -40,7 +35,9 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: com.gigaworks.tech.calculator
-          releaseFile: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
           track: alpha
           inAppUpdatePriority: 3
           whatsNewDirectory: docs/whatsnew
+      - name: Remove service_account.json
+        run: rm service_account.json
