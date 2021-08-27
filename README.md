@@ -1,3 +1,5 @@
+![Feature](https://user-images.githubusercontent.com/20144332/121818868-881ae200-cca7-11eb-8581-c3f8182f9105.png)
+
 # Calculator Plus
 
 ![](https://img.shields.io/badge/Code-Java-informational?style=for-the-badge&logo=java&color=5094F0)
