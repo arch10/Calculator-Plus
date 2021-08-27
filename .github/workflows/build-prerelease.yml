@@ -1,0 +1,25 @@
+name: App Pre-Release
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+      - name: Get version name
+        run: |
+        version=$(aapt dump badging app/build/outputs/apk/debug/*.apk | grep "versionName" | sed -e "s/.*versionName='//" -e "s/' .*//")

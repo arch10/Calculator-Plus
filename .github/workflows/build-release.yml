@@ -1,4 +1,4 @@
-name: Create Github Release
+name: App Release
 
 on:
   workflow_dispatch:
@@ -36,8 +36,17 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.gigaworks.tech.calculator
           releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
-          track: alpha
+          track: beta
           inAppUpdatePriority: 3
           whatsNewDirectory: docs/whatsnew
       - name: Remove service_account.json
         run: rm service_account.json
+      - uses: openhousepvt/slack@v1.3.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          channel: "#calculator-plus"
+          version: 0.0.${{ github.run_number }}
+          platform: "Android"
+        if: success()
