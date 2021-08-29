@@ -18,12 +18,12 @@ jobs:
           distribution: "adopt"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build Android App Apk
-        run: ./gradlew assembleDebug
   githubRelease:
     needs: buildApk
     runs-on: ubuntu-latest
     steps:
+      - name: Test
+        run: ls -la
       - name: Check App version
         run: |
           APP_VERSION=$(./gradlew -q printVersionName)
