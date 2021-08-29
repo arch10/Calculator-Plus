@@ -8,7 +8,33 @@ plugins {
     id "com.google.gms.google-services"
 }
 
+def versionPropertiesFile = rootProject.file("version.properties")
+
+task bumpVersionCode {
+    doLast {
+        def versionProperties = new Properties()
+        versionProperties.load(new FileInputStream(versionPropertiesFile))
+
+        def code = versionProperties['VERSION_CODE'].toInteger() + 1
+
+        versionProperties['VERSION_CODE'] = code.toString()
+        versionProperties.store(versionPropertiesFile.newWriter(), null)
+    }
+}
+
+task printVersionName {
+    doLast {
+        println android.defaultConfig.versionName
+    }
+}
+
 android {
+
+    def versionProperties = new Properties()
+    if (versionPropertiesFile.exists()) {
+        versionProperties.load(new FileInputStream(versionPropertiesFile))
+    }
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -16,7 +42,7 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 49
+        versionCode versionProperties['VERSION_CODE'].toInteger()
         versionName "2.1.1"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
