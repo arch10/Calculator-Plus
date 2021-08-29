@@ -18,8 +18,30 @@ jobs:
           distribution: "adopt"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle
+      - name: Build Android App Apk
         run: ./gradlew assembleDebug
-      - name: Get version name
+      - name: Check App version
         run: |
-        version=$(aapt dump badging app/build/outputs/apk/debug/*.apk | grep "versionName" | sed -e "s/.*versionName='//" -e "s/' .*//")
+          APP_VERSION=$(./gradlew -q printVersionName)
+          echo "APP_VERSION = " ${APP_VERSION}
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+      - uses: ncipollo/release-action@v1
+        id: upload-release-asset
+        with:
+          name: "Calculator Plus"
+          bodyFile: "docs/whatsnew/whatsnew-en-GB"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          tag: v${{ env.APP_VERSION }}-rc${{ github.run_number }}
+          artifacts: "app/build/outputs/apk/debug/*.apk"
+          artifactContentType: application/vnd.android.package-archive
+      - uses: openhousepvt/slack@v1.3.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          channel: "#calculator-plus"
+          version: v${{ env.APP_VERSION }}-rc${{ github.run_number }}
+          downloadUrl: ${{ steps.upload-release-asset.outputs.html_url }}
+          platform: "Android"
+        if: success()
