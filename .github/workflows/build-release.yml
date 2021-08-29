@@ -58,7 +58,9 @@ jobs:
         run: ./gradlew bumpVersionCode
       - name: Commit updates
         run: |
-          git commit --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" -am "ci: update version.properties"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "ci: update version.properties"
           git push
   githubRelease:
     runs-on: ubuntu-latest
@@ -87,6 +89,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           tag: v${{ env.APP_VERSION }}
+          allowUpdates: true
           artifacts: "app/build/outputs/apk/debug/*.apk"
           artifactContentType: application/vnd.android.package-archive
       - uses: openhousepvt/slack@v1.3.2
