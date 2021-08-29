@@ -6,7 +6,7 @@ on:
       - beta
 
 jobs:
-  build:
+  buildApk:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,6 +20,10 @@ jobs:
         run: chmod +x gradlew
       - name: Build Android App Apk
         run: ./gradlew assembleDebug
+  githubRelease:
+    needs: buildApk
+    runs-on: ubuntu-latest
+    steps:
       - name: Check App version
         run: |
           APP_VERSION=$(./gradlew -q printVersionName)
