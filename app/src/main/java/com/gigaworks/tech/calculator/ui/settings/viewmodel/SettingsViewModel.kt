@@ -95,7 +95,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun getAppThemeByOrdinal(ordinal: Int): AppTheme {
+    fun getAppThemeByOrdinal(ordinal: Int): AppTheme {
         return AppTheme.values().find { it.ordinal == ordinal } ?: AppTheme.SYSTEM_DEFAULT
     }
 
