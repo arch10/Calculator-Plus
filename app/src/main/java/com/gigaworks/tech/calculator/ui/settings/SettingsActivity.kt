@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.ActivitySettingsBinding
@@ -77,6 +78,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
     private fun setUpView() {
         if (viewModel.shouldAskUserRating()) {
+            logEvent(TRIGGER_STORE_FEEDBACK)
             askUserRating()
         }
         val colorDialog = ColorDialogBinding.inflate(layoutInflater, null, false)
@@ -102,12 +104,16 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             if (colorDialog.root.parent != null) {
                 ((colorDialog.root.parent) as ViewGroup).removeView(colorDialog.root)
             }
-            checkAccentTheme(viewModel.selectedAccentTheme, colorDialog);
+            checkAccentTheme(viewModel.selectedAccentTheme, colorDialog)
             dialog = MaterialAlertDialogBuilder(this)
                 .setView(colorDialog.root)
                 .setTitle(getString(R.string.select_accent_color))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.setAccentTheme(viewModel.selectedAccentTheme)
+                    logEvent(
+                        CHANGE_ACCENT_COLOR,
+                        bundleOf("value" to viewModel.selectedAccentTheme.name)
+                    )
                     dialog.dismiss()
                     val intent = arrayOfNulls<Intent>(2)
                     intent[1] = Intent(this, SettingsActivity::class.java)
@@ -133,6 +139,8 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 .setTitle(getString(R.string.choose_theme))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.changeTheme(selectedThemeChoice)
+                    val themeName = viewModel.getAppThemeByOrdinal(selectedThemeChoice)
+                    logEvent(CHANGE_THEME, bundleOf("value" to themeName))
                     dialog.dismiss()
                 }
                 .setSingleChoiceItems(
@@ -146,9 +154,12 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 }.show()
         }
         binding.smartCalculationCard.setOnClickListener {
-            viewModel.setSmartCalculation(!viewModel.getSmartCalculation())
+            val currentValue = viewModel.getSmartCalculation()
+            logEvent(CHANGE_SMART_CALCULATION, bundleOf("value" to !currentValue))
+            viewModel.setSmartCalculation(!currentValue)
         }
         binding.smartCalculationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            logEvent(CHANGE_SMART_CALCULATION, bundleOf("value" to isChecked))
             viewModel.setSmartCalculation(isChecked)
         }
         binding.numberSeparatorCard.setOnClickListener {
@@ -161,6 +172,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 .setTitle(getString(R.string.choose_number_separator))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.changeNumberSeparator(numberSeparator)
+                    logEvent(CHANGE_NUMBER_SEPARATOR, bundleOf("value" to numberSeparator.name))
                     dialog.dismiss()
                 }
                 .setSingleChoiceItems(
@@ -182,6 +194,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 .setTitle(getString(R.string.delete_history))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     viewModel.setAutoDeleteHistory(deleteHistory)
+                    logEvent(CHANGE_HISTORY_DELETE, bundleOf("value" to deleteHistory.days))
                     dialog.dismiss()
                 }
                 .setSingleChoiceItems(
@@ -206,6 +219,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                     val newPrecision = precisionDialogLayout.precisionSlider.value.toInt()
                     viewModel.setAnswerPrecision(newPrecision)
+                    logEvent(CHANGE_PRECISION, bundleOf("value" to newPrecision))
                     dialog.dismiss()
                 }
                 .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
@@ -223,12 +237,15 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 msg.append("Download it from $DOWNLOAD_LINK")
                 putExtra(Intent.EXTRA_TEXT, msg.toString())
             }
+            logEvent(SHARE_APP)
             startActivity(Intent.createChooser(intent, getString(R.string.choose)))
         }
         binding.bugCard.setOnClickListener {
+            logEvent(REPORT_PROBLEM)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(REPORT_BUG_LINK) })
         }
         binding.rateCard.setOnClickListener {
+            logEvent(RATE_APP)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(APP_STORE_LINK) })
         }
         binding.contactCard.setOnClickListener {
@@ -248,16 +265,16 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 putExtra(Intent.EXTRA_TEXT, body.toString())
             }
             if (intent.resolveActivity(packageManager) != null) {
+                logEvent(SEND_FEEDBACK)
                 startActivity(intent)
             }
         }
-        binding.rateCard.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(APP_STORE_LINK) })
-        }
         binding.followCard.setOnClickListener {
+            logEvent(FOLLOW_ME)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(FOLLOW_LINK) })
         }
         binding.aboutCard.setOnClickListener {
+            logEvent(CLICK_ABOUT)
             startActivity(Intent(this, AboutActivity::class.java))
         }
     }

@@ -13,6 +13,7 @@ import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.FragmentAboutBinding
 import com.gigaworks.tech.calculator.ui.base.BaseFragment
+import com.gigaworks.tech.calculator.util.JOIN_BETA
 
 class AboutFragment : BaseFragment<FragmentAboutBinding>() {
 
@@ -36,6 +37,7 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
             findNavController().navigate(R.id.action_aboutFragment_to_changeLogFragment)
         }
         binding.betaCard.setOnClickListener {
+            logEvent(JOIN_BETA)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(BETA_TESTING_LINK) })
         }
         binding.openSourceCard.setOnClickListener {
