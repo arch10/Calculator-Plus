@@ -36,6 +36,7 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.gigaworks.tech.calculator
           releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          status: completed
           track: beta
           inAppUpdatePriority: 3
           whatsNewDirectory: docs/whatsnew
