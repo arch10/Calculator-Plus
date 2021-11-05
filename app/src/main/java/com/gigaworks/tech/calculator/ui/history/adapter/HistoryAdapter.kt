@@ -62,7 +62,8 @@ class HistoryAdapter(
             v: View?,
             menuInfo: ContextMenu.ContextMenuInfo?
         ) {
-            menu.add(this.adapterPosition, 101, 0, "Delete")
+            menu.add(this.adapterPosition, 102, 0, "Share")
+            menu.add(this.adapterPosition, 101, 1, "Delete")
         }
 
     }
