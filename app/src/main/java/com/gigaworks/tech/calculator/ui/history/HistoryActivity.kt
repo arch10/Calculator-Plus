@@ -1,5 +1,6 @@
 package com.gigaworks.tech.calculator.ui.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,6 +14,7 @@ import com.gigaworks.tech.calculator.ui.base.BaseActivity
 import com.gigaworks.tech.calculator.ui.history.adapter.HistoryAdapter
 import com.gigaworks.tech.calculator.ui.history.viewmodel.HistoryViewModel
 import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
+import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,11 +61,28 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                 viewModel.deleteHistory(history.expression)
                 true
             }
+            102 -> {
+                val position = item.groupId
+                val history = (binding.rv.adapter as HistoryAdapter).getHistory(position)
+                val sharedEquation = "${history.expression} = ${history.result}"
+                logEvent(SHARE_EXPRESSION)
+                startActivity(
+                    Intent.createChooser(
+                        Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression")
+                            putExtra(Intent.EXTRA_TEXT, sharedEquation)
+                        },
+                        getString(R.string.choose)
+                    )
+                )
+                true
+            }
             else -> super.onContextItemSelected(item)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.history_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }

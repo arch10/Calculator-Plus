@@ -8,10 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.google.firebase.analytics.FirebaseAnalytics
+import javax.annotation.Nullable
 
 abstract class BaseFragment<B : ViewBinding> : Fragment() {
     private var _binding: B? = null
     protected val binding get() = _binding!!
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,10 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
             setTitle(title)
         }
         toolbar.setNavigationOnClickListener(onBackIconClick)
+    }
+
+    protected fun logEvent(eventName: String, @Nullable bundle: Bundle? = null) {
+        firebaseAnalytics.logEvent(eventName, bundle)
     }
 
     abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): B

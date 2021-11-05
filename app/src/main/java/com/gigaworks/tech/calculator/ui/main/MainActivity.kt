@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.bundleOf
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.gigaworks.tech.calculator.R
@@ -180,6 +181,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.numPad.delete.setOnLongClickListener {
             if (getExpression().isNotEmpty()) {
                 animateClear()
+                logEvent(CLICK_CLEAR)
             }
             true
         }
@@ -211,6 +213,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     viewModel.insertHistory(history)
                     viewModel.isPrevResult = true
                     setExpressionAfterEqual(result)
+                    logEvent(EVALUATE)
                 }
             }
         }
@@ -223,6 +226,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             if (result.isNumber()) {
                 Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
                 viewModel.setMemory(result)
+                logEvent(CLICK_MEMORY)
             }
         }
 
@@ -241,6 +245,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 )
             }
             setExpression(newExpression)
+            logEvent(CLICK_MEMORY)
         }
 
         binding.scientificPad.memoryAdd.setOnClickListener {
@@ -251,6 +256,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             if (result.isNumber() && memory.isNumber()) {
                 val newMemory = memory.toDouble() + result.toDouble()
                 viewModel.setMemory(newMemory.toString())
+                logEvent(CLICK_MEMORY)
             }
         }
 
@@ -262,6 +268,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             if (result.isNumber() && memory.isNumber()) {
                 val newMemory = memory.toDouble() - result.toDouble()
                 viewModel.setMemory(newMemory.toString())
+                logEvent(CLICK_MEMORY)
             }
         }
 
@@ -289,7 +296,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.resultPad.expression.addTextChangedListener(expressionChangeListener)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
@@ -315,12 +322,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.settings -> startActivity(Intent(this, SettingsActivity::class.java))
-            R.id.history -> startActivity(Intent(this, HistoryActivity::class.java))
-            R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.settings -> {
+                logEvent(CLICK_SETTINGS)
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
+            R.id.history -> {
+                logEvent(CLICK_HISTORY)
+                startActivity(Intent(this, HistoryActivity::class.java))
+            }
+            R.id.about -> {
+                logEvent(CLICK_ABOUT)
+                startActivity(Intent(this, AboutActivity::class.java))
+            }
             R.id.share -> {
                 val sharedEquation = getShareEquation()
                 if (sharedEquation.isNotEmpty()) {
+                    logEvent(SHARE_EXPRESSION)
                     startActivity(
                         Intent.createChooser(
                             Intent(Intent.ACTION_SEND).apply {
@@ -336,6 +353,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
             R.id.tutorial -> {
+                logEvent(CLICK_TUTORIAL)
                 showTutorial()
             }
         }
@@ -475,9 +493,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (text == AngleType.DEG.name) {
             menuItem.title = AngleType.RAD.name
             viewModel.changeAngleType(AngleType.RAD)
+            logEvent(CHANGE_ANGLE, bundleOf("type" to "RAD"))
         } else {
             menuItem.title = AngleType.DEG.name
             viewModel.changeAngleType(AngleType.DEG)
+            logEvent(CHANGE_ANGLE, bundleOf("type" to "DEG"))
         }
         val currentExpression = getExpression()
         setExpression(currentExpression)
