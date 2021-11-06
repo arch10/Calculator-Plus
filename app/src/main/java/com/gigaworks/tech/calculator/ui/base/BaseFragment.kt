@@ -9,6 +9,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import javax.annotation.Nullable
 
 abstract class BaseFragment<B : ViewBinding> : Fragment() {
@@ -28,6 +30,7 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     ): View? {
         // initialize viewBinding
         _binding = getViewBinding(inflater, container)
+        firebaseAnalytics = Firebase.analytics
         return binding.root
     }
 
