@@ -12,8 +12,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: "11"
-          distribution: "adopt"
+          java-version: "17"
+          distribution: "zulu"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
@@ -51,8 +51,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: "11"
-          distribution: "adopt"
+          java-version: "17"
+          distribution: "zulu"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Update version code
@@ -71,8 +71,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: "11"
-          distribution: "adopt"
+          java-version: "17"
+          distribution: "zulu"
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
