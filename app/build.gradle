@@ -1,11 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
     id "com.google.gms.google-services"
+    id 'kotlin-kapt'
 }
 
 def versionPropertiesFile = rootProject.file("version.properties")
@@ -35,13 +35,14 @@ android {
         versionProperties.load(new FileInputStream(versionPropertiesFile))
     }
 
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
+    buildToolsVersion '33.0.2'
 
+    namespace 'com.gigaworks.tech.calculator'
     defaultConfig {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode versionProperties['VERSION_CODE'].toInteger()
         versionName "2.1.1"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
@@ -55,70 +56,72 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         viewBinding true
+    }
+    hilt {
+        enableAggregatingTask = true
     }
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.5.0-alpha05'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    //navigation
-    def navVersion = "2.3.5"
+    // navigation
+    def navVersion = "2.5.3"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
-    //big-math
-    def bigMathVersion = "2.3.0"
+    // big-math
+    def bigMathVersion = '2.3.2'
     implementation "ch.obermuhlner:big-math:$bigMathVersion"
 
-    //hilt
+    // Hilt dependencies
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    //ktx extensions
-    implementation 'androidx.activity:activity-ktx:1.4.0'
+    // ktx extensions
+    implementation 'androidx.activity:activity-ktx:1.7.1'
 
-    //viewModel
-    def viewModelVersion = "2.4.0"
+    // viewModel
+    def viewModelVersion = "2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$viewModelVersion"
 
-    //tap target
+    // tap target
     def tapTargetVersion = '1.13.3'
     implementation "com.getkeepsafe.taptargetview:taptargetview:$tapTargetVersion"
 
-    //custom tabs
-    implementation "androidx.browser:browser:1.4.0"
+    // custom tabs
+    implementation "androidx.browser:browser:1.5.0"
 
-    //firebase
-    implementation platform("com.google.firebase:firebase-bom:29.0.0")
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
 
-    //room
-    def roomVersion = "2.4.0-beta01"
+    // room
+    def roomVersion = "2.5.1"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
-    //google play core
-    implementation("com.google.android.play:core:1.10.2")
+    // google play core
+    implementation("com.google.android.play:core:1.10.3")
     implementation("com.google.android.play:core-ktx:1.8.1")
 
-    //test
+    // test
     testImplementation 'junit:junit:4.13.2'
 
 }

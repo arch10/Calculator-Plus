@@ -18,11 +18,6 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
     protected val binding get() = _binding!!
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(false)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

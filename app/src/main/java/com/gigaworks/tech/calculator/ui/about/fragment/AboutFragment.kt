@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.navigation.fragment.findNavController
 import com.gigaworks.tech.calculator.BuildConfig
@@ -49,10 +50,12 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
     }
 
     private fun launchUrl(url: String) {
+        val customColorScheme =
+            CustomTabColorSchemeParams.Builder().setToolbarColor(getToolbarColor()).build()
         val builder = CustomTabsIntent
             .Builder()
             .setShowTitle(true)
-            .setToolbarColor(getToolbarColor())
+            .setDefaultColorSchemeParams(customColorScheme)
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
     }

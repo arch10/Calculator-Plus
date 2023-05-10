@@ -1,16 +1,27 @@
 package com.gigaworks.tech.calculator.ui.main
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.*
+import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.bundleOf
@@ -22,13 +33,31 @@ import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.ui.about.AboutActivity
 import com.gigaworks.tech.calculator.ui.base.BaseActivity
 import com.gigaworks.tech.calculator.ui.history.HistoryActivity
-import com.gigaworks.tech.calculator.ui.main.helper.*
+import com.gigaworks.tech.calculator.ui.main.helper.addNumberSeparator
+import com.gigaworks.tech.calculator.ui.main.helper.handleClick
+import com.gigaworks.tech.calculator.ui.main.helper.handleConstantClick
+import com.gigaworks.tech.calculator.ui.main.helper.handleDelete
+import com.gigaworks.tech.calculator.ui.main.helper.isNumber
+import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.ui.main.viewmodel.MainViewModel
 import com.gigaworks.tech.calculator.ui.settings.SettingsActivity
 import com.gigaworks.tech.calculator.ui.view.CalculatorEditText
-import com.gigaworks.tech.calculator.util.*
+import com.gigaworks.tech.calculator.util.AccentTheme
+import com.gigaworks.tech.calculator.util.AngleType
+import com.gigaworks.tech.calculator.util.AppPreference
+import com.gigaworks.tech.calculator.util.AppTheme
+import com.gigaworks.tech.calculator.util.CHANGE_ANGLE
+import com.gigaworks.tech.calculator.util.CLICK_ABOUT
+import com.gigaworks.tech.calculator.util.CLICK_CLEAR
+import com.gigaworks.tech.calculator.util.CLICK_HISTORY
+import com.gigaworks.tech.calculator.util.CLICK_MEMORY
+import com.gigaworks.tech.calculator.util.CLICK_SETTINGS
+import com.gigaworks.tech.calculator.util.CLICK_TUTORIAL
+import com.gigaworks.tech.calculator.util.EVALUATE
+import com.gigaworks.tech.calculator.util.NumberSeparator
+import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.getAccentTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import kotlin.math.sqrt
 
 
@@ -51,6 +80,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setClickListener()
         setAppTheme()
 
+        // Add onBackPressedDispatcher callback
+        onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
     }
 
     private val buttonClick = View.OnClickListener {
@@ -308,15 +339,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    /**
-     * On back pressed, close the scientific pad if it is open
-     * else close the app.
-     * */
-    override fun onBackPressed() {
-        if (binding.calculatorPadViewPager?.currentItem == 0 || binding.calculatorPadViewPager == null) {
-            super.onBackPressed()
-        } else {
-            binding.calculatorPadViewPager?.currentItem = 0
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        /**
+         * On back pressed, close the scientific pad if it is open
+         * else close the app.
+         */
+        override fun handleOnBackPressed() {
+            if (binding.calculatorPadViewPager?.currentItem == 1) {
+                binding.calculatorPadViewPager?.currentItem = 0
+            } else {
+                finish()
+            }
         }
     }
 
