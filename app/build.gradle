@@ -44,7 +44,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         versionCode versionProperties['VERSION_CODE'].toInteger()
-        versionName "2.1.1"
+        versionName "2.2.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
