@@ -75,7 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="@dimen/space_xl"
-                app:cardElevation="4dp"
                 android:visibility="gone"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -118,9 +117,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:cardElevation="4dp"
                 android:layout_marginTop="@dimen/space_xl"
                 android:background="?attr/selectableItemBackground"
+                app:cardCornerRadius="0dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -161,8 +160,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:cardElevation="4dp"
                 android:background="?attr/selectableItemBackground"
+                app:cardCornerRadius="0dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -203,8 +202,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:cardElevation="4dp"
                 android:background="?attr/selectableItemBackground"
+                app:cardCornerRadius="0dp"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -246,8 +245,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="@dimen/space_xl"
-                app:cardElevation="4dp"
                 android:background="?attr/selectableItemBackground"
+                app:cardCornerRadius="0dp"
                 android:clickable="true"
                 android:focusable="true">
 

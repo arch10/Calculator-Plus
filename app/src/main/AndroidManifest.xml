@@ -3,13 +3,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <meta-data
-        android:name="google_analytics_adid_collection_enabled"
-        android:value="false" />
-    <meta-data
-        android:name="google_analytics_default_allow_ad_personalization_signals"
-        android:value="false" />
-
     <queries>
         <intent>
             <action android:name="android.intent.action.SENDTO" />

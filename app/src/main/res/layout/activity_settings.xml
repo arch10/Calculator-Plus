@@ -130,13 +130,13 @@
                     android:layout_marginEnd="@dimen/space_l"
                     android:gravity="top"
                     android:paddingTop="2dp"
-                    tools:text="International"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
                     android:textColor="?attr/textDisable"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/numberSeparator" />
+                    app:layout_constraintTop_toBottomOf="@+id/numberSeparator"
+                    tools:text="International" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,13 +171,13 @@
                     android:layout_marginEnd="@dimen/space_l"
                     android:gravity="top"
                     android:paddingTop="2dp"
-                    tools:text="Precision: 6"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
                     android:textColor="?attr/textDisable"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/precision" />
+                    app:layout_constraintTop_toBottomOf="@+id/precision"
+                    tools:text="Precision: 6" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -248,12 +248,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/theme"
                     android:src="@drawable/brightness"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/theme" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/theme"
@@ -301,12 +301,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/accent_color"
                     android:src="@drawable/palette"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/accent_color" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/color"
@@ -331,13 +331,13 @@
                     android:layout_marginEnd="@dimen/space_l"
                     android:gravity="top"
                     android:paddingTop="2dp"
-                    tools:text="Blue"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
                     android:textColor="?attr/textDisable"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/colorIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/color" />
+                    app:layout_constraintTop_toBottomOf="@+id/color"
+                    tools:text="Blue" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -367,12 +367,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/share"
                     android:src="@drawable/share"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/share" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/share"
@@ -420,12 +420,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/rate"
                     android:src="@drawable/star"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/rate" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/rate"
@@ -473,12 +473,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/bug"
                     android:src="@drawable/bug"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/bug" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/bug"
@@ -526,12 +526,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/contact"
                     android:src="@drawable/mail"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/contact" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/contact"
@@ -579,12 +579,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/follow"
                     android:src="@drawable/twitter"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/follow" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/follow"
@@ -632,12 +632,12 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="@dimen/space_l"
+                    android:contentDescription="@string/title_activity_about"
                     android:src="@drawable/alert_circle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary"
-                    android:contentDescription="@string/title_activity_about" />
+                    app:tint="?attr/textPrimary" />
 
                 <TextView
                     android:id="@+id/about"
@@ -662,13 +662,13 @@
                     android:layout_marginEnd="@dimen/space_l"
                     android:gravity="top"
                     android:paddingTop="2dp"
-                    tools:text="Version: 2.0.0"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
                     android:textColor="?attr/textDisable"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/aboutIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/about" />
+                    app:layout_constraintTop_toBottomOf="@+id/about"
+                    tools:text="Version: 2.0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

@@ -5,12 +5,12 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
     id "com.google.gms.google-services"
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 def versionPropertiesFile = rootProject.file("version.properties")
 
-task bumpVersionCode {
+tasks.register('bumpVersionCode') {
     doLast {
         def versionProperties = new Properties()
         versionProperties.load(new FileInputStream(versionPropertiesFile))
@@ -22,7 +22,7 @@ task bumpVersionCode {
     }
 }
 
-task printVersionName {
+tasks.register('printVersionName') {
     doLast {
         println android.defaultConfig.versionName
     }
@@ -35,14 +35,12 @@ android {
         versionProperties.load(new FileInputStream(versionPropertiesFile))
     }
 
-    compileSdkVersion 33
-    buildToolsVersion '33.0.2'
-
     namespace 'com.gigaworks.tech.calculator'
     defaultConfig {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 21
-        targetSdkVersion 33
+        compileSdk 34
+        targetSdkVersion 34
         versionCode versionProperties['VERSION_CODE'].toInteger()
         versionName "2.2.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
@@ -69,23 +67,17 @@ android {
         enableAggregatingTask = true
     }
 
-    configurations.all {
-        exclude group: 'com.google.android.gms', module: 'play-services-ads'
-        exclude group: 'com.google.android.gms', module: 'play-services-ads-identifier'
-        exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
-    }
-
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // navigation
-    def navVersion = "2.5.3"
+    def navVersion = "2.7.6"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
@@ -95,13 +87,13 @@ dependencies {
 
     // Hilt dependencies
     implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // ktx extensions
-    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation 'androidx.activity:activity-ktx:1.8.2'
 
     // viewModel
-    def viewModelVersion = "2.6.1"
+    def viewModelVersion = "2.6.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$viewModelVersion"
 
@@ -110,19 +102,19 @@ dependencies {
     implementation "com.getkeepsafe.taptargetview:taptargetview:$tapTargetVersion"
 
     // custom tabs
-    implementation "androidx.browser:browser:1.5.0"
+    implementation "androidx.browser:browser:1.7.0"
 
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
 
     // room
-    def roomVersion = "2.5.1"
+    def roomVersion = "2.6.1"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
+    ksp "androidx.room:room-compiler:$roomVersion"
 
     // google play core
     implementation("com.google.android.play:core:1.10.3")
