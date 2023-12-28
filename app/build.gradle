@@ -109,6 +109,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation("com.google.firebase:firebase-config")
 
     // room
     def roomVersion = "2.6.1"
@@ -119,6 +120,10 @@ dependencies {
     // google play core
     implementation("com.google.android.play:core:1.10.3")
     implementation("com.google.android.play:core-ktx:1.8.1")
+
+    // google adMob
+    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation("com.google.android.ump:user-messaging-platform:2.1.0")
 
     // test
     testImplementation 'junit:junit:4.13.2'

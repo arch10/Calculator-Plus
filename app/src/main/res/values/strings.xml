@@ -3,6 +3,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_history">History</string>
     <string name="show_tutorial">Show Tutorial</string>
+    <string name="privacy_settings">Privacy Settings</string>
     <string name="title_activity_about">About</string>
 
     <!-- Calculation Exception errors -->

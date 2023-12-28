@@ -42,6 +42,8 @@ import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.ui.main.viewmodel.MainViewModel
 import com.gigaworks.tech.calculator.ui.settings.SettingsActivity
 import com.gigaworks.tech.calculator.ui.view.CalculatorEditText
+import com.gigaworks.tech.calculator.util.ADS_DISABLED
+import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.AccentTheme
 import com.gigaworks.tech.calculator.util.AngleType
 import com.gigaworks.tech.calculator.util.AppPreference
@@ -51,13 +53,25 @@ import com.gigaworks.tech.calculator.util.CLICK_ABOUT
 import com.gigaworks.tech.calculator.util.CLICK_CLEAR
 import com.gigaworks.tech.calculator.util.CLICK_HISTORY
 import com.gigaworks.tech.calculator.util.CLICK_MEMORY
+import com.gigaworks.tech.calculator.util.CLICK_PRIVACY_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_TUTORIAL
 import com.gigaworks.tech.calculator.util.EVALUATE
+import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.getAccentTheme
+import com.gigaworks.tech.calculator.util.logD
+import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.visible
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.sqrt
 
 
@@ -66,6 +80,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private val viewModel: MainViewModel by viewModels()
     private var mCurrentAnimator: Animator? = null
+    private val isMobileAdsInitializeCalled = AtomicBoolean(false)
+    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -81,7 +97,74 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setAppTheme()
 
         // Add onBackPressedDispatcher callback
-        onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+        // setup remote config
+        setupRemoteConfig()
+
+        // enable Google ads
+        enableAds()
+
+    }
+
+    private fun initializeMobileAdsSdk() {
+        if (isMobileAdsInitializeCalled.getAndSet(true)) {
+            return
+        }
+        MobileAds.initialize(this) {}
+        logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+        logEvent(ADS_ENABLED)
+    }
+
+    private fun enableAds() {
+        googleMobileAdsConsentManager =
+            GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        val remoteConfig = Firebase.remoteConfig
+        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
+        logD("enable_ads=$shouldEnableAds")
+        if (!shouldEnableAds) {
+            logD("disabling ads due to remote config")
+            logEvent(ADS_DISABLED)
+            binding.adView.visible(false)
+            return
+        }
+
+        logD("Google Mobile Ads SDK Version: ${MobileAds.getVersion()}")
+        googleMobileAdsConsentManager.gatherConsent(this) { error ->
+            if (error != null) {
+                // Consent not obtained in current session.
+                logE("${error.errorCode}: ${error.message}")
+            }
+
+            if (googleMobileAdsConsentManager.canRequestAds) {
+                initializeMobileAdsSdk()
+            }
+
+            if (googleMobileAdsConsentManager.isPrivacyOptionsRequired) {
+                // Regenerate the options menu to include a privacy setting.
+                invalidateOptionsMenu()
+            }
+        }
+
+        if (googleMobileAdsConsentManager.canRequestAds) {
+            initializeMobileAdsSdk()
+        }
+
+    }
+
+    private fun setupRemoteConfig() {
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.activate()
+        remoteConfig.fetchAndActivate().addOnCompleteListener(this) {
+            if (it.isSuccessful) {
+                logD("Remote config fetch success")
+            } else {
+                logD("Remote config fetch failed")
+            }
+        }
     }
 
     private val buttonClick = View.OnClickListener {
@@ -329,6 +412,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        val privacySettings = menu.findItem(R.id.privacy_settings)
+        privacySettings?.isVisible = googleMobileAdsConsentManager.isPrivacyOptionsRequired
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -359,14 +444,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 logEvent(CLICK_SETTINGS)
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
+
             R.id.history -> {
                 logEvent(CLICK_HISTORY)
                 startActivity(Intent(this, HistoryActivity::class.java))
             }
+
             R.id.about -> {
                 logEvent(CLICK_ABOUT)
                 startActivity(Intent(this, AboutActivity::class.java))
             }
+
             R.id.share -> {
                 val sharedEquation = getShareEquation()
                 if (sharedEquation.isNotEmpty()) {
@@ -385,9 +473,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     Toast.makeText(this, getString(R.string.share_error), Toast.LENGTH_SHORT).show()
                 }
             }
+
             R.id.tutorial -> {
                 logEvent(CLICK_TUTORIAL)
                 showTutorial()
+            }
+
+            R.id.privacy_settings -> {
+                logEvent(CLICK_PRIVACY_SETTINGS)
+                googleMobileAdsConsentManager.showPrivacyOptionsForm(this) { formError ->
+                    if (formError != null) {
+                        logE("${formError.errorCode}: ${formError.message}")
+                        Toast.makeText(this, formError.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

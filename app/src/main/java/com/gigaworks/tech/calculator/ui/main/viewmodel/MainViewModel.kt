@@ -7,8 +7,19 @@ import androidx.lifecycle.viewModelScope
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.repository.HistoryRepository
-import com.gigaworks.tech.calculator.ui.main.helper.*
-import com.gigaworks.tech.calculator.util.*
+import com.gigaworks.tech.calculator.ui.main.helper.addNumberSeparator
+import com.gigaworks.tech.calculator.ui.main.helper.getResult
+import com.gigaworks.tech.calculator.ui.main.helper.isExpressionBalanced
+import com.gigaworks.tech.calculator.ui.main.helper.isNumber
+import com.gigaworks.tech.calculator.ui.main.helper.prepareExpression
+import com.gigaworks.tech.calculator.ui.main.helper.roundMyAnswer
+import com.gigaworks.tech.calculator.ui.main.helper.tryBalancingBrackets
+import com.gigaworks.tech.calculator.util.AngleType
+import com.gigaworks.tech.calculator.util.AppPreference
+import com.gigaworks.tech.calculator.util.AppTheme
+import com.gigaworks.tech.calculator.util.CalculationException
+import com.gigaworks.tech.calculator.util.CalculationMessage
+import com.gigaworks.tech.calculator.util.NumberSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -138,7 +149,7 @@ class MainViewModel @Inject constructor(
             AppPreference.NUMBER_SEPARATOR,
             NumberSeparator.INTERNATIONAL.name
         )
-        return NumberSeparator.values().find { it.name == numberSeparator }
+        return NumberSeparator.entries.find { it.name == numberSeparator }
             ?: NumberSeparator.INTERNATIONAL
     }
 

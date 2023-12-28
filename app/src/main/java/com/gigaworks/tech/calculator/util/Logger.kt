@@ -13,6 +13,12 @@ fun printLogD(className: String, message: String?) {
     }
 }
 
+fun printLogW(className: String, message: String?) {
+    if(DEBUG) {
+        Log.w("$TAG:WARN", "$className: $message")
+    }
+}
+
 fun printLogE(className: String, message: String?) {
     if (DEBUG) {
         Log.d("$TAG:DEBUG", "$className: $message")

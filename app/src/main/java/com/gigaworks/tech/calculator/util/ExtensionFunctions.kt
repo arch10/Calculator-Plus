@@ -37,6 +37,10 @@ fun Activity.logD(msg: String?) {
     printLogD(this.getClassName(), msg)
 }
 
+fun Activity.logW(msg: String?) {
+    printLogW(this.getClassName(), msg)
+}
+
 fun Activity.logE(msg: String?) {
     printLogE(this.getClassName(), msg)
 }

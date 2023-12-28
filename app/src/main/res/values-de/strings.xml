@@ -3,6 +3,7 @@
     <string name="title_activity_settings">die Einstellungen</string>
     <string name="title_activity_history">Geschichte</string>
     <string name="show_tutorial">Show Tutorial</string>
+    <string name="privacy_settings">Datenschutzeinstellungen</string>
     <string name="title_activity_about">Über</string>
     <string name="invalid">ungültige Ausdruck</string>
     <string name="settings_share">Aktie</string>

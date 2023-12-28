@@ -24,6 +24,9 @@ const val CLICK_HISTORY = "click_history"
 //click tutorial
 const val CLICK_TUTORIAL = "click_tutorial"
 
+//click privacy settings
+const val CLICK_PRIVACY_SETTINGS = "click_privacy_settings"
+
 //click about
 const val CLICK_ABOUT = "click_about"
 
@@ -65,3 +68,9 @@ const val JOIN_BETA = "join_beta"
 
 //trigger feedback
 const val TRIGGER_STORE_FEEDBACK = "trigger_store_feedback"
+
+//disable ads
+const val ADS_DISABLED = "ads_disabled"
+
+//enable ads
+const val ADS_ENABLED = "ads_enabled"

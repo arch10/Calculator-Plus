@@ -3,6 +3,7 @@
     <string name="title_activity_settings">Réglages</string>
     <string name="title_activity_history">Histoire</string>
     <string name="show_tutorial">show Tutorial</string>
+    <string name="privacy_settings">Paramètres de confidentialité</string>
     <string name="title_activity_about">À propos de</string>
     <string name="invalid">expression non valide</string>
     <string name="settings_share">Partager</string>
