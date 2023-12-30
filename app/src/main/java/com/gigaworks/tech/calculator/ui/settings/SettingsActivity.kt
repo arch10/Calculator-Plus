@@ -20,8 +20,12 @@ import com.gigaworks.tech.calculator.ui.main.MainActivity
 import com.gigaworks.tech.calculator.ui.settings.helper.getString
 import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
 import com.gigaworks.tech.calculator.util.*
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -38,6 +42,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
     private val viewModel by viewModels<SettingsViewModel>()
     private var dialog: AlertDialog? = null
+    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -50,6 +55,32 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         setUpView()
         setUpObservables()
+
+        // enable Google ads
+        enableAds()
+    }
+
+    private fun enableAds() {
+        googleMobileAdsConsentManager =
+            GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        val remoteConfig = Firebase.remoteConfig
+        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
+        if (!shouldEnableAds) {
+            logD("disabling ads due to remote config")
+            logEvent(ADS_DISABLED)
+            return
+        }
+        if (googleMobileAdsConsentManager.canRequestAds) {
+            binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
+                (this as ViewGroup.MarginLayoutParams).bottomMargin =
+                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
+            }
+            binding.adViewContainer.visible(true)
+            val adRequest = AdRequest.Builder().build()
+            binding.adView.loadAd(adRequest)
+            logEvent(ADS_ENABLED)
+        }
+
     }
 
     private fun setUpObservables() {
@@ -290,18 +321,23 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             AccentTheme.BLUE -> {
                 colorDialog.defaultCheck.visible(true)
             }
+
             AccentTheme.GREEN -> {
                 colorDialog.greenCheck.visible(true)
             }
+
             AccentTheme.PURPLE -> {
                 colorDialog.purpleCheck.visible(true)
             }
+
             AccentTheme.PINK -> {
                 colorDialog.pinkCheck.visible(true)
             }
+
             AccentTheme.RED -> {
                 colorDialog.redCheck.visible(true)
             }
+
             AccentTheme.GREY -> {
                 colorDialog.greyCheck.visible(true)
             }

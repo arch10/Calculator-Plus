@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.cache.model.toDomain
@@ -14,14 +15,23 @@ import com.gigaworks.tech.calculator.ui.base.BaseActivity
 import com.gigaworks.tech.calculator.ui.history.adapter.HistoryAdapter
 import com.gigaworks.tech.calculator.ui.history.viewmodel.HistoryViewModel
 import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
+import com.gigaworks.tech.calculator.util.ADS_DISABLED
+import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.visible
+import com.google.android.gms.ads.AdRequest
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
     private val viewModel by viewModels<HistoryViewModel>()
+    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +40,31 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
         setupView()
         setupObservables()
+
+        // enable Google ads
+        enableAds()
+    }
+
+    private fun enableAds() {
+        googleMobileAdsConsentManager =
+            GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        val remoteConfig = Firebase.remoteConfig
+        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
+        if (!shouldEnableAds) {
+            logD("disabling ads due to remote config")
+            logEvent(ADS_DISABLED)
+            return
+        }
+        if (googleMobileAdsConsentManager.canRequestAds) {
+            binding.rv.layoutParams = binding.rv.layoutParams.apply {
+                (this as ViewGroup.MarginLayoutParams).bottomMargin =
+                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
+            }
+            binding.adViewContainer.visible(true)
+            val adRequest = AdRequest.Builder().build()
+            binding.adView.loadAd(adRequest)
+            logEvent(ADS_ENABLED)
+        }
 
     }
 
