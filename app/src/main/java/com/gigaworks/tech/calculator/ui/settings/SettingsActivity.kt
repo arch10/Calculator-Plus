@@ -77,8 +77,10 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             }
             binding.adViewContainer.visible(true)
             val adRequest = AdRequest.Builder().build()
-            binding.adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
+            binding?.let {
+                it.adView.loadAd(adRequest)
+                logEvent(ADS_ENABLED)
+            }
         }
 
     }

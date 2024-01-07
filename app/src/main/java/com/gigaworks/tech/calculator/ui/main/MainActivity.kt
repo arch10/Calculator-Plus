@@ -114,8 +114,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         MobileAds.initialize(this) {}
         logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
         val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
-        logEvent(ADS_ENABLED)
+        binding?.let {
+            it.adView.loadAd(adRequest)
+            logEvent(ADS_ENABLED)
+        }
     }
 
     private fun enableAds() {
