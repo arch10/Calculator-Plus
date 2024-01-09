@@ -14,8 +14,8 @@ import com.google.firebase.ktx.Firebase
 import javax.annotation.Nullable
 
 abstract class BaseFragment<B : ViewBinding> : Fragment() {
-    private var _binding: B? = null
-    protected val binding get() = _binding!!
+    protected lateinit var binding: B
+        private set // This is to prevent the user from setting the binding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreateView(
@@ -24,14 +24,9 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // initialize viewBinding
-        _binding = getViewBinding(inflater, container)
+        binding = getViewBinding(inflater, container)
         firebaseAnalytics = Firebase.analytics
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     fun setActionBar(toolbar: Toolbar, title: String = "", onBackIconClick: (View?) -> Unit = {}) {

@@ -15,12 +15,13 @@ import javax.annotation.Nullable
 
 abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
     private var _binding: B? = null
-    protected val binding get() = _binding!!
+    protected lateinit var binding: B
+        private set // This is to prevent the user from setting the binding
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = getViewBinding(layoutInflater)
+        binding = getViewBinding(layoutInflater)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             window.statusBarColor = Color.BLACK
         }
@@ -38,11 +39,6 @@ abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
 
     protected fun logEvent(eventName: String, @Nullable bundle: Bundle? = null) {
         firebaseAnalytics.logEvent(eventName, bundle)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     abstract fun getViewBinding(inflater: LayoutInflater): B
