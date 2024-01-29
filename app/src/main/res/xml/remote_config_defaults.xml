@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <defaults>
   <entry>
+    <key>main_ad_id</key>
+    <value>ca-app-pub-2673776259760115/6451442832</value>
+  </entry>
+  <entry>
+    <key>history_ad_id</key>
+    <value>ca-app-pub-2673776259760115/8506722549</value>
+  </entry>
+  <entry>
+    <key>settings_ad_id</key>
+    <value>ca-app-pub-2673776259760115/5156890070</value>
+  </entry>
+  <entry>
     <key>enable_ads</key>
     <value>false</value>
   </entry>

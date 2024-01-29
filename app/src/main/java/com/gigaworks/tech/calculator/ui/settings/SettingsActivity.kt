@@ -21,6 +21,8 @@ import com.gigaworks.tech.calculator.ui.settings.helper.getString
 import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
 import com.gigaworks.tech.calculator.util.*
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.Firebase
@@ -70,6 +72,14 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(ADS_DISABLED)
             return
         }
+        //test ad unit id - uncomment below line to enable test ads
+        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        val adUnitId = remoteConfig["settings_ad_id"].asString()
+        if (adUnitId.isEmpty()) {
+            logD("disabling ads due to empty ad unit id")
+            logEvent(ADS_DISABLED)
+            return
+        }
         if (googleMobileAdsConsentManager.canRequestAds) {
             binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
                 (this as ViewGroup.MarginLayoutParams).bottomMargin =
@@ -77,7 +87,11 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             }
             binding.adViewContainer.visible(true)
             val adRequest = AdRequest.Builder().build()
-            binding.adView.loadAd(adRequest)
+            val adView = AdView(this)
+            adView.setAdSize(AdSize.BANNER)
+            adView.adUnitId = adUnitId
+            binding.adViewContainer.addView(adView)
+            adView.loadAd(adRequest)
             logEvent(ADS_ENABLED)
         }
 

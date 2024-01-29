@@ -65,6 +65,8 @@ import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -107,14 +109,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     }
 
-    private fun initializeMobileAdsSdk() {
+    private fun initializeMobileAdsSdk(adUnitId: String) {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
         }
         MobileAds.initialize(this) {}
         logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
         val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = adUnitId
+        binding.adViewContainer.addView(adView)
+        adView.loadAd(adRequest)
         logEvent(ADS_ENABLED)
     }
 
@@ -127,7 +133,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (!shouldEnableAds) {
             logD("disabling ads due to remote config")
             logEvent(ADS_DISABLED)
-            binding.adView.visible(false)
+            return
+        }
+        //test ad unit id - uncomment below line to enable test ads
+        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        val adUnitId = remoteConfig["main_ad_id"].asString()
+        if (adUnitId.isEmpty()) {
+            logD("disabling ads due to empty ad unit id")
+            logEvent(ADS_DISABLED)
             return
         }
 
@@ -139,7 +152,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
 
             if (googleMobileAdsConsentManager.canRequestAds) {
-                initializeMobileAdsSdk()
+                initializeMobileAdsSdk(adUnitId)
             }
 
             if (googleMobileAdsConsentManager.isPrivacyOptionsRequired) {
@@ -149,7 +162,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         if (googleMobileAdsConsentManager.canRequestAds) {
-            initializeMobileAdsSdk()
+            initializeMobileAdsSdk(adUnitId)
         }
 
     }

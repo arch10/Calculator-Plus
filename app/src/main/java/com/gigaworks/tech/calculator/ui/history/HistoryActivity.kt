@@ -22,6 +22,8 @@ import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
@@ -55,6 +57,14 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
             logEvent(ADS_DISABLED)
             return
         }
+        //test ad unit id - uncomment below line to enable test ads
+        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        val adUnitId = remoteConfig["history_ad_id"].asString()
+        if (adUnitId.isEmpty()) {
+            logD("disabling ads due to empty ad unit id")
+            logEvent(ADS_DISABLED)
+            return
+        }
         if (googleMobileAdsConsentManager.canRequestAds) {
             binding.rv.layoutParams = binding.rv.layoutParams.apply {
                 (this as ViewGroup.MarginLayoutParams).bottomMargin =
@@ -62,7 +72,11 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
             }
             binding.adViewContainer.visible(true)
             val adRequest = AdRequest.Builder().build()
-            binding.adView.loadAd(adRequest)
+            val adView = AdView(this)
+            adView.setAdSize(AdSize.BANNER)
+            adView.adUnitId = adUnitId
+            binding.adViewContainer.addView(adView)
+            adView.loadAd(adRequest)
             logEvent(ADS_ENABLED)
         }
 
@@ -96,6 +110,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                 viewModel.deleteHistory(history.expression)
                 true
             }
+
             102 -> {
                 val position = item.groupId
                 val history = (binding.rv.adapter as HistoryAdapter).getHistory(position)
@@ -113,6 +128,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                 )
                 true
             }
+
             else -> super.onContextItemSelected(item)
         }
     }
