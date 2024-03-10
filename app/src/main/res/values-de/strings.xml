@@ -66,4 +66,7 @@
     <string name="precision">Präzision</string>
     <string name="accent_color">Akzentfarbe</string>
     <string name="select_accent_color">Akzentfarbe auswählen</string>
+    <string name="hidden_settings">Versteckte Einstellungen</string>
+    <string name="hidden_disable_ads">Werbungen ausschalten</string>
+    <string name="hidden_disable_ads_desc">Dadurch werden alle Anzeigen in der App deaktiviert</string>
 </resources>

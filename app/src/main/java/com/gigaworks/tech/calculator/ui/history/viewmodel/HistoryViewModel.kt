@@ -80,9 +80,13 @@ class HistoryViewModel @Inject constructor(
         appPreference.setStringPreference(AppPreference.EXPRESSION, value)
     }
 
+    fun getDisableAds(): Boolean {
+        return appPreference.getBooleanPreference(AppPreference.DISABLE_ADS, false)
+    }
+
     private fun getAutoDeleteHistory(): HistoryAutoDelete {
         val days = appPreference.getIntPreference(AppPreference.HISTORY_AUTO_DELETE, -1)
-        return HistoryAutoDelete.values().find { it.days == days } ?: HistoryAutoDelete.NEVER
+        return HistoryAutoDelete.entries.find { it.days == days } ?: HistoryAutoDelete.NEVER
     }
 
     private fun getFormattedDate(timeInMillis: Long): String {

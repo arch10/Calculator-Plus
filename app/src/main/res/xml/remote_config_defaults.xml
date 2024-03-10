@@ -16,4 +16,8 @@
     <key>enable_ads</key>
     <value>false</value>
   </entry>
+  <entry>
+    <key>allow_disabling_ads</key>
+    <value>false</value>
+  </entry>
 </defaults>

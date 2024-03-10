@@ -42,6 +42,10 @@ class SettingsViewModel @Inject constructor(
 
     var selectedAccentTheme: AccentTheme = _accentTheme.value!!
 
+    private val _disableAds = MutableLiveData(getDisableAds())
+    val disableAds: LiveData<Boolean>
+        get() = _disableAds
+
     fun shouldAskUserRating(): Boolean {
         val launchCount = appPreference.getLongPreference(AppPreference.LAUNCH_COUNT)
         val lastLaunchDate = appPreference.getLongPreference(AppPreference.LAST_LAUNCH_DAY)
@@ -96,12 +100,12 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun getAppThemeByOrdinal(ordinal: Int): AppTheme {
-        return AppTheme.values().find { it.ordinal == ordinal } ?: AppTheme.SYSTEM_DEFAULT
+        return AppTheme.entries.find { it.ordinal == ordinal } ?: AppTheme.SYSTEM_DEFAULT
     }
 
     fun getAutoDeleteHistory(): HistoryAutoDelete {
         val days = appPreference.getIntPreference(AppPreference.HISTORY_AUTO_DELETE, -1)
-        return HistoryAutoDelete.values().find { it.days == days } ?: HistoryAutoDelete.NEVER
+        return HistoryAutoDelete.entries.find { it.days == days } ?: HistoryAutoDelete.NEVER
     }
 
     fun setAutoDeleteHistory(value: HistoryAutoDelete) {
@@ -134,13 +138,22 @@ class SettingsViewModel @Inject constructor(
             AppPreference.NUMBER_SEPARATOR,
             NumberSeparator.INTERNATIONAL.name
         )
-        return NumberSeparator.values().find { it.name == numberSeparator }
+        return NumberSeparator.entries.find { it.name == numberSeparator }
             ?: NumberSeparator.INTERNATIONAL
     }
 
     fun changeNumberSeparator(numberSeparator: NumberSeparator) {
         _numberSeparator.value = numberSeparator
         appPreference.setStringPreference(AppPreference.NUMBER_SEPARATOR, numberSeparator.name)
+    }
+
+    fun getDisableAds(): Boolean {
+        return appPreference.getBooleanPreference(AppPreference.DISABLE_ADS, false)
+    }
+
+    fun setDisableAds(isDisabled: Boolean) {
+        _disableAds.value = isDisabled
+        appPreference.setBooleanPreference(AppPreference.DISABLE_ADS, isDisabled)
     }
 
 }

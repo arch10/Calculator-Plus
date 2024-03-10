@@ -77,7 +77,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // navigation
-    def navVersion = "2.7.6"
+    def navVersion = "2.7.7"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
@@ -93,7 +93,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.8.2'
 
     // viewModel
-    def viewModelVersion = "2.6.2"
+    def viewModelVersion = "2.7.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$viewModelVersion"
 
@@ -102,10 +102,10 @@ dependencies {
     implementation "com.getkeepsafe.taptargetview:taptargetview:$tapTargetVersion"
 
     // custom tabs
-    implementation "androidx.browser:browser:1.7.0"
+    implementation "androidx.browser:browser:1.8.0"
 
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation platform('com.google.firebase:firebase-bom:32.7.4')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'

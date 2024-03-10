@@ -167,4 +167,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getDisableAds(): Boolean {
+        return appPreference.getBooleanPreference(AppPreference.DISABLE_ADS, false)
+    }
+
 }

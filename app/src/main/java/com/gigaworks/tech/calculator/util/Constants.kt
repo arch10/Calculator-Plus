@@ -74,3 +74,9 @@ const val ADS_DISABLED = "ads_disabled"
 
 //enable ads
 const val ADS_ENABLED = "ads_enabled"
+
+//enable hidden settings
+const val HIDDEN_SETTINGS_ENABLED = "hidden_settings_enabled"
+
+//change disable ads
+const val CHANGE_DISABLE_ADS = "change_disable_ads"

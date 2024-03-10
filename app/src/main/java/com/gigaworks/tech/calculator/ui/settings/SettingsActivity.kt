@@ -1,11 +1,17 @@
 package com.gigaworks.tech.calculator.ui.settings
 
+import android.content.Context
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -30,6 +36,7 @@ import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import kotlin.math.sqrt
 
 @AndroidEntryPoint
 class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
@@ -46,6 +53,13 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private var dialog: AlertDialog? = null
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
+    // Declaring sensorManager
+    // and acceleration constants
+    private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    private var acceleration = 10f
+    private var currentAcceleration = SensorManager.GRAVITY_EARTH
+    private var lastAcceleration = SensorManager.GRAVITY_EARTH
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
         val accentTheme =
@@ -60,6 +74,51 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         // enable Google ads
         enableAds()
+    }
+
+    private val sensorListener: SensorEventListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+
+            // Fetching x,y,z values
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+            lastAcceleration = currentAcceleration
+
+            // Getting current accelerations
+            // with the help of fetched x,y,z values
+            currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+            val delta = currentAcceleration - lastAcceleration
+            acceleration = acceleration * 0.9f + delta
+
+            // Display a Toast message if
+            // acceleration value is over 60
+            if (acceleration > 60) {
+                logD("Acceleration: $acceleration")
+                Toast.makeText(applicationContext, "Hidden setting available", Toast.LENGTH_SHORT)
+                    .show()
+                logEvent(HIDDEN_SETTINGS_ENABLED)
+                binding.hiddenSettings.visible(true)
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+    }
+
+    override fun onResume() {
+        sensorManager.registerListener(
+            sensorListener,
+            sensorManager.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER
+            ),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+        super.onResume()
+    }
+
+    override fun onPause() {
+        sensorManager.unregisterListener(sensorListener)
+        super.onPause()
     }
 
     private fun enableAds() {
@@ -80,6 +139,16 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(ADS_DISABLED)
             return
         }
+
+        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+        val localDisableAds = viewModel.getDisableAds()
+        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
+        if (allowDisablingAds && localDisableAds) {
+            logD("disabling ads due to user setting")
+            logEvent(ADS_DISABLED)
+            return
+        }
+
         if (googleMobileAdsConsentManager.canRequestAds) {
             binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
                 (this as ViewGroup.MarginLayoutParams).bottomMargin =
@@ -116,8 +185,11 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             binding.precisionSubtitle.text = precisionSubtitle
         }
         viewModel.accentTheme.observe(this) {
-            val accentTheme = it.name.lowercase().capitalize()
+            val accentTheme = it.name.lowercase().capitalize(Locale.ROOT)
             binding.colorSubtitle.text = accentTheme
+        }
+        viewModel.disableAds.observe(this) {
+            binding.disableAdsSwitch.isChecked = it
         }
     }
 
@@ -126,6 +198,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(TRIGGER_STORE_FEEDBACK)
             askUserRating()
         }
+
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
         val colorDialog = ColorDialogBinding.inflate(layoutInflater, null, false)
         colorDialog.colorDefault.setOnClickListener {
             checkAccentTheme(AccentTheme.BLUE, colorDialog)
@@ -175,9 +250,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 }.show()
         }
 
-        binding.toolbar.setNavigationOnClickListener { handleBackPress() }
         val appVersion = "${getString(R.string.version)}: ${BuildConfig.VERSION_NAME}"
         binding.aboutSubtitle.text = appVersion
+
         binding.themeCard.setOnClickListener {
             var selectedThemeChoice = viewModel.selectedTheme.value!!.ordinal
             dialog = MaterialAlertDialogBuilder(this)
@@ -198,6 +273,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                     dialog.dismiss()
                 }.show()
         }
+
         binding.smartCalculationCard.setOnClickListener {
             val currentValue = viewModel.getSmartCalculation()
             logEvent(CHANGE_SMART_CALCULATION, bundleOf("value" to !currentValue))
@@ -207,10 +283,11 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(CHANGE_SMART_CALCULATION, bundleOf("value" to isChecked))
             viewModel.setSmartCalculation(isChecked)
         }
+
         binding.numberSeparatorCard.setOnClickListener {
             var numberSeparator = viewModel.getNumberSeparator()
             val list =
-                NumberSeparator.values()
+                NumberSeparator.entries
                     .map { it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT) }
                     .toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
@@ -224,17 +301,18 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                     list,
                     viewModel.numberSeparator.value!!.ordinal
                 ) { _, which ->
-                    numberSeparator = NumberSeparator.values().find { it.ordinal == which }
+                    numberSeparator = NumberSeparator.entries.find { it.ordinal == which }
                         ?: NumberSeparator.INTERNATIONAL
                 }
                 .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }.show()
         }
+
         binding.deleteHistoryCard.setOnClickListener {
             var deleteHistory = viewModel.getAutoDeleteHistory()
             val list =
-                HistoryAutoDelete.values().map { it.getString() }.toTypedArray()
+                HistoryAutoDelete.entries.map { it.getString() }.toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.delete_history))
                 .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
@@ -246,13 +324,14 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                     list,
                     viewModel.autoDeleteHistory.value!!.ordinal
                 ) { _, which ->
-                    deleteHistory = HistoryAutoDelete.values().find { it.ordinal == which }
+                    deleteHistory = HistoryAutoDelete.entries.find { it.ordinal == which }
                         ?: HistoryAutoDelete.NEVER
                 }
                 .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.dismiss()
                 }.show()
         }
+
         binding.precisionCard.setOnClickListener {
             val precision = viewModel.getAnswerPrecision()
             val precisionDialogLayout = PrecisionDialogBinding.inflate(layoutInflater, null, false)
@@ -271,6 +350,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                     dialog.dismiss()
                 }.show()
         }
+
         binding.shareCard.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
@@ -285,14 +365,17 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(SHARE_APP)
             startActivity(Intent.createChooser(intent, getString(R.string.choose)))
         }
+
         binding.bugCard.setOnClickListener {
             logEvent(REPORT_PROBLEM)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(REPORT_BUG_LINK) })
         }
+
         binding.rateCard.setOnClickListener {
             logEvent(RATE_APP)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(APP_STORE_LINK) })
         }
+
         binding.contactCard.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 val body = StringBuilder()
@@ -314,13 +397,26 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 startActivity(intent)
             }
         }
+
         binding.followCard.setOnClickListener {
             logEvent(FOLLOW_ME)
             startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(FOLLOW_LINK) })
         }
+
         binding.aboutCard.setOnClickListener {
             logEvent(CLICK_ABOUT)
             startActivity(Intent(this, AboutActivity::class.java))
+        }
+
+        binding.disableAdsCard.setOnClickListener {
+            val currentValue = viewModel.disableAds.value!!
+            logEvent(CHANGE_DISABLE_ADS, bundleOf("value" to currentValue))
+            viewModel.setDisableAds(!currentValue)
+        }
+
+        binding.disableAdsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            logEvent(CHANGE_DISABLE_ADS, bundleOf("value" to isChecked))
+            viewModel.setDisableAds(isChecked)
         }
     }
 
@@ -375,15 +471,6 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                 logE("Failed to initiate user review. ${task.exception?.message}")
             }
         }
-    }
-
-    override fun onBackPressed() {
-        dialog?.dismiss()
-        handleBackPress()
-    }
-
-    private fun handleBackPress() {
-        finish()
     }
 
     override fun getViewBinding(inflater: LayoutInflater) =

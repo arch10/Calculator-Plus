@@ -66,4 +66,7 @@
     <string name="precision">Precisão</string>
     <string name="accent_color">Cor de destaque</string>
     <string name="select_accent_color">Selecione a cor de destaque</string>
+    <string name="hidden_settings">Configurações ocultas</string>
+    <string name="hidden_disable_ads">Desativar anúncios</string>
+    <string name="hidden_disable_ads_desc">Isso desativará todos os anúncios no aplicativo</string>
 </resources>

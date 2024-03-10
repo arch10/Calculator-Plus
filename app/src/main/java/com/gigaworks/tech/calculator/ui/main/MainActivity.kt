@@ -144,6 +144,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             return
         }
 
+        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+        val localDisableAds = viewModel.getDisableAds()
+        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
+        if (allowDisablingAds && localDisableAds) {
+            logD("disabling ads due to user setting")
+            logEvent(ADS_DISABLED)
+            return
+        }
+
         logD("Google Mobile Ads SDK Version: ${MobileAds.getVersion()}")
         googleMobileAdsConsentManager.gatherConsent(this) { error ->
             if (error != null) {

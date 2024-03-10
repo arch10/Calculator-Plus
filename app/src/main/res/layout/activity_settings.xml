@@ -343,6 +343,79 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <LinearLayout
+                android:id="@+id/hiddenSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:layout_marginTop="@dimen/space_xxl"
+                    android:layout_marginEnd="@dimen/space_l"
+                    android:text="@string/hidden_settings"
+                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Overline"
+                    android:textColor="?attr/operatorBtnColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/disableAdsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/disableAds"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_m"
+                        android:gravity="bottom"
+                        android:text="@string/hidden_disable_ads"
+                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                        android:textColor="?attr/textPrimary"
+                        app:layout_constraintBottom_toTopOf="@id/disableAdsSubtitle"
+                        app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/disableAdsSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_m"
+                        android:gravity="top"
+                        android:paddingTop="2dp"
+                        android:text="@string/hidden_disable_ads_desc"
+                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                        android:textColor="?attr/textDisable"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/disableAds" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/disableAdsSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:checked="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

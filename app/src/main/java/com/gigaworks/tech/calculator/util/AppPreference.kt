@@ -53,5 +53,6 @@ class AppPreference(context: Context) {
         const val ACCENT_THEME = "app_accent_theme"
         const val LAUNCH_COUNT = "app_launch_count"
         const val LAST_LAUNCH_DAY = "app_last_launch_day"
+        const val DISABLE_ADS = "app_disable_ads"
     }
 }

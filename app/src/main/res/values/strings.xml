@@ -73,4 +73,8 @@
     <string name="precision">Precision</string>
     <string name="accent_color">Accent Color</string>
     <string name="select_accent_color">Select accent color</string>
+
+    <string name="hidden_settings">Hidden Settings</string>
+    <string name="hidden_disable_ads">Disable Ads</string>
+    <string name="hidden_disable_ads_desc">This will disable all ads in the app</string>
 </resources>
