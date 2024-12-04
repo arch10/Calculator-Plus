@@ -90,7 +90,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
-    private val geeMeePlacementId = "12945"
+    private val geemeePlacementId = "12945"
+    private val geemeeAppKey = "7OKwz38pamGtKmgUeRoYDqRUVtCYb1WH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -126,7 +127,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val remoteConfig = Firebase.remoteConfig
         val enableGeeMee = remoteConfig["enable_geemee_ads"].asBoolean()
         if (enableGeeMee) {
-            GeeMee.initSDK("7OKwz38pamGtKmgUeRoYDqRUVtCYb1WH")
+            GeeMee.initSDK(geemeeAppKey)
         } else {
             MobileAds.initialize(this) {}
             logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
@@ -146,14 +147,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             override fun onInitSuccess() {
                 super.onInitSuccess()
                 val adSize = ai.geemee.AdSize.BANNER
-                GeeMee.loadBanner(geeMeePlacementId, adSize)
+                GeeMee.loadBanner(geemeePlacementId, adSize)
                 logEvent(GEEMEE_INIT_SUCCESS)
             }
 
             override fun onBannerReady(p0: String?) {
                 super.onBannerReady(p0)
                 logEvent(GEEMEE_BANNER_READY)
-                val bannerView = GeeMee.showBanner(geeMeePlacementId)
+                val bannerView = GeeMee.showBanner(geemeePlacementId)
                 if (bannerView != null) {
                     if (bannerView.parent != null) {
                         val vg = bannerView.parent as ViewGroup
