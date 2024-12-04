@@ -20,4 +20,8 @@
     <key>allow_disabling_ads</key>
     <value>false</value>
   </entry>
+  <entry>
+    <key>enable_geemee_ads</key>
+    <value>false</value>
+  </entry>
 </defaults>

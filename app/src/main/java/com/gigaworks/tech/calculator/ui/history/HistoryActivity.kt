@@ -54,7 +54,9 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
         if (!shouldEnableAds) {
             logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "ads_disabled")
+            }
             return
         }
         //test ad unit id - uncomment below line to enable test ads
@@ -62,18 +64,20 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         val adUnitId = remoteConfig["history_ad_id"].asString()
         if (adUnitId.isEmpty()) {
             logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "empty_ad_unit")
+            }
             return
         }
 
-        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
-        val localDisableAds = viewModel.getDisableAds()
-        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
-        if (allowDisablingAds && localDisableAds) {
-            logD("disabling ads due to user setting")
-            logEvent(ADS_DISABLED)
-            return
-        }
+//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val localDisableAds = viewModel.getDisableAds()
+//        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
+//        if (allowDisablingAds && localDisableAds) {
+//            logD("disabling ads due to user setting")
+//            logEvent(ADS_DISABLED)
+//            return
+//        }
 
         if (googleMobileAdsConsentManager.canRequestAds) {
             binding.rv.layoutParams = binding.rv.layoutParams.apply {
