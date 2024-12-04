@@ -1,5 +1,6 @@
 package com.gigaworks.tech.calculator.ui.main
 
+import ai.geemee.GeeMee
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -17,6 +18,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -57,13 +59,17 @@ import com.gigaworks.tech.calculator.util.CLICK_PRIVACY_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_TUTORIAL
 import com.gigaworks.tech.calculator.util.EVALUATE
+import com.gigaworks.tech.calculator.util.GEEMEE_AD_CLOSE
+import com.gigaworks.tech.calculator.util.GEEMEE_AD_OPEN
+import com.gigaworks.tech.calculator.util.GEEMEE_BANNER_READY
+import com.gigaworks.tech.calculator.util.GEEMEE_INIT_SUCCESS
+import com.gigaworks.tech.calculator.util.GeeMeeCallbackListener
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
-import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -84,6 +90,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private val geemeePlacementId = "12945"
+    private val geemeeAppKey = "7OKwz38pamGtKmgUeRoYDqRUVtCYb1WH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -104,6 +112,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         // setup remote config
         setupRemoteConfig()
 
+        // setup geemee listener
+        setGeeMeeCallbackListener()
+
         // enable Google ads
         enableAds()
 
@@ -113,15 +124,59 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
         }
-        MobileAds.initialize(this) {}
-        logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
-        val adRequest = AdRequest.Builder().build()
-        val adView = AdView(this)
-        adView.setAdSize(AdSize.BANNER)
-        adView.adUnitId = adUnitId
-        binding.adViewContainer.addView(adView)
-        adView.loadAd(adRequest)
-        logEvent(ADS_ENABLED)
+        val remoteConfig = Firebase.remoteConfig
+        val enableGeeMee = remoteConfig["enable_geemee_ads"].asBoolean()
+        if (enableGeeMee) {
+            GeeMee.initSDK(geemeeAppKey)
+        } else {
+            MobileAds.initialize(this) {}
+            logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
+            val adRequest = AdRequest.Builder().build()
+            val adView = AdView(this)
+            adView.setAdSize(AdSize.BANNER)
+            adView.adUnitId = adUnitId
+            binding.adViewContainer.addView(adView)
+            adView.loadAd(adRequest)
+            logEvent(ADS_ENABLED)
+        }
+
+    }
+
+    private fun setGeeMeeCallbackListener() {
+        GeeMee.setCallback(object : GeeMeeCallbackListener {
+            override fun onInitSuccess() {
+                super.onInitSuccess()
+                val adSize = ai.geemee.AdSize.BANNER
+                GeeMee.loadBanner(geemeePlacementId, adSize)
+                logEvent(GEEMEE_INIT_SUCCESS)
+            }
+
+            override fun onBannerReady(p0: String?) {
+                super.onBannerReady(p0)
+                logEvent(GEEMEE_BANNER_READY)
+                val bannerView = GeeMee.showBanner(geemeePlacementId)
+                if (bannerView != null) {
+                    if (bannerView.parent != null) {
+                        val vg = bannerView.parent as ViewGroup
+                        vg.removeView(bannerView)
+                    }
+                    binding.adViewContainer.addView(bannerView)
+                    logEvent(ADS_ENABLED) {
+                        param("source", "GeeMee")
+                    }
+                }
+            }
+
+            override fun onInterstitialOpen(p0: String?) {
+                super.onInterstitialOpen(p0)
+                logEvent(GEEMEE_AD_OPEN)
+            }
+
+            override fun onInterstitialClose(p0: String?) {
+                super.onInterstitialClose(p0)
+                logEvent(GEEMEE_AD_CLOSE)
+            }
+        })
     }
 
     private fun enableAds() {
@@ -132,7 +187,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         logD("enable_ads=$shouldEnableAds")
         if (!shouldEnableAds) {
             logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "ads_disabled")
+            }
             return
         }
         //test ad unit id - uncomment below line to enable test ads
@@ -140,18 +197,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val adUnitId = remoteConfig["main_ad_id"].asString()
         if (adUnitId.isEmpty()) {
             logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "empty_ad_unit")
+            }
             return
         }
 
-        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
-        val localDisableAds = viewModel.getDisableAds()
-        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
-        if (allowDisablingAds && localDisableAds) {
-            logD("disabling ads due to user setting")
-            logEvent(ADS_DISABLED)
-            return
-        }
+//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val localDisableAds = viewModel.getDisableAds()
+//        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
+//        if (allowDisablingAds && localDisableAds) {
+//            logD("disabling ads due to user setting")
+//            logEvent(ADS_DISABLED) {
+//                param("reason", "user_settings")
+//            }
+//            return
+//        }
 
         logD("Google Mobile Ads SDK Version: ${MobileAds.getVersion()}")
         googleMobileAdsConsentManager.gatherConsent(this) { error ->

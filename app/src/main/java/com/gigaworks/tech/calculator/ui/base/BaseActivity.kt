@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.ktx.Firebase
 import javax.annotation.Nullable
 
@@ -39,6 +41,10 @@ abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
 
     protected fun logEvent(eventName: String, @Nullable bundle: Bundle? = null) {
         firebaseAnalytics.logEvent(eventName, bundle)
+    }
+
+    protected fun logEvent(eventName: String, block: ParametersBuilder.() -> Unit) {
+        firebaseAnalytics.logEvent(eventName, block)
     }
 
     abstract fun getViewBinding(inflater: LayoutInflater): B

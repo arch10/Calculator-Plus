@@ -1,17 +1,11 @@
 package com.gigaworks.tech.calculator.ui.settings
 
-import android.content.Context
 import android.content.Intent
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -25,7 +19,31 @@ import com.gigaworks.tech.calculator.ui.base.BaseActivity
 import com.gigaworks.tech.calculator.ui.main.MainActivity
 import com.gigaworks.tech.calculator.ui.settings.helper.getString
 import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
-import com.gigaworks.tech.calculator.util.*
+import com.gigaworks.tech.calculator.util.ADS_DISABLED
+import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.AccentTheme
+import com.gigaworks.tech.calculator.util.AppPreference
+import com.gigaworks.tech.calculator.util.CHANGE_ACCENT_COLOR
+import com.gigaworks.tech.calculator.util.CHANGE_DISABLE_ADS
+import com.gigaworks.tech.calculator.util.CHANGE_HISTORY_DELETE
+import com.gigaworks.tech.calculator.util.CHANGE_NUMBER_SEPARATOR
+import com.gigaworks.tech.calculator.util.CHANGE_PRECISION
+import com.gigaworks.tech.calculator.util.CHANGE_SMART_CALCULATION
+import com.gigaworks.tech.calculator.util.CHANGE_THEME
+import com.gigaworks.tech.calculator.util.CLICK_ABOUT
+import com.gigaworks.tech.calculator.util.FOLLOW_ME
+import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
+import com.gigaworks.tech.calculator.util.HistoryAutoDelete
+import com.gigaworks.tech.calculator.util.NumberSeparator
+import com.gigaworks.tech.calculator.util.RATE_APP
+import com.gigaworks.tech.calculator.util.REPORT_PROBLEM
+import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
+import com.gigaworks.tech.calculator.util.SHARE_APP
+import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
+import com.gigaworks.tech.calculator.util.getAccentTheme
+import com.gigaworks.tech.calculator.util.logD
+import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -35,8 +53,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
-import kotlin.math.sqrt
+import java.util.Locale
 
 @AndroidEntryPoint
 class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
@@ -55,10 +72,10 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
     // Declaring sensorManager
     // and acceleration constants
-    private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    private var acceleration = 10f
-    private var currentAcceleration = SensorManager.GRAVITY_EARTH
-    private var lastAcceleration = SensorManager.GRAVITY_EARTH
+//    private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+//    private var acceleration = 10f
+//    private var currentAcceleration = SensorManager.GRAVITY_EARTH
+//    private var lastAcceleration = SensorManager.GRAVITY_EARTH
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -76,50 +93,50 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         enableAds()
     }
 
-    private val sensorListener: SensorEventListener = object : SensorEventListener {
-        override fun onSensorChanged(event: SensorEvent) {
-
-            // Fetching x,y,z values
-            val x = event.values[0]
-            val y = event.values[1]
-            val z = event.values[2]
-            lastAcceleration = currentAcceleration
-
-            // Getting current accelerations
-            // with the help of fetched x,y,z values
-            currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
-            val delta = currentAcceleration - lastAcceleration
-            acceleration = acceleration * 0.9f + delta
-
-            // Display a Toast message if
-            // acceleration value is over 60
-            if (acceleration > 60) {
-                logD("Acceleration: $acceleration")
-                Toast.makeText(applicationContext, "Hidden setting available", Toast.LENGTH_SHORT)
-                    .show()
-                logEvent(HIDDEN_SETTINGS_ENABLED)
-                binding.hiddenSettings.visible(true)
-            }
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-    }
-
-    override fun onResume() {
-        sensorManager.registerListener(
-            sensorListener,
-            sensorManager.getDefaultSensor(
-                Sensor.TYPE_ACCELEROMETER
-            ),
-            SensorManager.SENSOR_DELAY_NORMAL
-        )
-        super.onResume()
-    }
-
-    override fun onPause() {
-        sensorManager.unregisterListener(sensorListener)
-        super.onPause()
-    }
+//    private val sensorListener: SensorEventListener = object : SensorEventListener {
+//        override fun onSensorChanged(event: SensorEvent) {
+//
+//            // Fetching x,y,z values
+//            val x = event.values[0]
+//            val y = event.values[1]
+//            val z = event.values[2]
+//            lastAcceleration = currentAcceleration
+//
+//            // Getting current accelerations
+//            // with the help of fetched x,y,z values
+//            currentAcceleration = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+//            val delta = currentAcceleration - lastAcceleration
+//            acceleration = acceleration * 0.9f + delta
+//
+//            // Display a Toast message if
+//            // acceleration value is over 60
+//            if (acceleration > 60) {
+//                logD("Acceleration: $acceleration")
+//                Toast.makeText(applicationContext, "Hidden setting available", Toast.LENGTH_SHORT)
+//                    .show()
+//                logEvent(HIDDEN_SETTINGS_ENABLED)
+//                binding.hiddenSettings.visible(true)
+//            }
+//        }
+//
+//        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+//    }
+//
+//    override fun onResume() {
+//        sensorManager.registerListener(
+//            sensorListener,
+//            sensorManager.getDefaultSensor(
+//                Sensor.TYPE_ACCELEROMETER
+//            ),
+//            SensorManager.SENSOR_DELAY_NORMAL
+//        )
+//        super.onResume()
+//    }
+//
+//    override fun onPause() {
+//        sensorManager.unregisterListener(sensorListener)
+//        super.onPause()
+//    }
 
     private fun enableAds() {
         googleMobileAdsConsentManager =
@@ -128,7 +145,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
         if (!shouldEnableAds) {
             logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "ads_disabled")
+            }
             return
         }
         //test ad unit id - uncomment below line to enable test ads
@@ -136,18 +155,20 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         val adUnitId = remoteConfig["settings_ad_id"].asString()
         if (adUnitId.isEmpty()) {
             logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED)
+            logEvent(ADS_DISABLED) {
+                param("reason", "empty_ad_unit")
+            }
             return
         }
 
-        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
-        val localDisableAds = viewModel.getDisableAds()
-        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
-        if (allowDisablingAds && localDisableAds) {
-            logD("disabling ads due to user setting")
-            logEvent(ADS_DISABLED)
-            return
-        }
+//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val localDisableAds = viewModel.getDisableAds()
+//        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
+//        if (allowDisablingAds && localDisableAds) {
+//            logD("disabling ads due to user setting")
+//            logEvent(ADS_DISABLED)
+//            return
+//        }
 
         if (googleMobileAdsConsentManager.canRequestAds) {
             binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
