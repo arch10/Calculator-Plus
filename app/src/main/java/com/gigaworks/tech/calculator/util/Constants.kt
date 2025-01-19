@@ -82,7 +82,7 @@ const val HIDDEN_SETTINGS_ENABLED = "hidden_settings_enabled"
 const val CHANGE_DISABLE_ADS = "change_disable_ads"
 
 //geemee events
+const val GEEMEE_ENABLED = "geemee_enabled"
 const val GEEMEE_INIT_SUCCESS = "geemee_init_success"
-const val GEEMEE_BANNER_READY = "geemee_banner_ready"
 const val GEEMEE_AD_OPEN = "geemee_ad_open"
 const val GEEMEE_AD_CLOSE = "geemee_ad_close"

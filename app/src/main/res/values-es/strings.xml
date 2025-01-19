@@ -69,4 +69,5 @@
     <string name="hidden_settings">Configuraciones ocultas</string>
     <string name="hidden_disable_ads">Desactivar los anuncios</string>
     <string name="hidden_disable_ads_desc">Esto desactivará todos los anuncios en la aplicación.</string>
+    <string name="win_prize">Ganar premio</string>
 </resources>

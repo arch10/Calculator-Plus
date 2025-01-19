@@ -78,7 +78,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
     // navigation
-    def navVersion = "2.8.4"
+    def navVersion = "2.8.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
@@ -106,7 +106,7 @@ dependencies {
     implementation "androidx.browser:browser:1.8.0"
 
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
@@ -123,7 +123,7 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.2")
 
     // google adMob
-    implementation 'com.google.android.gms:play-services-ads:23.5.0'
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
     implementation("com.google.android.ump:user-messaging-platform:3.1.0")
 
     // geemee sdk

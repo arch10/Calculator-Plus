@@ -69,4 +69,5 @@
     <string name="hidden_settings">Versteckte Einstellungen</string>
     <string name="hidden_disable_ads">Werbungen ausschalten</string>
     <string name="hidden_disable_ads_desc">Dadurch werden alle Anzeigen in der App deaktiviert</string>
+    <string name="win_prize">Preis gewinnen</string>
 </resources>

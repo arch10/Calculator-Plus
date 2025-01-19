@@ -69,4 +69,5 @@
     <string name="hidden_settings">Paramètres masqués</string>
     <string name="hidden_disable_ads">Désactiver les publicités</string>
     <string name="hidden_disable_ads_desc">Cela désactivera toutes les publicités dans l\'application</string>
+    <string name="win_prize">Gagnez un prix</string>
 </resources>

@@ -18,7 +18,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
-import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -61,7 +60,7 @@ import com.gigaworks.tech.calculator.util.CLICK_TUTORIAL
 import com.gigaworks.tech.calculator.util.EVALUATE
 import com.gigaworks.tech.calculator.util.GEEMEE_AD_CLOSE
 import com.gigaworks.tech.calculator.util.GEEMEE_AD_OPEN
-import com.gigaworks.tech.calculator.util.GEEMEE_BANNER_READY
+import com.gigaworks.tech.calculator.util.GEEMEE_ENABLED
 import com.gigaworks.tech.calculator.util.GEEMEE_INIT_SUCCESS
 import com.gigaworks.tech.calculator.util.GeeMeeCallbackListener
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
@@ -70,6 +69,7 @@ import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -90,7 +90,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
-    private val geemeePlacementId = "12945"
+    private val geemeePlacementId = "13553"
     private val geemeeAppKey = "7OKwz38pamGtKmgUeRoYDqRUVtCYb1WH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,44 +127,32 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val remoteConfig = Firebase.remoteConfig
         val enableGeeMee = remoteConfig["enable_geemee_ads"].asBoolean()
         if (enableGeeMee) {
+            logEvent(GEEMEE_ENABLED)
             GeeMee.initSDK(geemeeAppKey)
-        } else {
-            MobileAds.initialize(this) {}
-            logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
-            val adRequest = AdRequest.Builder().build()
-            val adView = AdView(this)
-            adView.setAdSize(AdSize.BANNER)
-            adView.adUnitId = adUnitId
-            binding.adViewContainer.addView(adView)
-            adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
+            binding.geemeBtn.setImageResource(R.drawable.gift_100x100)
+            binding.geemeBtn.visible(true)
+            binding.geemeBtn.setOnClickListener {
+                if (GeeMee.isInteractiveReady(geemeePlacementId)) {
+                    GeeMee.showInterstitial(geemeePlacementId)
+                }
+            }
         }
-
+        MobileAds.initialize(this) {}
+        logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
+        val adRequest = AdRequest.Builder().build()
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = adUnitId
+        binding.adViewContainer.addView(adView)
+        adView.loadAd(adRequest)
+        logEvent(ADS_ENABLED)
     }
 
     private fun setGeeMeeCallbackListener() {
         GeeMee.setCallback(object : GeeMeeCallbackListener {
             override fun onInitSuccess() {
                 super.onInitSuccess()
-                val adSize = ai.geemee.AdSize.BANNER
-                GeeMee.loadBanner(geemeePlacementId, adSize)
                 logEvent(GEEMEE_INIT_SUCCESS)
-            }
-
-            override fun onBannerReady(p0: String?) {
-                super.onBannerReady(p0)
-                logEvent(GEEMEE_BANNER_READY)
-                val bannerView = GeeMee.showBanner(geemeePlacementId)
-                if (bannerView != null) {
-                    if (bannerView.parent != null) {
-                        val vg = bannerView.parent as ViewGroup
-                        vg.removeView(bannerView)
-                    }
-                    binding.adViewContainer.addView(bannerView)
-                    logEvent(ADS_ENABLED) {
-                        param("source", "GeeMee")
-                    }
-                }
             }
 
             override fun onInterstitialOpen(p0: String?) {
