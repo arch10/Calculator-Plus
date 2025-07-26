@@ -1,6 +1,5 @@
 package com.gigaworks.tech.calculator.ui.main
 
-import ai.geemee.GeeMee
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -58,18 +57,12 @@ import com.gigaworks.tech.calculator.util.CLICK_PRIVACY_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_SETTINGS
 import com.gigaworks.tech.calculator.util.CLICK_TUTORIAL
 import com.gigaworks.tech.calculator.util.EVALUATE
-import com.gigaworks.tech.calculator.util.GEEMEE_AD_CLOSE
-import com.gigaworks.tech.calculator.util.GEEMEE_AD_OPEN
-import com.gigaworks.tech.calculator.util.GEEMEE_ENABLED
-import com.gigaworks.tech.calculator.util.GEEMEE_INIT_SUCCESS
-import com.gigaworks.tech.calculator.util.GeeMeeCallbackListener
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
-import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -90,8 +83,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
-    private val geemeePlacementId = "13553"
-    private val geemeeAppKey = "7OKwz38pamGtKmgUeRoYDqRUVtCYb1WH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val appPreference = AppPreference(this)
@@ -116,9 +107,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         // setup remote config
         setupRemoteConfig()
 
-        // setup geemee listener
-        setGeeMeeCallbackListener()
-
         // enable Google ads
         enableAds()
 
@@ -127,19 +115,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun initializeMobileAdsSdk(adUnitId: String) {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
-        }
-        val remoteConfig = Firebase.remoteConfig
-        val enableGeeMee = remoteConfig["enable_geemee_ads"].asBoolean()
-        if (enableGeeMee) {
-            logEvent(GEEMEE_ENABLED)
-            GeeMee.initSDK(geemeeAppKey)
-            binding.geemeBtn.setImageResource(R.drawable.gift_100x100)
-            binding.geemeBtn.visible(true)
-            binding.geemeBtn.setOnClickListener {
-                if (GeeMee.isInteractiveReady(geemeePlacementId)) {
-                    GeeMee.showInterstitial(geemeePlacementId)
-                }
-            }
         }
         MobileAds.initialize(this) {}
         logD("Consent granted: ${googleMobileAdsConsentManager.canRequestAds}")
@@ -150,25 +125,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.adViewContainer.addView(adView)
         adView.loadAd(adRequest)
         logEvent(ADS_ENABLED)
-    }
-
-    private fun setGeeMeeCallbackListener() {
-        GeeMee.setCallback(object : GeeMeeCallbackListener {
-            override fun onInitSuccess() {
-                super.onInitSuccess()
-                logEvent(GEEMEE_INIT_SUCCESS)
-            }
-
-            override fun onInterstitialOpen(p0: String?) {
-                super.onInterstitialOpen(p0)
-                logEvent(GEEMEE_AD_OPEN)
-            }
-
-            override fun onInterstitialClose(p0: String?) {
-                super.onInterstitialClose(p0)
-                logEvent(GEEMEE_AD_CLOSE)
-            }
-        })
     }
 
     private fun enableAds() {
