@@ -34,37 +34,81 @@ Successfully upgraded the Calculator Plus Android project from API 34 to API 35 
 
 ### 3. Activity Updates for Edge-to-Edge
 
-#### BaseActivity.kt
+#### BaseActivity.kt (Centralized Solution)
 - Added `WindowCompat.setDecorFitsSystemWindows(window, false)` to enable edge-to-edge for all activities
-- Imported necessary WindowCompat classes
+- **NEW**: Implemented centralized `setupEdgeToEdge()` method with flexible parameters:
+  - `topInsetsView`: Optional view to receive top insets (status bar clearance)
+  - `bottomInsetsView`: Optional view to receive bottom insets (navigation bar clearance)  
+  - `applyToRoot`: Boolean flag to apply both insets to root view
+- Imported necessary WindowCompat, ViewCompat, and WindowInsetsCompat classes
 
 #### MainActivity.kt
-- Added comprehensive window insets handling:
-  - Top insets applied to AppBar for status bar clearance
-  - Bottom insets applied to ad container for navigation bar clearance
-- Imported `ViewCompat` and `WindowInsetsCompat` for insets management
+- Uses centralized edge-to-edge method:
+  ```kotlin
+  setupEdgeToEdge(
+      topInsetsView = binding.appBar,
+      bottomInsetsView = binding.adViewContainer
+  )
+  ```
+- Removed duplicate implementation and unnecessary imports
 
 #### SettingsActivity.kt
-- Implemented edge-to-edge insets handling:
-  - Top insets for toolbar
-  - Bottom insets for content area
-- Added required imports for insets management
+- Uses centralized edge-to-edge method:
+  ```kotlin
+  setupEdgeToEdge(
+      topInsetsView = binding.toolbar,
+      bottomInsetsView = binding.root
+  )
+  ```
+- Removed duplicate implementation and unnecessary imports
 
 #### HistoryActivity.kt
-- Added edge-to-edge support with proper insets handling:
-  - Toolbar padding for status bar
-  - Root view padding for navigation bar
-- Imported necessary ViewCompat classes
+- Uses centralized edge-to-edge method:
+  ```kotlin
+  setupEdgeToEdge(
+      topInsetsView = binding.toolbar,
+      bottomInsetsView = binding.root
+  )
+  ```
+- Removed duplicate implementation and unnecessary imports
 
 #### AboutActivity.kt
-- Implemented basic edge-to-edge support:
-  - Added onCreate override with edge-to-edge setup
-  - Root view padding for both top and bottom insets
-- Added required imports and bundle parameter
+- Uses centralized edge-to-edge method with root application:
+  ```kotlin
+  setupEdgeToEdge(applyToRoot = true)
+  ```
+- Removed duplicate implementation and unnecessary imports
 
-### 4. Edge-to-Edge Implementation Details
+### 4. Code Quality Improvements
 
-Each activity now includes a `setupEdgeToEdge()` method that:
+#### Refactored Centralized Edge-to-Edge Implementation
+- **Problem**: Original implementation had duplicate `setupEdgeToEdge()` methods in each activity
+- **Solution**: Moved common functionality to `BaseActivity` with flexible parameters
+- **Benefits**: 
+  - Eliminates code duplication (DRY principle)
+  - Single source of truth for edge-to-edge logic
+  - Easier maintenance and updates
+  - Consistent behavior across all activities
+  - Flexible parameter system supports different use cases
+
+#### Usage Examples:
+```kotlin
+// For activities with separate top and bottom views
+setupEdgeToEdge(
+    topInsetsView = binding.toolbar,
+    bottomInsetsView = binding.adContainer
+)
+
+// For activities applying insets to root view
+setupEdgeToEdge(applyToRoot = true)
+
+// For activities with only top insets
+setupEdgeToEdge(topInsetsView = binding.appBar)
+```
+
+### 5. Edge-to-Edge Implementation Details
+
+The centralized `setupEdgeToEdge()` method:
 
 1. **Listens for window insets** using `ViewCompat.setOnApplyWindowInsetsListener`
 2. **Gets system bar insets** using `WindowInsetsCompat.Type.systemBars()`
@@ -73,7 +117,7 @@ Each activity now includes a `setupEdgeToEdge()` method that:
    - Navigation bar (bottom inset)
    - Any side insets for gesture navigation
 
-### 5. Benefits of These Changes
+### 6. Benefits of These Changes
 
 #### User Experience
 - **Modern Android 15 appearance** with full-screen content
@@ -86,8 +130,11 @@ Each activity now includes a `setupEdgeToEdge()` method that:
 - **Backward compatibility** maintained for older Android versions
 - **Performance optimized** with native Android edge-to-edge APIs
 - **Accessibility compliant** with proper content positioning
+- **DRY principle applied** with centralized edge-to-edge implementation
+- **Maintainable codebase** with single source of truth for insets handling
+- **Flexible architecture** supporting different inset application strategies
 
-### 6. Testing Recommendations
+### 7. Testing Recommendations
 
 To verify the implementation:
 
@@ -100,14 +147,14 @@ To verify the implementation:
 4. **Test both light and dark themes** to ensure proper status bar contrast
 5. **Test activity transitions** to ensure consistent edge-to-edge behavior
 
-### 7. Build Status
+### 8. Build Status
 
 ✅ **Configuration Phase**: Successful - all syntax and dependencies are correct
 ⚠️ **Compilation**: Requires Android SDK setup (expected in development environment)
 
 The project is ready for compilation and testing in a properly configured Android development environment.
 
-### 8. Future Considerations
+### 9. Future Considerations
 
 - **Monitor Android 16 changes** for any new edge-to-edge requirements
 - **Consider adding predictive back gesture** support when targeting future APIs

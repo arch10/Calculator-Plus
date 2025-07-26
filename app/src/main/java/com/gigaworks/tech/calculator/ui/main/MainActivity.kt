@@ -26,8 +26,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.gigaworks.tech.calculator.R
@@ -107,7 +105,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setupObservers()
         setClickListener()
         setAppTheme()
-        setupEdgeToEdge()
+        setupEdgeToEdge(
+            topInsetsView = binding.appBar,
+            bottomInsetsView = binding.adViewContainer
+        )
 
         // Add onBackPressedDispatcher callback
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
@@ -809,29 +810,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         AppCompatDelegate.setDefaultNightMode(themeMode)
     }
 
-    private fun setupEdgeToEdge() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Apply top inset to the app bar
-            binding.appBar.setPadding(
-                binding.appBar.paddingLeft,
-                insets.top,
-                binding.appBar.paddingRight,
-                binding.appBar.paddingBottom
-            )
-            
-            // Apply bottom inset to the ad container
-            binding.adViewContainer.setPadding(
-                binding.adViewContainer.paddingLeft,
-                binding.adViewContainer.paddingTop,
-                binding.adViewContainer.paddingRight,
-                insets.bottom
-            )
-            
-            WindowInsetsCompat.CONSUMED
-        }
-    }
+
 
     private fun getSelectedTheme(): AppTheme {
         val themeName = viewModel.getAppTheme()

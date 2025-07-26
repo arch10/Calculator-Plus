@@ -7,8 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.cache.model.toDomain
 import com.gigaworks.tech.calculator.databinding.ActivityHistoryBinding
@@ -44,7 +42,10 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
         setupView()
         setupObservables()
-        setupEdgeToEdge()
+        setupEdgeToEdge(
+            topInsetsView = binding.toolbar,
+            bottomInsetsView = binding.root
+        )
 
         // enable Google ads
         enableAds()
@@ -174,29 +175,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         finish()
     }
 
-    private fun setupEdgeToEdge() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
-            // Apply top inset to the toolbar
-            binding.toolbar.setPadding(
-                binding.toolbar.paddingLeft,
-                insets.top,
-                binding.toolbar.paddingRight,
-                binding.toolbar.paddingBottom
-            )
-            
-            // Apply bottom inset to the content
-            binding.root.setPadding(
-                binding.root.paddingLeft,
-                binding.root.paddingTop,
-                binding.root.paddingRight,
-                insets.bottom
-            )
-            
-            WindowInsetsCompat.CONSUMED
-        }
-    }
+
 
     override fun getViewBinding(inflater: LayoutInflater) = ActivityHistoryBinding.inflate(inflater)
 
