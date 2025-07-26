@@ -25,6 +25,10 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
             requireActivity().finish()
         }
 
+        setupEdgeToEdge(
+            topInsetsView = binding.appBar,
+        )
+
         setUpView()
     }
 

@@ -21,14 +21,20 @@
         <item name="numPadPrimary">@color/numPadPrimary</item>
         <item name="operatorBtnColor">@color/primaryLight</item>
         <item name="clearColor">@color/clear</item>
+        <item name="isLightTheme">false</item>
         <!-- Widget Themes -->
         <item name="materialAlertDialogTheme">
             @style/ThemeOverlay.CalculatorPlus.MaterialAlertDialog
         </item>
         <item name="switchStyle">@style/Widget.CalculatorPlus.Switch</item>
-        <!-- Status bar Themes -->
-        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <!-- Edge-to-edge support -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o">?attr/isLightTheme</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
     </style>
 
     <style name="MaterialGreenTheme" parent="BaseTheme">

@@ -42,6 +42,9 @@ class OpenSourceFragment : BaseFragment<FragmentOpenSourceBinding>() {
         setActionBar(binding.toolbar, getString(R.string.open_source)) {
             findNavController().navigateUp()
         }
+        setupEdgeToEdge(
+            topInsetsView = binding.appBar,
+        )
 
         setupView()
 

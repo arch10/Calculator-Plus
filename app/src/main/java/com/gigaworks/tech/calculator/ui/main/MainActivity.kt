@@ -105,6 +105,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setupObservers()
         setClickListener()
         setAppTheme()
+        setupEdgeToEdge(
+            topInsetsView = binding.appBar,
+            bottomInsetsView = binding.adViewContainer
+        )
 
         // Add onBackPressedDispatcher callback
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
@@ -805,6 +809,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         AppCompatDelegate.setDefaultNightMode(themeMode)
     }
+
+
 
     private fun getSelectedTheme(): AppTheme {
         val themeName = viewModel.getAppTheme()
