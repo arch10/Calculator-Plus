@@ -54,6 +54,9 @@ class EvaluateUnitTest {
         // Test integer exponents that are represented as decimals
         assertEquals("16", roundMyAnswer(getResult("(-2)^4.0", deg))) // (-2)^4.0 = 16 (even)
         assertEquals("-8", roundMyAnswer(getResult("(-2)^3.0", deg))) // (-2)^3.0 = -8 (odd)
+        // Test zero and one exponents
+        assertEquals("1", roundMyAnswer(getResult("(-5)^0", deg))) // Any number to power 0 = 1
+        assertEquals("-5", roundMyAnswer(getResult("(-5)^1", deg))) // Any number to power 1 = itself
         assertEquals("50", roundMyAnswer(getResult("5000/100", deg)))
         assertEquals("3.333333", roundMyAnswer(getResult("10/3", deg)))
         assertEquals("500000", roundMyAnswer(getResult("5000*100", deg)))
