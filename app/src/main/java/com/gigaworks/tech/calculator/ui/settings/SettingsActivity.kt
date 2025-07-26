@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.ActivitySettingsBinding
@@ -88,6 +90,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         setUpView()
         setUpObservables()
+        setupEdgeToEdge()
 
         // enable Google ads
         enableAds()
@@ -491,6 +494,30 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             } else {
                 logE("Failed to initiate user review. ${task.exception?.message}")
             }
+        }
+    }
+
+    private fun setupEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            
+            // Apply top inset to the toolbar
+            binding.toolbar.setPadding(
+                binding.toolbar.paddingLeft,
+                insets.top,
+                binding.toolbar.paddingRight,
+                binding.toolbar.paddingBottom
+            )
+            
+            // Apply bottom inset to the content
+            binding.root.setPadding(
+                binding.root.paddingLeft,
+                binding.root.paddingTop,
+                binding.root.paddingRight,
+                insets.bottom
+            )
+            
+            WindowInsetsCompat.CONSUMED
         }
     }
 

@@ -8,6 +8,7 @@
     <attr name="numPadPrimary" format="color" />
     <attr name="operatorBtnColor" format="color" />
     <attr name="clearColor" format="color" />
+    <attr name="isLightTheme" format="boolean" />
 
     <declare-styleable name="CalculatorEditText">
         <attr name="minTextSize" format="dimension" />
