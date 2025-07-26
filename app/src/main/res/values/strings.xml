@@ -77,5 +77,4 @@
     <string name="hidden_settings">Hidden Settings</string>
     <string name="hidden_disable_ads">Disable Ads</string>
     <string name="hidden_disable_ads_desc">This will disable all ads in the app</string>
-    <string name="win_prize">Win Prize</string>
 </resources>
