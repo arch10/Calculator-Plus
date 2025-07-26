@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.cache.model.toDomain
@@ -164,18 +165,12 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     }
 
     private fun setupView() {
-        binding.toolbar.setNavigationOnClickListener { handleBackPress() }
+        binding.toolbar.setNavigationOnClickListener { finish() }
+        // Add back press callback
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
+        }
     }
-
-    override fun onBackPressed() {
-        handleBackPress()
-    }
-
-    private fun handleBackPress() {
-        finish()
-    }
-
-
 
     override fun getViewBinding(inflater: LayoutInflater) = ActivityHistoryBinding.inflate(inflater)
 

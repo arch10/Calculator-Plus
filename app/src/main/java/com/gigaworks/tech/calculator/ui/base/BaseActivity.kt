@@ -13,9 +13,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ParametersBuilder
-import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import javax.annotation.Nullable
 
 abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
@@ -30,12 +30,7 @@ abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
         
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        
-        // Legacy fallback for older versions
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            window.statusBarColor = Color.BLACK
-        }
-        
+
         setContentView(binding.root)
         firebaseAnalytics = Firebase.analytics
     }

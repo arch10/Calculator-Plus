@@ -40,6 +40,7 @@ import com.gigaworks.tech.calculator.util.REPORT_PROBLEM
 import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
+import com.gigaworks.tech.calculator.util.capitalize
 import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
@@ -200,7 +201,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         }
         viewModel.numberSeparator.observe(this) {
             binding.numberSeparatorSubtitle.text =
-                it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT)
+                it.name.lowercase(Locale.ROOT).capitalize()
         }
         viewModel.autoDeleteHistory.observe(this) {
             binding.deleteHistorySubtitle.text = it.getString()
@@ -210,7 +211,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             binding.precisionSubtitle.text = precisionSubtitle
         }
         viewModel.accentTheme.observe(this) {
-            val accentTheme = it.name.lowercase().capitalize(Locale.ROOT)
+            val accentTheme = it.name.lowercase().capitalize()
             binding.colorSubtitle.text = accentTheme
         }
         viewModel.disableAds.observe(this) {
@@ -267,7 +268,15 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
                         MainActivity::class.java
                     ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivities(intent)
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        overrideActivityTransition(
+                            OVERRIDE_TRANSITION_OPEN,
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                        )
+                    } else {
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    }
                     finish()
                 }
                 .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
@@ -313,7 +322,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             var numberSeparator = viewModel.getNumberSeparator()
             val list =
                 NumberSeparator.entries
-                    .map { it.name.toLowerCase(Locale.ROOT).capitalize(Locale.ROOT) }
+                    .map { it.name.lowercase(Locale.ROOT).capitalize() }
                     .toTypedArray()
             dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.choose_number_separator))
@@ -497,7 +506,6 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             }
         }
     }
-
 
 
     override fun getViewBinding(inflater: LayoutInflater) =

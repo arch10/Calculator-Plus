@@ -38,7 +38,7 @@ android {
     namespace 'com.gigaworks.tech.calculator'
     defaultConfig {
         applicationId "com.gigaworks.tech.calculator"
-        minSdkVersion 21
+        minSdkVersion 23
         compileSdk 35
         targetSdkVersion 35
         versionCode versionProperties['VERSION_CODE'].toInteger()
@@ -72,16 +72,16 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.15.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     
     // Edge-to-edge support
     implementation 'androidx.core:core-splashscreen:1.0.1'
 
     // navigation
-    def navVersion = "2.8.5"
+    def navVersion = "2.9.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
 
@@ -94,29 +94,29 @@ dependencies {
     ksp "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // ktx extensions
-    implementation 'androidx.activity:activity-ktx:1.9.3'
+    implementation 'androidx.activity:activity-ktx:1.10.1'
 
     // viewModel
-    def viewModelVersion = "2.8.7"
+    def viewModelVersion = "2.9.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewModelVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$viewModelVersion"
 
     // tap target
-    def tapTargetVersion = '1.13.3'
+    def tapTargetVersion = '1.15.0'
     implementation "com.getkeepsafe.taptargetview:taptargetview:$tapTargetVersion"
 
     // custom tabs
     implementation "androidx.browser:browser:1.8.0"
 
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:33.7.0')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation platform('com.google.firebase:firebase-bom:34.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-perf'
     implementation("com.google.firebase:firebase-config")
 
     // room
-    def roomVersion = "2.6.1"
+    def roomVersion = "2.7.2"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     ksp "androidx.room:room-compiler:$roomVersion"
@@ -126,8 +126,8 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.2")
 
     // google adMob
-    implementation 'com.google.android.gms:play-services-ads:23.6.0'
-    implementation("com.google.android.ump:user-messaging-platform:3.1.0")
+    implementation 'com.google.android.gms:play-services-ads:24.5.0'
+    implementation("com.google.android.ump:user-messaging-platform:3.2.0")
 
     // geemee sdk
     implementation 'ai.geemee:sdk:3.2.4'

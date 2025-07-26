@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 
 fun Fragment.getClassName(): String {
     return this.javaClass.simpleName
@@ -47,4 +48,13 @@ fun Activity.logE(msg: String?) {
 
 fun View.visible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+fun String.capitalize(): String {
+    return this.replaceFirstChar {
+        if (it.isLowerCase())
+            it.titlecase(Locale.ROOT)
+        else
+            it.toString()
+    }
 }

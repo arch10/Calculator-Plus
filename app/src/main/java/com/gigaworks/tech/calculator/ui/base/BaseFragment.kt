@@ -9,8 +9,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.analytics
+import com.google.firebase.Firebase
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import javax.annotation.Nullable
