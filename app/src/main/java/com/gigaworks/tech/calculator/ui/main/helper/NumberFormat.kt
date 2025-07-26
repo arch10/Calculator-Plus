@@ -538,19 +538,27 @@ private fun solvePower(stack: Stack<String>): Stack<String> {
             if (num2.compareTo(BigDecimal.ONE) == 0) {
                 tempStack.push(num1.toString())
             } else {
-                val result = BigDecimalMath.pow(num1.abs(), num2, precision)
                 // Handle sign based on mathematical rules for negative base exponentiation
                 if (num1.compareTo(BigDecimal.ZERO) == -1) {
-                    // Base is negative - check if exponent is even or odd
-                    if (num2.remainder(BigDecimal.valueOf(2)).compareTo(BigDecimal.ZERO) == 0) {
-                        // Even exponent: negative base raised to even power is positive
-                        tempStack.push(result.toString())
+                    // Base is negative - check if exponent is an integer and even/odd
+                    if (num2.remainder(BigDecimal.ONE).compareTo(BigDecimal.ZERO) == 0) {
+                        // Integer exponent - check if even or odd
+                        val result = BigDecimalMath.pow(num1.abs(), num2, precision)
+                        if (num2.remainder(BigDecimal.valueOf(2)).compareTo(BigDecimal.ZERO) == 0) {
+                            // Even exponent: negative base raised to even power is positive
+                            tempStack.push(result.toString())
+                        } else {
+                            // Odd exponent: negative base raised to odd power is negative
+                            tempStack.push("-$result")
+                        }
                     } else {
-                        // Odd exponent: negative base raised to odd power is negative
-                        tempStack.push("-$result")
+                        // Fractional exponent with negative base - use the original BigDecimalMath behavior
+                        val result = BigDecimalMath.pow(num1, num2, precision)
+                        tempStack.push(result.toString())
                     }
                 } else {
                     // Positive base: result is always positive
+                    val result = BigDecimalMath.pow(num1, num2, precision)
                     tempStack.push(result.toString())
                 }
             }

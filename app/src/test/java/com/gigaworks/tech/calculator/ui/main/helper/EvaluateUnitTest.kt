@@ -47,6 +47,13 @@ class EvaluateUnitTest {
         assertEquals("4", roundMyAnswer(getResult("(-2)^2", deg))) // Even exponent: should be positive
         assertEquals("-32", roundMyAnswer(getResult("(-2)^5", deg))) // Odd exponent: should be negative
         assertEquals("16", roundMyAnswer(getResult("(-2)^4", deg))) // Even exponent: should be positive
+        // Test edge cases
+        assertEquals("1", roundMyAnswer(getResult("(-1)^2", deg))) // (-1)^2 = 1
+        assertEquals("-1", roundMyAnswer(getResult("(-1)^3", deg))) // (-1)^3 = -1
+        assertEquals("9", roundMyAnswer(getResult("(-3)^2", deg))) // (-3)^2 = 9
+        // Test integer exponents that are represented as decimals
+        assertEquals("16", roundMyAnswer(getResult("(-2)^4.0", deg))) // (-2)^4.0 = 16 (even)
+        assertEquals("-8", roundMyAnswer(getResult("(-2)^3.0", deg))) // (-2)^3.0 = -8 (odd)
         assertEquals("50", roundMyAnswer(getResult("5000/100", deg)))
         assertEquals("3.333333", roundMyAnswer(getResult("10/3", deg)))
         assertEquals("500000", roundMyAnswer(getResult("5000*100", deg)))
