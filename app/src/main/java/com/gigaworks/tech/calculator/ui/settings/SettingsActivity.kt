@@ -89,7 +89,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         setUpView()
         setUpObservables()
         setupEdgeToEdge(
-            topInsetsView = binding.toolbar,
+            topInsetsView = binding.appBar,
             bottomInsetsView = binding.root
         )
 

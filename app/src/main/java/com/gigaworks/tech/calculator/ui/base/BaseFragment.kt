@@ -11,6 +11,8 @@ import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import javax.annotation.Nullable
 
 abstract class BaseFragment<B : ViewBinding> : Fragment() {
@@ -43,4 +45,45 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
 
     abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): B
 
+    /**
+     * Sets up edge-to-edge display with proper window insets handling.
+     *
+     * @param topInsetsView View to receive top insets (status bar clearance). If null, no top insets applied.
+     * @param bottomInsetsView View to receive bottom insets (navigation bar clearance). If null, no bottom insets applied.
+     * @param applyToRoot If true, applies both top and bottom insets to the root view. Overrides individual view parameters.
+     */
+    protected fun setupEdgeToEdge(
+        topInsetsView: View? = null,
+        bottomInsetsView: View? = null,
+        applyToRoot: Boolean = false
+    ) {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            if (applyToRoot) {
+                // Apply both top and bottom insets to root view
+                binding.root.setPadding(
+                    binding.root.paddingLeft,
+                    insets.top,
+                    binding.root.paddingRight,
+                    insets.bottom
+                )
+            } else {
+                // Apply top insets to specified view
+                topInsetsView?.setPadding(
+                    topInsetsView.paddingLeft,
+                    insets.top,
+                    topInsetsView.paddingRight,
+                    topInsetsView.paddingBottom
+                )
+                // Apply bottom insets to specified view
+                bottomInsetsView?.setPadding(
+                    bottomInsetsView.paddingLeft,
+                    bottomInsetsView.paddingTop,
+                    bottomInsetsView.paddingRight,
+                    insets.bottom
+                )
+            }
+            WindowInsetsCompat.CONSUMED
+        }
+    }
 }

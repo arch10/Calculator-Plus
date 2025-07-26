@@ -43,7 +43,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         setupView()
         setupObservables()
         setupEdgeToEdge(
-            topInsetsView = binding.toolbar,
+            topInsetsView = binding.appBar,
             bottomInsetsView = binding.root
         )
 

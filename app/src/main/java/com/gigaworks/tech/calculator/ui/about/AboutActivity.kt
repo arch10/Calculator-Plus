@@ -9,7 +9,6 @@ class AboutActivity : BaseActivity<ActivityAboutBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupEdgeToEdge(applyToRoot = true)
     }
 
     override fun getViewBinding(inflater: LayoutInflater) = ActivityAboutBinding.inflate(inflater)
