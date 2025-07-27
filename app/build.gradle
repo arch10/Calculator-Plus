@@ -38,7 +38,7 @@ android {
     namespace 'com.gigaworks.tech.calculator'
     defaultConfig {
         applicationId "com.gigaworks.tech.calculator"
-        minSdkVersion 23
+        minSdkVersion 24
         compileSdk 35
         targetSdkVersion 35
         versionCode versionProperties['VERSION_CODE'].toInteger()
@@ -74,7 +74,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.16.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.android.material:material:1.13.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     
     // Edge-to-edge support

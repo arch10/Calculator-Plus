@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.6.1
+
+### Technical Updates
+- **Material Design 3**: Updated Material Design dependency from 1.12.0 to 1.13.1 for Material You support
+- **Android Support**: Updated minimum SDK from 23 to 24 for better Material3 compatibility
+- **Dependencies**: Prepared foundation for Material You theming implementation
+
 ## v2.6.0
 
 ### New Features
