@@ -42,7 +42,7 @@ android {
         compileSdk 35
         targetSdkVersion 35
         versionCode versionProperties['VERSION_CODE'].toInteger()
-        versionName "2.5.1"
+        versionName "2.6.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
