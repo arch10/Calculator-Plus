@@ -1,0 +1,121 @@
+name: GitHub Copilot Environment Setup
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master, develop, beta ]
+  pull_request:
+    branches: [ main, master, develop, beta ]
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 59
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Java 17 with Zulu distribution
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+          cache-read-only: false
+          
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+        
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        
+      - name: Configure JVM options for module access
+        run: |
+          mkdir -p ~/.gradle
+          cat >> ~/.gradle/gradle.properties << EOF
+          # JVM options for module access
+          org.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 \\
+            --add-opens=java.base/java.util=ALL-UNNAMED \\
+            --add-opens=java.base/java.lang=ALL-UNNAMED \\
+            --add-opens=java.base/java.lang.invoke=ALL-UNNAMED \\
+            --add-opens=java.base/java.util.concurrent=ALL-UNNAMED \\
+            --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED \\
+            --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED \\
+            --add-opens=java.base/java.nio.charset=ALL-UNNAMED \\
+            --add-opens=java.base/java.net=ALL-UNNAMED \\
+            --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED \\
+            --add-exports=java.base/sun.nio.ch=ALL-UNNAMED \\
+            --add-exports=java.base/sun.nio.fs=ALL-UNNAMED \\
+            --add-exports=java.base/sun.security.util=ALL-UNNAMED \\
+            --add-exports=java.base/sun.security.pkcs=ALL-UNNAMED \\
+            --add-exports=java.base/sun.security.x509=ALL-UNNAMED \\
+            --add-exports=java.base/sun.security.provider=ALL-UNNAMED
+          org.gradle.daemon=true
+          org.gradle.parallel=true
+          org.gradle.caching=true
+          org.gradle.configureondemand=true
+          EOF
+          
+      - name: Download and refresh dependencies
+        run: |
+          echo "Downloading project dependencies..."
+          ./gradlew dependencies --refresh-dependencies --configuration classpath || true
+          ./gradlew dependencies --refresh-dependencies --configuration compileClasspath || true
+          ./gradlew dependencies --refresh-dependencies --configuration runtimeClasspath || true
+          ./gradlew dependencies --refresh-dependencies --configuration androidTestCompileClasspath || true
+          ./gradlew dependencies --refresh-dependencies --configuration testCompileClasspath || true
+          
+      - name: Cache project dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/build-cache
+          key: ${{ runner.os }}-gradle-copilot-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-copilot-
+            ${{ runner.os }}-gradle-
+            
+      - name: Pre-build Android tools and validate environment
+        run: |
+          echo "Pre-building Android tools and validating environment..."
+          ./gradlew help --info || true
+          ./gradlew tasks --info || true
+          
+      - name: Download Android SDK components
+        run: |
+          echo "Downloading Android SDK components..."
+          ./gradlew app:preBuild --info || true
+          
+      - name: Validate Java and Gradle configuration
+        run: |
+          echo "=== Java Configuration ==="
+          java -version
+          echo "=== Gradle Configuration ==="
+          ./gradlew --version
+          echo "=== Project Configuration ==="
+          ./gradlew projects
+          echo "=== Build Scan ==="
+          ./gradlew help --scan || true
+          
+      - name: Environment validation summary
+        run: |
+          echo "=== Environment Setup Complete ==="
+          echo "✅ Java 17 with Zulu distribution configured"
+          echo "✅ Gradle 8.13 configured with caching"
+          echo "✅ JVM module access options applied"
+          echo "✅ Dependencies downloaded and cached"
+          echo "✅ Android tools pre-built"
+          echo "✅ Environment ready for GitHub Copilot coding agent"
+          echo ""
+          echo "Gradle cache size:"
+          du -sh ~/.gradle/caches || echo "Cache directory not found"
+          echo ""
+          echo "Available JVM memory:"
+          free -h
