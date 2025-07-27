@@ -1,15 +1,22 @@
 # Changelog
 
-### Changelog for v2.6.0
+## v2.6.0
 
-#### New Features:
-- Added advanced calculation history management, allowing users to easily revisit and edit previous calculations.
-- Introduced new themes to personalize the app's appearance.
+### New Features
+- **Calculation History**: Complete history management system - view, clear, and reuse your previous calculations
+- **Theme Customization**: Multiple app themes including system default, light, and dark modes
+- **Accent Colors**: Choose from 6 different accent colors (Blue, Green, Purple, Pink, Red, Grey) to personalize your experience
+- **Smart Calculation**: Auto-complete equations for faster input
+- **Memory Functions**: Store and recall values with memory buttons (MS/MR)
 
-#### Improvements:
-- Enhanced performance for quicker calculations.
-- Improved user interface for a more intuitive experience.
+### Improvements  
+- **Android 14 Support**: Updated target SDK to Android 14 for better compatibility
+- **Themed Icons**: Added support for Android's themed icon system
+- **Enhanced Performance**: Updated core libraries for improved calculation speed
+- **Better Settings**: Organized settings with number separators, precision control, and auto-delete history options
+- **Multi-language Support**: Available in English, German, Spanish, French, Portuguese, and Hindi
 
-#### Bug Fixes:
-- Fixed occasional crashes on startup experienced by some users.
-- Resolved minor issues in the settings menu for smoother navigation.
+### Technical Updates
+- Updated all library dependencies for security and performance
+- Improved error handling for invalid expressions and edge cases
+- Enhanced UI responsiveness across different screen sizes
