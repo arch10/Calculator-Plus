@@ -3,9 +3,11 @@ name: GitHub Copilot Environment Setup
 on:
   workflow_dispatch:
   push:
-    branches: [ main, master, develop, beta ]
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
   pull_request:
-    branches: [ main, master, develop, beta ]
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
 
 jobs:
   copilot-setup-steps:
@@ -60,15 +62,6 @@ jobs:
           org.gradle.caching=true
           org.gradle.configureondemand=true
           EOF
-          
-      - name: Download and refresh dependencies
-        run: |
-          echo "Downloading project dependencies..."
-          ./gradlew dependencies --refresh-dependencies --configuration classpath || true
-          ./gradlew dependencies --refresh-dependencies --configuration compileClasspath || true
-          ./gradlew dependencies --refresh-dependencies --configuration runtimeClasspath || true
-          ./gradlew dependencies --refresh-dependencies --configuration androidTestCompileClasspath || true
-          ./gradlew dependencies --refresh-dependencies --configuration testCompileClasspath || true
           
       - name: Cache project dependencies
         uses: actions/cache@v4
