@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme -->
+    <!-- Base application theme for API 27+ that supports windowLightNavigationBar -->
     <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
@@ -19,9 +19,9 @@
         <item name="border">@color/border</item>
         <item name="textDisable">@color/textDisable</item>
         <item name="numPadPrimary">@color/numPadPrimary</item>
-        <item name="operatorBtnColor">@color/primaryLight</item>
+        <item name="operatorBtnColor">@color/primary</item>
         <item name="clearColor">@color/clear</item>
-        <item name="isLightTheme">false</item>
+        <item name="isLightTheme">true</item>
         <!-- Widget Themes -->
         <item name="materialAlertDialogTheme">
             @style/ThemeOverlay.CalculatorPlus.MaterialAlertDialog
@@ -32,38 +32,8 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">?attr/isLightTheme</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o">?attr/isLightTheme</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
     </style>
-
-    <style name="MaterialGreenTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/primaryGreen</item>
-        <item name="colorPrimaryVariant">@color/primaryGreen</item>
-        <item name="operatorBtnColor">@color/primaryGreenVariant</item>
-    </style>
-
-    <style name="MaterialRedTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/primaryRed</item>
-        <item name="colorPrimaryVariant">@color/primaryRed</item>
-        <item name="operatorBtnColor">@color/primaryRedVariant</item>
-    </style>
-
-    <style name="MaterialPurpleTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/primaryPurple</item>
-        <item name="colorPrimaryVariant">@color/primaryPurple</item>
-        <item name="operatorBtnColor">@color/primaryPurpleVariant</item>
-    </style>
-
-    <style name="MaterialGreyTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/primaryGrey</item>
-        <item name="colorPrimaryVariant">@color/primaryGrey</item>
-        <item name="operatorBtnColor">@color/primaryGreyVariant</item>
-    </style>
-
-    <style name="MaterialPinkTheme" parent="BaseTheme">
-        <item name="colorPrimary">@color/primaryPink</item>
-        <item name="colorPrimaryVariant">@color/primaryPink</item>
-        <item name="operatorBtnColor">@color/primaryPinkVariant</item>
-    </style>
-
 </resources>

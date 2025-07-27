@@ -62,6 +62,9 @@ jobs:
           org.gradle.caching=true
           org.gradle.configureondemand=true
           EOF
+
+      - name: Build with Gradle
+        run: ./gradlew build --info
           
       - name: Cache project dependencies
         uses: actions/cache@v4
