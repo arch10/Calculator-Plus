@@ -43,7 +43,7 @@ android {
         applicationId "com.gigaworks.tech.calculator"
         minSdkVersion 23
         compileSdk 36
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode versionProperties['VERSION_CODE'].toInteger()
         versionName "2.6.0"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
