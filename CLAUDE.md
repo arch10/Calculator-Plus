@@ -198,7 +198,7 @@ Framework: **JUnit 4**. No instrumentation or UI tests exist yet.
 
 ## Known Issues / Things to Watch
 
-1. **`minifyEnabled false`** in release builds — ProGuard/R8 is disabled. Enabling it will require testing that BigMath reflection still works and verifying no classes are stripped.
+1. **R8 minification + resource shrinking are enabled** in release builds (`minifyEnabled true`, `shrinkResources true`). Keep rules for BigMath, custom views, and enums are in `app/proguard-rules.pro`. If adding a new library that uses reflection, add a corresponding keep rule there.
 2. **Commented-out ad-disable feature** in `MainActivity.enableAds()` lines 154–163 — the `allow_disabling_ads` Remote Config key and `DISABLE_ADS` pref key are wired up but the UI toggle is not yet surfaced. Do not remove without also removing `AppPreference.DISABLE_ADS` and `MainViewModel.getDisableAds()`.
 3. **`MainActivity` is 824 lines** — ad management, animation, theme setup, and click handling are all in one class. New features should not add more responsibilities here; extract into helpers or managers instead.
 4. **No Lint baseline** — `./gradlew lint` will report all issues. Do not suppress lint warnings globally; fix them or add targeted `@SuppressLint` annotations.
