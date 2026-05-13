@@ -1,21 +1,33 @@
 # Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# For more details, see http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep source file names and line numbers for readable crash stack traces
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ── BigMath (ch.obermuhlner:big-math) ────────────────────────────────────────
+# The library uses reflection internally for MathContext and BigDecimalMath.
+-keep class ch.obermuhlner.math.big.** { *; }
+-dontwarn ch.obermuhlner.math.big.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ── Custom Views inflated from XML ───────────────────────────────────────────
+-keep class com.gigaworks.tech.calculator.ui.view.** {
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+# ── Enums (used in AppPreference via name()/valueOf()) ───────────────────────
+-keepclassmembers enum com.gigaworks.tech.calculator.** {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# ── Firebase Crashlytics — preserve stack traces ─────────────────────────────
+-keepattributes *Annotation*
+-keep public class * extends java.lang.Exception
+
+# ── TapTargetView ────────────────────────────────────────────────────────────
+-keep class com.getkeepsafe.taptargetview.** { *; }
+
+# ── Google Play Review API ───────────────────────────────────────────────────
+-keep class com.google.android.play.core.review.** { *; }
