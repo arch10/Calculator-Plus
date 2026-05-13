@@ -10,10 +10,10 @@
 
 | Tool | Version |
 |---|---|
-| Gradle | 8.11.1 |
-| Kotlin | 2.1.20 |
-| KSP | 2.1.20-2.0.1 |
-| AGP | 8.11.1 |
+| Gradle | 9.4.1 |
+| Kotlin | 2.3.21 |
+| KSP | 2.3.8 |
+| AGP | 9.2.0 |
 | Java compatibility | VERSION_17 |
 
 ### Key Gradle Commands
