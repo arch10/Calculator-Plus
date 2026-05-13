@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "$raw = [Console]::In.ReadToEnd(); $j = $raw | ConvertFrom-Json; $f = $j.tool_input.file_path; if ($f -match 'build\\.gradle$|AndroidManifest\\.xml$|AppPreference\\.kt$|Constants\\.kt$|version\\.properties$') { Write-Output '{\"systemMessage\":\"CLAUDE.md may need updating \\u2014 check if this change affects architecture, preferences, constants, build config, or the release checklist.\"}' }",
+            "timeout": 10,
+            "statusMessage": "Checking CLAUDE.md relevance..."
+          }
+        ]
+      }
+    ]
+  }
+}
