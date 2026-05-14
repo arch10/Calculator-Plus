@@ -29,6 +29,14 @@ tasks.register('printVersionName') {
 
 android {
 
+    // Firebase Perf plugin instruments LayoutInflater.inflate() at build time for screen
+    // rendering traces. On AGP 9.x this instrumentation corrupts the themed context passed
+    // to MaterialToolbar's constructor, causing an InflateException in release builds only.
+    // Performance data is still collected at runtime; only the bytecode transform is disabled.
+    firebasePerformance {
+        instrumentationEnabled false
+    }
+
     def versionProperties = new Properties()
     if (versionPropertiesFile.exists()) {
         versionProperties.load(new FileInputStream(versionPropertiesFile))
