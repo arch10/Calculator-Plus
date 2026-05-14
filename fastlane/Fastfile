@@ -1,0 +1,121 @@
+require "base64"
+require "tmpdir"
+
+default_platform(:android)
+
+# ── Version helpers ───────────────────────────────────────────────────────────
+
+VERSION_PROPS = "version.properties"
+APP_GRADLE    = "app/build.gradle"
+
+def read_version_code
+  File.read(VERSION_PROPS).match(/VERSION_CODE=(\d+)/)[1].to_i
+end
+
+def write_version_code(code)
+  content = File.read(VERSION_PROPS)
+  File.write(VERSION_PROPS, content.gsub(/VERSION_CODE=\d+/, "VERSION_CODE=#{code}"))
+end
+
+def read_version_name
+  File.read(APP_GRADLE).match(/versionName\s+"([^"]+)"/)[1]
+end
+
+def write_version_name(name)
+  content = File.read(APP_GRADLE)
+  File.write(APP_GRADLE, content.gsub(/versionName\s+"[^"]+"/, "versionName \"#{name}\""))
+end
+
+def bump_patch(version)
+  parts = version.split(".")
+  parts[2] = (parts[2].to_i + 1).to_s
+  parts.join(".")
+end
+
+# ── Lanes ─────────────────────────────────────────────────────────────────────
+
+platform :android do
+
+  desc "Bump patch versionName and versionCode, then commit and push"
+  lane :bump do
+    new_code = read_version_code + 1
+    new_name = bump_patch(read_version_name)
+
+    write_version_code(new_code)
+    write_version_name(new_name)
+
+    git_commit(
+      path: [VERSION_PROPS, APP_GRADLE],
+      message: "ci: bump version to #{new_name} (#{new_code})"
+    )
+    push_to_git_remote
+  end
+
+  desc "Build debug APK and create a GitHub pre-release"
+  lane :prerelease do
+    gradle(task: "assemble", build_type: "Debug")
+
+    version_name = read_version_name
+    run_number   = ENV["GITHUB_RUN_NUMBER"] || read_version_code.to_s
+    tag          = "v#{version_name}-rc#{run_number}"
+
+    set_github_release(
+      repository_name: ENV["GITHUB_REPOSITORY"],
+      api_token:       ENV["GITHUB_TOKEN"],
+      name:            "Calculator Plus #{tag}",
+      tag_name:        tag,
+      description:     File.read("docs/whatsnew/whatsnew-en-GB"),
+      is_prerelease:   true,
+      upload_assets:   Dir["app/build/outputs/apk/debug/*.apk"]
+    )
+  end
+
+  desc "Build signed release AAB, upload to Play Store beta, and create GitHub release"
+  lane :release do
+    keystore_path = File.join(Dir.tmpdir, "release.jks")
+    File.binwrite(keystore_path, Base64.decode64(ENV["SIGNING_KEY"]))
+
+    begin
+      gradle(
+        task:       "bundle",
+        build_type: "Release",
+        properties: {
+          "android.injected.signing.store.file"     => keystore_path,
+          "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
+          "android.injected.signing.key.alias"      => ENV["ALIAS"],
+          "android.injected.signing.key.password"   => ENV["KEY_PASSWORD"]
+        }
+      )
+
+      upload_to_play_store(
+        track:                  "beta",
+        aab:                    "app/build/outputs/bundle/release/app-release.aab",
+        json_key_data:          ENV["SERVICE_ACCOUNT_JSON"],
+        release_status:         "completed",
+        in_app_update_priority: 3,
+        skip_upload_apk:        true,
+        skip_upload_metadata:   true,
+        skip_upload_images:     true,
+        skip_upload_screenshots: true,
+        release_description:    File.read("docs/whatsnew/whatsnew-en-GB")
+      )
+
+      # Build debug APK for GitHub Release attachment
+      gradle(task: "assemble", build_type: "Debug")
+
+      version_name = read_version_name
+      set_github_release(
+        repository_name: ENV["GITHUB_REPOSITORY"],
+        api_token:       ENV["GITHUB_TOKEN"],
+        name:            "Calculator Plus v#{version_name}",
+        tag_name:        "v#{version_name}",
+        description:     File.read("docs/whatsnew/whatsnew-en-GB"),
+        is_prerelease:   false,
+        upload_assets:   Dir["app/build/outputs/apk/debug/*.apk"]
+      )
+    ensure
+      File.delete(keystore_path) if File.exist?(keystore_path)
+    end
+  end
+
+end
