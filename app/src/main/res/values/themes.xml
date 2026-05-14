@@ -1,12 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme -->
-    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primaryDark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Color Themes -->
         <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
         <item name="colorError">@color/error</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnSurface">@color/textPrimary</item>
@@ -71,7 +72,7 @@
     </style>
 
     <!-- Widget Styles -->
-    <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.Material3.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="backgroundTint">?attr/operatorBtnColor</item>
@@ -82,7 +83,7 @@
         <item name="rippleColor">@color/button_ripple_primary</item>
     </style>
 
-    <style name="Widget.CalculatorPlus.NumPad.Primary" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.CalculatorPlus.NumPad.Primary" parent="Widget.Material3.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="android:textColor">?attr/textPrimary</item>
         <item name="backgroundTint">?attr/numPadPrimary</item>
@@ -99,14 +100,14 @@
         <item name="android:background">@drawable/button_ripple</item>
     </style>
 
-    <style name="ThemeOverlay.CalculatorPlus.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="ThemeOverlay.CalculatorPlus.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorPrimary">?attr/operatorBtnColor</item>
         <item name="colorSecondary">?attr/operatorBtnColor</item>
         <item name="colorSurface">@color/background</item>
         <item name="colorOnSurface">@color/textPrimary</item>
     </style>
 
-    <style name="Widget.CalculatorPlus.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+    <style name="Widget.CalculatorPlus.Switch" parent="Widget.Material3.CompoundButton.Switch">
         <item name="materialThemeOverlay">@style/ThemeOverlay.CalculatorPlus.Switch</item>
     </style>
 
