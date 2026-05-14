@@ -31,3 +31,11 @@
 
 # ── Google Play Review API ───────────────────────────────────────────────────
 -keep class com.google.android.play.core.review.** { *; }
+
+# ── Menu XML onClick handlers (called via reflection by SupportMenuInflater) ──
+-keepclassmembers class com.gigaworks.tech.calculator.ui.main.MainActivity {
+    public void changeAngleType(android.view.MenuItem);
+}
+
+# ── Navigation fragments (instantiated by class name from about_nav_graph.xml) ─
+-keep class com.gigaworks.tech.calculator.ui.about.fragment.** { <init>(); }
