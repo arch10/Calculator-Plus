@@ -1,3 +1,5 @@
+opt_out_usage
+
 require "base64"
 require "tmpdir"
 
@@ -5,8 +7,9 @@ default_platform(:android)
 
 # ── Version helpers ───────────────────────────────────────────────────────────
 
-VERSION_PROPS = "version.properties"
-APP_GRADLE    = "app/build.gradle"
+ROOT          = File.expand_path("..", __dir__)
+VERSION_PROPS = File.join(ROOT, "version.properties")
+APP_GRADLE    = File.join(ROOT, "app/build.gradle")
 
 def read_version_code
   File.read(VERSION_PROPS).match(/VERSION_CODE=(\d+)/)[1].to_i
