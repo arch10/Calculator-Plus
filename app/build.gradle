@@ -45,7 +45,7 @@ android {
         compileSdk 36
         targetSdkVersion 36
         versionCode versionProperties['VERSION_CODE'].toInteger()
-        versionName "2.6.3"
+        versionName "2.6.4"
         buildConfigField "java.util.Date", "buildTime", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
