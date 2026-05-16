@@ -125,7 +125,7 @@
     </style>
 
     <style name="ThemeOverlay.CalculatorPlus.Switch" parent="">
-        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorOnSurface">?attr/colorOnSurface</item>
         <item name="colorSecondary">?attr/operatorBtnColor</item>
     </style>
 

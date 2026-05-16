@@ -4,22 +4,24 @@
     <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryDark</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Color Themes -->
+        <!-- Color Themes — M3 semantic tokens with static-accent values as defaults -->
         <item name="colorSurface">@color/surface</item>
         <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorOnSurfaceVariant">@color/textSecondary</item>
+        <item name="colorOutlineVariant">@color/border</item>
         <item name="colorError">@color/error</item>
         <item name="android:colorBackground">@color/background</item>
-        <item name="colorOnSurface">@color/textPrimary</item>
         <item name="colorOnError">@color/textAccent</item>
-        <!-- Custom Color Themes -->
-        <item name="textPrimary">@color/textPrimary</item>
-        <item name="textSecondary">@color/textSecondary</item>
+        <!-- Custom attrs — partially re-pointed (operatorBtnColor kept for dark-mode contrast) -->
+        <item name="textPrimary">?attr/colorOnSurface</item>
+        <item name="textSecondary">?attr/colorOnSurfaceVariant</item>
         <item name="textAccent">@color/textAccent</item>
-        <item name="border">@color/border</item>
+        <item name="border">?attr/colorOutlineVariant</item>
         <item name="textDisable">@color/textDisable</item>
-        <item name="numPadPrimary">@color/numPadPrimary</item>
+        <item name="numPadPrimary">?attr/colorSurfaceContainerHigh</item>
         <item name="operatorBtnColor">@color/primaryLight</item>
         <item name="clearColor">@color/clear</item>
         <item name="isLightTheme">false</item>
