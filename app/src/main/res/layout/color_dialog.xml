@@ -120,4 +120,25 @@
             app:tint="@color/white" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/color_dynamic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/space_xl"
+        android:background="@drawable/color_dynamic_gradient"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/color_pink">
+
+        <ImageView
+            android:id="@+id/dynamic_check"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/check"
+            android:visibility="invisible"
+            app:tint="@color/white" />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

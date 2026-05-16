@@ -41,7 +41,6 @@ import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
 import com.gigaworks.tech.calculator.util.capitalize
-import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.visible
@@ -79,10 +78,6 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 //    private var lastAcceleration = SensorManager.GRAVITY_EARTH
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val appPreference = AppPreference(this)
-        val accentTheme =
-            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
-        setTheme(getAccentTheme(accentTheme))
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(binding.toolbar)
@@ -245,6 +240,12 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         }
         colorDialog.colorGrey.setOnClickListener {
             checkAccentTheme(AccentTheme.GREY, colorDialog)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            colorDialog.colorDynamic.visible(true)
+            colorDialog.colorDynamic.setOnClickListener {
+                checkAccentTheme(AccentTheme.DYNAMIC, colorDialog)
+            }
         }
         binding.colorCard.setOnClickListener {
             if (colorDialog.root.parent != null) {
@@ -461,30 +462,15 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         colorDialog.pinkCheck.visible(false)
         colorDialog.redCheck.visible(false)
         colorDialog.greyCheck.visible(false)
+        colorDialog.dynamicCheck.visible(false)
         when (accentTheme) {
-            AccentTheme.BLUE -> {
-                colorDialog.defaultCheck.visible(true)
-            }
-
-            AccentTheme.GREEN -> {
-                colorDialog.greenCheck.visible(true)
-            }
-
-            AccentTheme.PURPLE -> {
-                colorDialog.purpleCheck.visible(true)
-            }
-
-            AccentTheme.PINK -> {
-                colorDialog.pinkCheck.visible(true)
-            }
-
-            AccentTheme.RED -> {
-                colorDialog.redCheck.visible(true)
-            }
-
-            AccentTheme.GREY -> {
-                colorDialog.greyCheck.visible(true)
-            }
+            AccentTheme.BLUE -> colorDialog.defaultCheck.visible(true)
+            AccentTheme.GREEN -> colorDialog.greenCheck.visible(true)
+            AccentTheme.PURPLE -> colorDialog.purpleCheck.visible(true)
+            AccentTheme.PINK -> colorDialog.pinkCheck.visible(true)
+            AccentTheme.RED -> colorDialog.redCheck.visible(true)
+            AccentTheme.GREY -> colorDialog.greyCheck.visible(true)
+            AccentTheme.DYNAMIC -> colorDialog.dynamicCheck.visible(true)
         }
         viewModel.selectedAccentTheme = accentTheme
     }

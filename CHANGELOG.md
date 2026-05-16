@@ -1,5 +1,28 @@
 # Changelog
 
+## v3.0.0
+
+### Material You Design Overhaul
+- Migrated all `TextAppearance` styles from `TextAppearance.MaterialComponents.*` to `TextAppearance.Material3.*` parents
+- Re-pointed all custom theme attrs (`operatorBtnColor`, `numPadPrimary`, `textPrimary`, etc.) to M3 semantic tokens so Dynamic Colors works automatically
+- Added `MaterialDynamicTheme` style — activates `DynamicColors.applyToActivityIfAvailable()` on Android 12+ to colour the UI from the device wallpaper
+- Added `DYNAMIC` to `AccentTheme` enum; Dynamic swatch appears in the colour picker only on API 31+ devices
+- Animated splash screen via `Theme.SplashScreen` (`installSplashScreen()` called in `MainActivity`)
+- Centralised accent theme application in `BaseActivity` — `HistoryActivity` and `AboutActivity` now correctly inherit the selected accent theme
+
+### Numpad & Buttons
+- `button_corner_radius` raised `0dp` → `16dp` — all buttons now have M3 medium-shape rounded corners
+- Added `3dp` margins to each button and `4dp` outer padding to numpad container — creates visible gaps between buttons
+- Operator buttons (÷, ×, +, −) switched to `NumPad.Secondary` style — accent-colour fill with white text, clearly distinct from number keys
+- Removed flat border dividers between number and operator columns
+
+### Settings Screen
+- Each settings section (General, User Interface, App) wrapped in a `MaterialCardView` with `12dp` corner radius and `colorSurfaceContainerHigh` background
+- Internal row dividers use `?attr/colorOutlineVariant`
+
+### About Screen
+- All `MaterialCardView`s bumped from `cardCornerRadius="0dp"` to `12dp`
+
 ## v2.7.0
 
 ### Build & Toolchain

@@ -1,6 +1,5 @@
 package com.gigaworks.tech.calculator.ui.base
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,26 +10,37 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewbinding.ViewBinding
+import com.gigaworks.tech.calculator.util.AccentTheme
+import com.gigaworks.tech.calculator.util.AppPreference
+import com.gigaworks.tech.calculator.util.getAccentTheme
+import com.google.android.material.color.DynamicColors
+import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.Firebase
 import javax.annotation.Nullable
 
 abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
     private var _binding: B? = null
     protected lateinit var binding: B
-        private set // This is to prevent the user from setting the binding
+        private set
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // setTheme() must run before super.onCreate() — theme is applied before setContentView().
+        // DynamicColors must be applied after setTheme() but before super.onCreate();
+        // anywhere else and the first frame draws with the wrong palette.
+        val appPreference = AppPreference(this)
+        val accentTheme = appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
+        setTheme(getAccentTheme(accentTheme))
+        if (accentTheme == AccentTheme.DYNAMIC.name && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DynamicColors.applyToActivityIfAvailable(this)
+        }
+
         super.onCreate(savedInstanceState)
         binding = getViewBinding(layoutInflater)
-        
-        // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         setContentView(binding.root)
         firebaseAnalytics = Firebase.analytics
     }

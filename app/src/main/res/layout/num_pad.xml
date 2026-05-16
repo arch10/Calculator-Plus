@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="?attr/colorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/firstRow"
@@ -62,15 +63,6 @@
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/delete_button" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/border"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/closeBracket"
-            app:layout_constraintEnd_toStartOf="@id/delete"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -120,25 +112,15 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/divide"
-            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            style="@style/Widget.CalculatorPlus.NumPad.Operator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u00F7"
-            android:textColor="?attr/operatorBtnColor"
+            android:text="÷"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/nine"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/border"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/nine"
-            app:layout_constraintEnd_toStartOf="@id/divide"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -189,25 +171,15 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/multiply"
-            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            style="@style/Widget.CalculatorPlus.NumPad.Operator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u00D7"
-            android:textColor="?attr/operatorBtnColor"
+            android:text="×"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/six"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/border"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/six"
-            app:layout_constraintEnd_toStartOf="@id/multiply"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -258,25 +230,15 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/plus"
-            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            style="@style/Widget.CalculatorPlus.NumPad.Operator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u002B"
-            android:textColor="?attr/operatorBtnColor"
+            android:text="+"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/three"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/border"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/three"
-            app:layout_constraintEnd_toStartOf="@id/plus"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -315,7 +277,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/equal"
-            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            style="@style/Widget.CalculatorPlus.NumPad.Operator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="="
@@ -327,26 +289,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/minus"
-            style="@style/Widget.CalculatorPlus.NumPad.Primary"
+            style="@style/Widget.CalculatorPlus.NumPad.Operator"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u2212"
-            android:textColor="?attr/operatorBtnColor"
             android:stateListAnimator="@null"
+            android:text="−"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/equal"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/border"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/equal"
-            app:layout_constraintEnd_toStartOf="@id/minus"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,5 +6,6 @@ enum class AccentTheme {
     PURPLE,
     PINK,
     RED,
-    GREY
+    GREY,
+    DYNAMIC
 }
