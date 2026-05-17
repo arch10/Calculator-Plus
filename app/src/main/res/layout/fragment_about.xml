@@ -86,18 +86,6 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <ImageView
-                        android:id="@+id/whatsNewIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:contentDescription="@string/whats_new"
-                        android:src="@drawable/history"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="?attr/textPrimary" />
-
                     <TextView
                         android:id="@+id/whatsNew"
                         android:layout_width="0dp"
@@ -110,7 +98,7 @@
                         android:textColor="?attr/textPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/whatsNewIcon"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -142,18 +130,6 @@
                         android:clickable="true"
                         android:focusable="true">
 
-                        <ImageView
-                            android:id="@+id/betaIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="@dimen/space_l"
-                            android:contentDescription="@string/join_beta"
-                            android:src="@drawable/star"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/textPrimary" />
-
                         <TextView
                             android:id="@+id/beta"
                             android:layout_width="0dp"
@@ -166,7 +142,7 @@
                             android:textColor="?attr/textPrimary"
                             app:layout_constraintBottom_toTopOf="@id/betaSubtitle"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/betaIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
@@ -182,7 +158,7 @@
                             android:textColor="?attr/textDisable"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/betaIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/beta" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -203,18 +179,6 @@
                         android:clickable="true"
                         android:focusable="true">
 
-                        <ImageView
-                            android:id="@+id/openSourceIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="@dimen/space_l"
-                            android:contentDescription="@string/open_source"
-                            android:src="@drawable/share"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/textPrimary" />
-
                         <TextView
                             android:id="@+id/openSource"
                             android:layout_width="0dp"
@@ -227,7 +191,7 @@
                             android:textColor="?attr/textPrimary"
                             app:layout_constraintBottom_toTopOf="@id/openSourceSubtitle"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/openSourceIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
@@ -243,7 +207,7 @@
                             android:textColor="?attr/textDisable"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/openSourceIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/openSource" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -264,18 +228,6 @@
                         android:clickable="true"
                         android:focusable="true">
 
-                        <ImageView
-                            android:id="@+id/privacyIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="@dimen/space_l"
-                            android:contentDescription="@string/privacy_policy"
-                            android:src="@drawable/alert_circle"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/textPrimary" />
-
                         <TextView
                             android:id="@+id/privacy"
                             android:layout_width="0dp"
@@ -288,7 +240,7 @@
                             android:textColor="?attr/textPrimary"
                             app:layout_constraintBottom_toTopOf="@id/privacySubtitle"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/privacyIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
@@ -304,7 +256,7 @@
                             android:textColor="?attr/textDisable"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/privacyIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/privacy" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -325,18 +277,6 @@
                         android:clickable="true"
                         android:focusable="true">
 
-                        <ImageView
-                            android:id="@+id/termsIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="@dimen/space_l"
-                            android:contentDescription="@string/terms_of_use"
-                            android:src="@drawable/check"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/textPrimary" />
-
                         <TextView
                             android:id="@+id/terms"
                             android:layout_width="0dp"
@@ -349,7 +289,7 @@
                             android:textColor="?attr/textPrimary"
                             app:layout_constraintBottom_toTopOf="@id/termsSubtitle"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/termsIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
@@ -365,7 +305,7 @@
                             android:textColor="?attr/textDisable"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/termsIcon"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/terms" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
