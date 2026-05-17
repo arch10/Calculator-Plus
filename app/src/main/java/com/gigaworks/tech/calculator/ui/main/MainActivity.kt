@@ -83,6 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var isCompactMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -382,14 +383,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             val result = getResult()
             if (expression.isNotEmpty()) {
                 if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
-                    val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
-                    getResultEditText().setTextColor(getResultTextColor(true))
-                    val errorStringId = viewModel.error.value ?: R.string.invalid
-                    if (errorStringId == -1) {
-                        setResult("")
+                    if (isCompactMode) {
+                        val errorStringId = viewModel.error.value ?: R.string.invalid
+                        if (errorStringId != -1) {
+                            val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+                            getExpressionEditText().startAnimation(shake)
+                            Toast.makeText(this, getString(errorStringId), Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        setResult(getString(errorStringId))
-                        getResultEditText().startAnimation(shake)
+                        val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+                        getResultEditText().setTextColor(getResultTextColor(true))
+                        val errorStringId = viewModel.error.value ?: R.string.invalid
+                        if (errorStringId == -1) {
+                            setResult("")
+                        } else {
+                            setResult(getString(errorStringId))
+                            getResultEditText().startAnimation(shake)
+                        }
                     }
                 } else {
                     val balancedExpression = viewModel.getCalculatedExpression()
@@ -400,7 +410,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     )
                     viewModel.insertHistory(history)
                     viewModel.isPrevResult = true
-                    setExpressionAfterEqual(result)
+                    if (isCompactMode) {
+                        setExpression(result)
+                        setResult("")
+                    } else {
+                        setExpressionAfterEqual(result)
+                    }
                     logEvent(EVALUATE)
                 }
             }
@@ -479,6 +494,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
      * Setup the views with saved or initial values
      * */
     private fun setupView() {
+        isCompactMode = getResultEditText().visibility == View.GONE
         viewModel.updateLaunchStatistics()
         binding.resultPad.expression.setOnTextSizeChangeListener(textSizeChangeListener)
         binding.resultPad.expression.addTextChangedListener(expressionChangeListener)

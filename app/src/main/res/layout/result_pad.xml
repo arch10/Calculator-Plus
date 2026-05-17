@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/result"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="200+50058" />
 
     <com.gigaworks.tech.calculator.ui.view.CalculatorEditText
@@ -41,6 +41,7 @@
         android:singleLine="true"
         android:cursorVisible="false"
         android:inputType="textNoSuggestions"
+        android:visibility="gone"
         android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline6"
         android:textColor="?attr/textDisable"
         custom:maxTextSize="25sp"
