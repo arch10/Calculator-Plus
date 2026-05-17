@@ -19,6 +19,7 @@ import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.AppTheme
 import com.gigaworks.tech.calculator.util.CalculationException
 import com.gigaworks.tech.calculator.util.CalculationMessage
+import com.gigaworks.tech.calculator.util.HapticFeedback
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -169,6 +170,18 @@ class MainViewModel @Inject constructor(
 
     fun getDisableAds(): Boolean {
         return appPreference.getBooleanPreference(AppPreference.DISABLE_ADS, false)
+    }
+
+    fun getHapticFeedback(): HapticFeedback {
+        val value = appPreference.getStringPreference(
+            AppPreference.HAPTIC_FEEDBACK,
+            HapticFeedback.FOLLOW_SYSTEM.name
+        )
+        return try {
+            HapticFeedback.valueOf(value)
+        } catch (e: IllegalArgumentException) {
+            HapticFeedback.FOLLOW_SYSTEM
+        }
     }
 
 }

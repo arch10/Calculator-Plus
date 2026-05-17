@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?attr/textPrimary">
+    android:color="@color/button_ripple_secondary">
     <item android:id="@android:id/mask">
         <color android:color="#73ffffff" />
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/numPadPrimary" />
+            <solid android:color="?attr/colorSurfaceContainerHigh" />
         </shape>
     </item>
 </ripple>

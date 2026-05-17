@@ -76,7 +76,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:elevation="4dp"
-        android:background="?attr/clearColor"
+        android:background="?attr/colorPrimaryContainer"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"

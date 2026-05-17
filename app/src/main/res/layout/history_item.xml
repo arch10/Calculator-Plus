@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         tools:text="Yesterday"
         android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
-        android:textColor="?attr/operatorBtnColor"
+        android:textColor="?attr/colorPrimary"
         android:gravity="start"
         android:layout_marginStart="@dimen/space_xl"
         android:layout_marginEnd="@dimen/space_xl" />

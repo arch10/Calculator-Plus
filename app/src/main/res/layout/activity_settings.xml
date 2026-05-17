@@ -22,8 +22,6 @@
             app:title="@string/title_activity_settings" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/profileView"
         android:layout_width="match_parent"
@@ -37,312 +35,435 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/space_xl">
 
+            <!-- ── General ─────────────────────────────────── -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_xxl"
                 android:layout_marginEnd="@dimen/space_l"
+                android:layout_marginBottom="@dimen/space_m"
                 android:text="@string/general"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Overline"
-                android:textColor="?attr/operatorBtnColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="?attr/colorPrimary" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/smartCalculationCard"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginEnd="@dimen/space_l"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                app:strokeWidth="0dp">
 
-                <TextView
-                    android:id="@+id/smartCalculation"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_m"
-                    android:gravity="bottom"
-                    android:text="@string/smart_calculation"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/smartCalculationSubtitle"
-                    app:layout_constraintEnd_toStartOf="@+id/smartCalculationSwitch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/smartCalculationSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_m"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/smart_calculation_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/smartCalculationSwitch"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/smartCalculation" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/smartCalculationCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/smartCalculationSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:checked="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/smartCalculation"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="bottom"
+                            android:text="@string/smart_calculation"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/smartCalculationSubtitle"
+                            app:layout_constraintEnd_toStartOf="@+id/smartCalculationSwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/smartCalculationSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/smart_calculation_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/smartCalculationSwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/smartCalculation" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/numberSeparatorCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/smartCalculationSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:checked="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/numberSeparator"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/number_separator"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/numberSeparatorSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/numberSeparatorSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/numberSeparator"
-                    tools:text="International" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/numberSeparatorCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/precisionCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <TextView
+                            android:id="@+id/numberSeparator"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/number_separator"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/numberSeparatorSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/precision"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_m"
-                    android:gravity="bottom"
-                    android:text="@string/answer_precision"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/precisionSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/numberSeparatorSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/numberSeparator"
+                            tools:text="International" />
 
-                <TextView
-                    android:id="@+id/precisionSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/precision"
-                    tools:text="Precision: 6" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/deleteHistoryCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/precisionCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <TextView
-                    android:id="@+id/deleteHistory"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_m"
-                    android:gravity="bottom"
-                    android:text="@string/delete_history"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/deleteHistorySubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/precision"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="bottom"
+                            android:text="@string/answer_precision"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/precisionSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/deleteHistorySubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/never"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/deleteHistory" />
+                        <TextView
+                            android:id="@+id/precisionSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/precision"
+                            tools:text="Precision: 6" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deleteHistoryCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/deleteHistory"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="bottom"
+                            android:text="@string/delete_history"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/deleteHistorySubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/deleteHistorySubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/never"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/deleteHistory" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── User Interface ──────────────────────────── -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_xxl"
                 android:layout_marginEnd="@dimen/space_l"
+                android:layout_marginBottom="@dimen/space_m"
                 android:text="@string/user_interface"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Overline"
-                android:textColor="?attr/operatorBtnColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="?attr/colorPrimary" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/themeCard"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginEnd="@dimen/space_l"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                app:strokeWidth="0dp">
 
-                <ImageView
-                    android:id="@+id/themeIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/theme"
-                    android:src="@drawable/brightness"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/theme"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/theme"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/themeSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/themeIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/themeCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <TextView
-                    android:id="@+id/themeSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/system_default"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/themeIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/theme" />
+                        <ImageView
+                            android:id="@+id/themeIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/theme"
+                            android:src="@drawable/brightness"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/theme"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/theme"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/themeSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/themeIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/colorCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <TextView
+                            android:id="@+id/themeSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/system_default"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/themeIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/theme" />
 
-                <ImageView
-                    android:id="@+id/colorIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/accent_color"
-                    android:src="@drawable/palette"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/color"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/accent_color"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/colorSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/colorIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-                <TextView
-                    android:id="@+id/colorSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/colorIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/color"
-                    tools:text="Blue" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/colorCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <ImageView
+                            android:id="@+id/colorIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/accent_color"
+                            android:src="@drawable/palette"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
+                        <TextView
+                            android:id="@+id/color"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/accent_color"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/colorSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/colorIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/colorSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/colorIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/color"
+                            tools:text="Blue" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/hapticCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/hapticIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/haptic_feedback"
+                            android:src="@drawable/vibrate"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/hapticFeedback"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/haptic_feedback"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/hapticFeedbackSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/hapticIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/hapticFeedbackSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/hapticIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/hapticFeedback"
+                            tools:text="Follow system" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── Hidden Settings ─────────────────────────── -->
             <LinearLayout
                 android:id="@+id/hiddenSettings"
                 android:layout_width="match_parent"
@@ -357,395 +478,457 @@
                     android:layout_marginStart="@dimen/space_l"
                     android:layout_marginTop="@dimen/space_xxl"
                     android:layout_marginEnd="@dimen/space_l"
+                    android:layout_marginBottom="@dimen/space_m"
                     android:text="@string/hidden_settings"
                     android:textAppearance="@style/TextAppearance.CalculatorPlus.Overline"
-                    android:textColor="?attr/operatorBtnColor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="?attr/colorPrimary" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/disableAdsCard"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:layout_marginEnd="@dimen/space_l"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                    app:strokeWidth="0dp">
 
-                    <TextView
-                        android:id="@+id/disableAds"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="bottom"
-                        android:text="@string/hidden_disable_ads"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                        android:textColor="?attr/textPrimary"
-                        app:layout_constraintBottom_toTopOf="@id/disableAdsSubtitle"
-                        app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/disableAdsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
-                        android:id="@+id/disableAdsSubtitle"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="top"
-                        android:paddingTop="2dp"
-                        android:text="@string/hidden_disable_ads_desc"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                        android:textColor="?attr/textDisable"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/disableAds" />
+                        <TextView
+                            android:id="@+id/disableAds"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="bottom"
+                            android:text="@string/hidden_disable_ads"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/disableAdsSubtitle"
+                            app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/disableAdsSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_l"
-                        android:checked="false"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/disableAdsSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_m"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/hidden_disable_ads_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/disableAdsSwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/disableAds" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/disableAdsSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:checked="false"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
+            <!-- ── App ────────────────────────────────────── -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_xxl"
                 android:layout_marginEnd="@dimen/space_l"
+                android:layout_marginBottom="@dimen/space_m"
                 android:text="@string/app"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Overline"
-                android:textColor="?attr/operatorBtnColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textColor="?attr/colorPrimary" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/shareCard"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
+                android:layout_marginEnd="@dimen/space_l"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                app:strokeWidth="0dp">
 
-                <ImageView
-                    android:id="@+id/shareIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/share"
-                    android:src="@drawable/share"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/share"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/share"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/shareSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/shareIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/shareCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <TextView
-                    android:id="@+id/shareSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/share_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/shareIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/share" />
+                        <ImageView
+                            android:id="@+id/shareIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/share"
+                            android:src="@drawable/share"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/share"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/share"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/shareSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/shareIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/rateCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <TextView
+                            android:id="@+id/shareSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/share_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/shareIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/share" />
 
-                <ImageView
-                    android:id="@+id/rateIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/rate"
-                    android:src="@drawable/star"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/rate"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/rate"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/rateSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/rateIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-                <TextView
-                    android:id="@+id/rateSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/rate_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/rateIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/rate" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rateCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <ImageView
+                            android:id="@+id/rateIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/rate"
+                            android:src="@drawable/star"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bugCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <TextView
+                            android:id="@+id/rate"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/rate"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/rateSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/rateIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/bugIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/bug"
-                    android:src="@drawable/bug"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                        <TextView
+                            android:id="@+id/rateSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/rate_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/rateIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/rate" />
 
-                <TextView
-                    android:id="@+id/bug"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/bug"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/bugSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/bugIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/bugSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/bug_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/bugIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/bug" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/bugCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/contactCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                        <ImageView
+                            android:id="@+id/bugIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/bug"
+                            android:src="@drawable/bug"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-                <ImageView
-                    android:id="@+id/contactIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/contact"
-                    android:src="@drawable/mail"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                        <TextView
+                            android:id="@+id/bug"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/bug"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/bugSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/bugIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/contact"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/contact"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/contactSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/contactIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/bugSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/bug_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/bugIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/bug" />
 
-                <TextView
-                    android:id="@+id/contactSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/contact_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/contactIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/contact" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/followCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/contactCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <ImageView
-                    android:id="@+id/followIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/follow"
-                    android:src="@drawable/twitter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                        <ImageView
+                            android:id="@+id/contactIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/contact"
+                            android:src="@drawable/mail"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-                <TextView
-                    android:id="@+id/follow"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/follow"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/followSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/followIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/contact"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/contact"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/contactSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/contactIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/followSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:text="@string/follow_desc"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/followIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/follow" />
+                        <TextView
+                            android:id="@+id/contactSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/contact_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/contactIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/contact" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/aboutCard"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-                <ImageView
-                    android:id="@+id/aboutIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:contentDescription="@string/title_activity_about"
-                    android:src="@drawable/alert_circle"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/textPrimary" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/followCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                <TextView
-                    android:id="@+id/about"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="bottom"
-                    android:text="@string/title_activity_about"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                    android:textColor="?attr/textPrimary"
-                    app:layout_constraintBottom_toTopOf="@id/aboutSubtitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/aboutIcon"
-                    app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:id="@+id/followIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/follow"
+                            android:src="@drawable/twitter"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
 
-                <TextView
-                    android:id="@+id/aboutSubtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/space_l"
-                    android:layout_marginEnd="@dimen/space_l"
-                    android:gravity="top"
-                    android:paddingTop="2dp"
-                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
-                    android:textColor="?attr/textDisable"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/aboutIcon"
-                    app:layout_constraintTop_toBottomOf="@+id/about"
-                    tools:text="Version: 2.0.0" />
+                        <TextView
+                            android:id="@+id/follow"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/follow"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/followSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/followIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/followSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/follow_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/followIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/follow" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/aboutCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/aboutIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/title_activity_about"
+                            android:src="@drawable/alert_circle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/about"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/title_activity_about"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/aboutSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/aboutIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/aboutSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/aboutIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/about"
+                            tools:text="Version: 2.0.0" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

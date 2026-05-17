@@ -21,13 +21,12 @@
         android:cursorVisible="false"
         android:inputType="textNoSuggestions"
         android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline2"
-        android:fontFamily="@font/lato"
         custom:maxTextSize="63sp"
         custom:minTextSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/result"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="200+50058" />
 
     <com.gigaworks.tech.calculator.ui.view.CalculatorEditText
@@ -42,8 +41,8 @@
         android:singleLine="true"
         android:cursorVisible="false"
         android:inputType="textNoSuggestions"
+        android:visibility="gone"
         android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline3"
-        android:fontFamily="@font/lato"
         android:textColor="?attr/textDisable"
         custom:maxTextSize="50dp"
         custom:minTextSize="36sp"

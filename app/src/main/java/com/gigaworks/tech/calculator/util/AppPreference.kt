@@ -54,5 +54,6 @@ class AppPreference(context: Context) {
         const val LAUNCH_COUNT = "app_launch_count"
         const val LAST_LAUNCH_DAY = "app_last_launch_day"
         const val DISABLE_ADS = "app_disable_ads"
+        const val HAPTIC_FEEDBACK = "app_haptic_feedback"
     }
 }

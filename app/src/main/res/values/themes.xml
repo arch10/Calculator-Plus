@@ -3,23 +3,25 @@
     <style name="BaseTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryDark</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Color Themes -->
+        <!-- Color Themes — M3 semantic tokens with static-accent values as defaults -->
         <item name="colorSurface">@color/surface</item>
         <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHigh</item>
+        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorOnSurfaceVariant">@color/textSecondary</item>
+        <item name="colorOutlineVariant">@color/border</item>
         <item name="colorError">@color/error</item>
         <item name="android:colorBackground">@color/background</item>
-        <item name="colorOnSurface">@color/textPrimary</item>
-        <item name="colorOnError">@color/textAccent</item>
-        <!-- Custom Color Themes -->
-        <item name="textPrimary">@color/textPrimary</item>
-        <item name="textSecondary">@color/textSecondary</item>
-        <item name="textAccent">@color/textAccent</item>
-        <item name="border">@color/border</item>
+        <item name="colorOnError">?attr/colorOnPrimary</item>
+        <!-- Custom attrs re-pointed to M3 tokens so Dynamic Colors works for free -->
+        <item name="textPrimary">?attr/colorOnSurface</item>
+        <item name="textSecondary">?attr/colorOnSurfaceVariant</item>
+        <item name="textAccent">?attr/colorOnPrimary</item>
+        <item name="border">?attr/colorOutlineVariant</item>
         <item name="textDisable">@color/textDisable</item>
-        <item name="numPadPrimary">@color/numPadPrimary</item>
-        <item name="operatorBtnColor">@color/primary</item>
+        <item name="numPadPrimary">?attr/colorSurfaceContainerHigh</item>
+        <item name="operatorBtnColor">?attr/colorPrimary</item>
         <item name="clearColor">@color/clear</item>
         <item name="isLightTheme">true</item>
         <!-- Widget Themes -->
@@ -38,44 +40,39 @@
 
     <style name="MaterialGreenTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/primaryGreen</item>
-        <item name="colorPrimaryVariant">@color/primaryGreenVariant</item>
-        <item name="operatorBtnColor">@color/primaryGreen</item>
         <item name="clearColor">@color/primaryGreenClear</item>
     </style>
 
     <style name="MaterialRedTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/primaryRed</item>
-        <item name="colorPrimaryVariant">@color/primaryRedVariant</item>
-        <item name="operatorBtnColor">@color/primaryRed</item>
         <item name="clearColor">@color/primaryRedClear</item>
     </style>
 
     <style name="MaterialPurpleTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/primaryPurple</item>
-        <item name="colorPrimaryVariant">@color/primaryPurpleVariant</item>
-        <item name="operatorBtnColor">@color/primaryPurple</item>
         <item name="clearColor">@color/primaryPurpleClear</item>
     </style>
 
     <style name="MaterialGreyTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/primaryGrey</item>
-        <item name="colorPrimaryVariant">@color/primaryGreyVariant</item>
-        <item name="operatorBtnColor">@color/primaryGrey</item>
         <item name="clearColor">@color/primaryGreyClear</item>
     </style>
 
     <style name="MaterialPinkTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/primaryPink</item>
-        <item name="colorPrimaryVariant">@color/primaryPinkVariant</item>
-        <item name="operatorBtnColor">@color/primaryPink</item>
         <item name="clearColor">@color/primaryPinkClear</item>
     </style>
 
+    <!-- Dynamic theme: operatorBtnColor chains through colorPrimary so DynamicColors overlay works -->
+    <style name="MaterialDynamicTheme" parent="BaseTheme" />
+
     <!-- Widget Styles -->
+    <!-- NumPad.Secondary — accent-filled buttons (scientific pad + equals key).
+         Explicit backgroundTint prevents transparent flash during ViewPager drag. -->
     <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.Material3.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="backgroundTint">?attr/operatorBtnColor</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:paddingStart">8dp</item>
@@ -83,31 +80,47 @@
         <item name="android:maxLines">1</item>
         <item name="iconPadding">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="rippleColor">@color/button_ripple_primary</item>
     </style>
 
+    <!-- NumPad.Primary — neutral fill for digit/utility buttons. -->
     <style name="Widget.CalculatorPlus.NumPad.Primary" parent="Widget.Material3.Button">
         <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="android:textColor">?attr/textPrimary</item>
-        <item name="backgroundTint">?attr/numPadPrimary</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="iconPadding">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="rippleColor">@color/button_ripple_secondary</item>
+    </style>
+
+    <!-- NumPad.Operator — TextButton parent gives colorPrimary text via M3's own resolution
+         (same mechanism as backgroundTint on filled buttons, reliable across all devices).
+         backgroundTint tints the shape drawable to give a solid gray fill. -->
+    <style name="Widget.CalculatorPlus.NumPad.Operator" parent="Widget.Material3.Button.TextButton">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
     <style name="Widget.CalculatorPlus.NumPad.Primary.IconOnly" parent="Widget.CalculatorPlus.NumPad.Primary">
-        <item name="android:tint">?attr/operatorBtnColor</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/button_ripple</item>
     </style>
 
     <style name="ThemeOverlay.CalculatorPlus.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorPrimary">?attr/operatorBtnColor</item>
-        <item name="colorSecondary">?attr/operatorBtnColor</item>
-        <item name="colorSurface">@color/background</item>
-        <item name="colorOnSurface">@color/textPrimary</item>
+    </style>
+
+    <!-- Splash screen — postSplashScreenTheme transitions to the user-chosen accent at runtime.
+         Icon uses @color/textPrimary so it reads against the app background in both light (#263238
+         on white) and dark (#FFFFFF on dark) without imposing any particular accent colour. -->
+    <style name="Theme.CalculatorPlus.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_animated</item>
+        <item name="android:windowSplashScreenAnimationDuration">900</item>
+        <item name="postSplashScreenTheme">@style/BaseTheme</item>
     </style>
 
     <style name="Widget.CalculatorPlus.Switch" parent="Widget.Material3.CompoundButton.Switch">
@@ -115,47 +128,72 @@
     </style>
 
     <style name="ThemeOverlay.CalculatorPlus.Switch" parent="">
-        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="colorOnSurface">?attr/colorOnSurface</item>
         <item name="colorSecondary">?attr/operatorBtnColor</item>
     </style>
 
-    <!-- Text Styles -->
-    <style name="TextAppearance.CalculatorPlus.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+    <!-- Text Styles — M3 type scale parents -->
+    <style name="TextAppearance.CalculatorPlus.Headline2" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
 
-    <style name="TextAppearance.CalculatorPlus.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+    <style name="TextAppearance.CalculatorPlus.Headline3" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
 
-    <style name="TextAppearance.CalculatorPlus.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+    <style name="TextAppearance.CalculatorPlus.Headline4" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+    <style name="TextAppearance.CalculatorPlus.Headline5" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="TextAppearance.CalculatorPlus.Headline6" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+    <style name="TextAppearance.CalculatorPlus.Subtitle1" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="TextAppearance.CalculatorPlus.Subtitle2" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Body1" parent="TextAppearance.MaterialComponents.Body1">
+    <style name="TextAppearance.CalculatorPlus.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Body2" parent="TextAppearance.MaterialComponents.Body2">
+    <style name="TextAppearance.CalculatorPlus.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Button" parent="TextAppearance.MaterialComponents.Button">
+    <style name="TextAppearance.CalculatorPlus.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Caption" parent="TextAppearance.MaterialComponents.Caption">
+    <style name="TextAppearance.CalculatorPlus.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
-    <style name="TextAppearance.CalculatorPlus.Overline" parent="TextAppearance.MaterialComponents.Overline">
+    <style name="TextAppearance.CalculatorPlus.NumPad.Digit" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.CalculatorPlus.NumPad.Operator" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.CalculatorPlus.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>

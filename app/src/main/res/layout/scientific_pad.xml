@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +66,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="sin\u207B\u00b9"
+            android:text="sin⁻¹"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/acos"
@@ -77,7 +78,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="cos\u207B\u00b9"
+            android:text="cos⁻¹"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/atan"
@@ -89,7 +90,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="tan\u207B\u00b9"
+            android:text="tan⁻¹"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,7 +148,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u03C0"
+            android:text="π"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -181,7 +182,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u221A"
+            android:text="√"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cubeRoot"
@@ -193,7 +194,7 @@
             style="@style/Widget.CalculatorPlus.NumPad.Secondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="\u221b"
+            android:text="∛"
             android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/power"
@@ -278,7 +279,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="?attr/operatorBtnColor">
+        android:background="?attr/colorPrimary">
 
         <ImageView
             android:id="@+id/arrow"

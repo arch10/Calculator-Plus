@@ -22,6 +22,9 @@ fun getAccentTheme(accentTheme: String): Int {
         AccentTheme.GREY.name -> {
             R.style.MaterialGreyTheme
         }
+        AccentTheme.DYNAMIC.name -> {
+            R.style.MaterialDynamicTheme
+        }
         else -> {
             R.style.BaseTheme
         }

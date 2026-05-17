@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -25,6 +24,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.bundleOf
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.gigaworks.tech.calculator.R
@@ -44,7 +44,6 @@ import com.gigaworks.tech.calculator.ui.settings.SettingsActivity
 import com.gigaworks.tech.calculator.ui.view.CalculatorEditText
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
-import com.gigaworks.tech.calculator.util.AccentTheme
 import com.gigaworks.tech.calculator.util.AngleType
 import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.AppTheme
@@ -60,9 +59,10 @@ import com.gigaworks.tech.calculator.util.EVALUATE
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
-import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.performAppHapticFeedback
+import com.google.android.material.color.MaterialColors
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -83,12 +83,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mCurrentAnimator: Animator? = null
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var isCompactMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val appPreference = AppPreference(this)
-        val accentTheme =
-            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
-        setTheme(getAccentTheme(accentTheme))
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setupActionBar(binding.toolbar)
 
@@ -199,8 +197,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private val buttonClick = View.OnClickListener {
-        it.isHapticFeedbackEnabled = true
-        it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        it.performAppHapticFeedback(viewModel.getHapticFeedback())
         val text = (it as Button).text.toString()
         val expression = removeNumberSeparator(getExpression())
         var newExpression = handleClick(expression, text, viewModel.isPrevResult)
@@ -281,6 +278,52 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             minus.setOnClickListener(buttonClick)
         }
 
+        // Resolve colorPrimary at runtime so it correctly reflects the active accent theme
+        // on all devices/modes — XML inflate-time resolution can diverge on some Android 16 builds.
+        val accentColor = com.google.android.material.color.MaterialColors.getColor(
+            binding.root,
+            com.google.android.material.R.attr.colorPrimary,
+            android.graphics.Color.BLUE
+        )
+        binding.scientificPad.arrowFrame.setBackgroundColor(accentColor)
+        binding.clearView.setBackgroundColor(
+            com.google.android.material.color.MaterialColors.getColor(
+                binding.root,
+                com.google.android.material.R.attr.colorPrimaryContainer,
+                accentColor
+            )
+        )
+        with(binding.numPad) {
+            divide.setTextColor(accentColor)
+            multiply.setTextColor(accentColor)
+            plus.setTextColor(accentColor)
+            minus.setTextColor(accentColor)
+            equal.setTextColor(accentColor)
+
+            val onSurface = com.google.android.material.color.MaterialColors.getColor(
+                binding.root,
+                com.google.android.material.R.attr.colorOnSurface,
+                android.graphics.Color.BLACK
+            )
+            val surfaceHigh = com.google.android.material.color.MaterialColors.getColor(
+                binding.root,
+                com.google.android.material.R.attr.colorSurfaceContainerHigh,
+                android.graphics.Color.LTGRAY
+            )
+            val rippleColor = android.graphics.Color.argb(
+                31,
+                android.graphics.Color.red(onSurface),
+                android.graphics.Color.green(onSurface),
+                android.graphics.Color.blue(onSurface)
+            )
+            delete.background = android.graphics.drawable.RippleDrawable(
+                android.content.res.ColorStateList.valueOf(rippleColor),
+                android.graphics.drawable.ColorDrawable(surfaceHigh),
+                android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE)
+            )
+            delete.imageTintList = android.content.res.ColorStateList.valueOf(accentColor)
+        }
+
         //scientific Pad
         with(binding.scientificPad) {
             //first row
@@ -305,8 +348,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //delete onClick
         binding.numPad.delete.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val expression = removeNumberSeparator(getExpression())
             if (expression.isEmpty()) {
                 return@setOnClickListener
@@ -333,20 +375,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //equal onClick
         binding.numPad.equal.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val expression = removeNumberSeparator(getExpression())
             val result = getResult()
             if (expression.isNotEmpty()) {
                 if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
-                    val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
-                    getResultEditText().setTextColor(getResultTextColor(true))
-                    val errorStringId = viewModel.error.value ?: R.string.invalid
-                    if (errorStringId == -1) {
-                        setResult("")
+                    if (isCompactMode) {
+                        val errorStringId = viewModel.error.value ?: R.string.invalid
+                        if (errorStringId != -1) {
+                            val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+                            getExpressionEditText().startAnimation(shake)
+                            Toast.makeText(this, getString(errorStringId), Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        setResult(getString(errorStringId))
-                        getResultEditText().startAnimation(shake)
+                        val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+                        getResultEditText().setTextColor(getResultTextColor(true))
+                        val errorStringId = viewModel.error.value ?: R.string.invalid
+                        if (errorStringId == -1) {
+                            setResult("")
+                        } else {
+                            setResult(getString(errorStringId))
+                            getResultEditText().startAnimation(shake)
+                        }
                     }
                 } else {
                     val balancedExpression = viewModel.getCalculatedExpression()
@@ -357,7 +407,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     )
                     viewModel.insertHistory(history)
                     viewModel.isPrevResult = true
-                    setExpressionAfterEqual(result)
+                    if (isCompactMode) {
+                        setExpression(result)
+                        setResult("")
+                    } else {
+                        setExpressionAfterEqual(result)
+                    }
                     logEvent(EVALUATE)
                 }
             }
@@ -365,8 +420,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //memory store click
         binding.scientificPad.memoryStore.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val result = removeNumberSeparator(getResult())
             if (result.isNumber()) {
                 Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
@@ -377,8 +431,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //memory restore click
         binding.scientificPad.memoryRestore.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val expression = removeNumberSeparator(getExpression())
             var newExpression = handleConstantClick(expression, memory, viewModel.isPrevResult)
@@ -394,8 +447,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         binding.scientificPad.memoryAdd.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val result = removeNumberSeparator(getResult())
             if (result.isNumber() && memory.isNumber()) {
@@ -406,8 +458,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         binding.scientificPad.memorySub.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val result = removeNumberSeparator(getResult())
             if (result.isNumber() && memory.isNumber()) {
@@ -436,6 +487,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
      * Setup the views with saved or initial values
      * */
     private fun setupView() {
+        isCompactMode = getResultEditText().visibility == View.GONE
         viewModel.updateLaunchStatistics()
         binding.resultPad.expression.setOnTextSizeChangeListener(textSizeChangeListener)
         binding.resultPad.expression.addTextChangedListener(expressionChangeListener)
@@ -528,6 +580,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (binding.calculatorPadViewPager?.currentItem == 1) {
             binding.calculatorPadViewPager?.currentItem = 0
         }
+        val primaryColor = MaterialColors.getColor(this, R.attr.operatorBtnColor, 0)
+        val onPrimaryColor = MaterialColors.getColor(this, R.attr.textAccent, 0)
+        val surfaceColor = MaterialColors.getColor(this, R.attr.numPadPrimary, 0)
+        val onSurfaceColor = MaterialColors.getColor(this, R.attr.textPrimary, 0)
+
         val tapTargetSequence = TapTargetSequence(this)
         val delete = TapTarget
             .forView(
@@ -535,13 +592,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 getString(R.string.delete_button),
                 getString(R.string.delete_button_desc)
             )
-            .outerCircleColor(R.color.primary)
+            .outerCircleColorInt(primaryColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(false)
-            .titleTextColor(R.color.white)
-            .descriptionTextColor(R.color.white)
+            .titleTextColorInt(onPrimaryColor)
+            .descriptionTextColorInt(onPrimaryColor)
             .descriptionTextSize(18)
             .cancelable(true)
         val angle: TapTarget = TapTarget
@@ -551,13 +608,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 getString(R.string.angle_button),
                 getString(R.string.angle_button_desc)
             )
-            .outerCircleColor(R.color.primary)
+            .outerCircleColorInt(primaryColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(true)
-            .titleTextColor(R.color.white)
-            .descriptionTextColor(R.color.white)
+            .titleTextColorInt(onPrimaryColor)
+            .descriptionTextColorInt(onPrimaryColor)
             .descriptionTextSize(18)
             .cancelable(true)
         val options: TapTarget = TapTarget
@@ -566,13 +623,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 getString(R.string.options_menu),
                 getString(R.string.options_menu_desc)
             )
-            .outerCircleColor(R.color.primary)
+            .outerCircleColorInt(primaryColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(true)
-            .titleTextColor(R.color.white)
-            .descriptionTextColor(R.color.white)
+            .titleTextColorInt(onPrimaryColor)
+            .descriptionTextColorInt(onPrimaryColor)
             .descriptionTextSize(18)
             .cancelable(true)
             .id(56)
@@ -583,39 +640,39 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 getString(R.string.share_button),
                 getString(R.string.share_button_desc)
             )
-            .outerCircleColor(R.color.primary)
+            .outerCircleColorInt(primaryColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(true)
-            .titleTextColor(R.color.white)
-            .descriptionTextColor(R.color.white)
+            .titleTextColorInt(onPrimaryColor)
+            .descriptionTextColorInt(onPrimaryColor)
             .descriptionTextSize(18)
             .cancelable(true)
         val ms = TapTarget.forView(
             binding.scientificPad.memoryStore,
             getString(R.string.memory_store), getString(R.string.memory_store_desc)
         )
-            .outerCircleColor(R.color.numPadPrimary)
+            .outerCircleColorInt(surfaceColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(false)
-            .titleTextColor(R.color.textPrimary)
-            .descriptionTextColor(R.color.textPrimary)
+            .titleTextColorInt(onSurfaceColor)
+            .descriptionTextColorInt(onSurfaceColor)
             .descriptionTextSize(18)
             .cancelable(true)
         val mr = TapTarget.forView(
             binding.scientificPad.memoryRestore,
             getString(R.string.memory_restore), getString(R.string.memory_restore_desc)
         )
-            .outerCircleColor(R.color.numPadPrimary)
+            .outerCircleColorInt(surfaceColor)
             .outerCircleAlpha(1f)
-            .targetCircleColor(R.color.white)
+            .targetCircleColorInt(onPrimaryColor)
             .titleTextSize(28)
             .tintTarget(false)
-            .titleTextColor(R.color.textPrimary)
-            .descriptionTextColor(R.color.textPrimary)
+            .titleTextColorInt(onSurfaceColor)
+            .descriptionTextColorInt(onSurfaceColor)
             .descriptionTextSize(18)
             .cancelable(true)
 

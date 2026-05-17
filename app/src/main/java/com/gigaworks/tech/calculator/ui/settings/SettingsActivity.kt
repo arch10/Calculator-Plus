@@ -25,11 +25,13 @@ import com.gigaworks.tech.calculator.util.AccentTheme
 import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.CHANGE_ACCENT_COLOR
 import com.gigaworks.tech.calculator.util.CHANGE_DISABLE_ADS
+import com.gigaworks.tech.calculator.util.CHANGE_HAPTIC_FEEDBACK
 import com.gigaworks.tech.calculator.util.CHANGE_HISTORY_DELETE
 import com.gigaworks.tech.calculator.util.CHANGE_NUMBER_SEPARATOR
 import com.gigaworks.tech.calculator.util.CHANGE_PRECISION
 import com.gigaworks.tech.calculator.util.CHANGE_SMART_CALCULATION
 import com.gigaworks.tech.calculator.util.CHANGE_THEME
+import com.gigaworks.tech.calculator.util.HapticFeedback
 import com.gigaworks.tech.calculator.util.CLICK_ABOUT
 import com.gigaworks.tech.calculator.util.FOLLOW_ME
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
@@ -41,9 +43,9 @@ import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
 import com.gigaworks.tech.calculator.util.capitalize
-import com.gigaworks.tech.calculator.util.getAccentTheme
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.performAppHapticFeedback
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -67,6 +69,10 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         )
     }
 
+    private val hapticItems by lazy {
+        arrayOf("Follow system", "Enabled", "Disabled")
+    }
+
     private val viewModel by viewModels<SettingsViewModel>()
     private var dialog: AlertDialog? = null
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
@@ -79,10 +85,6 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 //    private var lastAcceleration = SensorManager.GRAVITY_EARTH
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val appPreference = AppPreference(this)
-        val accentTheme =
-            appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
-        setTheme(getAccentTheme(accentTheme))
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(binding.toolbar)
@@ -217,6 +219,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         viewModel.disableAds.observe(this) {
             binding.disableAdsSwitch.isChecked = it
         }
+        viewModel.hapticFeedback.observe(this) {
+            binding.hapticFeedbackSubtitle.text = hapticItems[it.ordinal]
+        }
     }
 
     private fun setUpView() {
@@ -245,6 +250,12 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         }
         colorDialog.colorGrey.setOnClickListener {
             checkAccentTheme(AccentTheme.GREY, colorDialog)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            colorDialog.colorDynamic.visible(true)
+            colorDialog.colorDynamic.setOnClickListener {
+                checkAccentTheme(AccentTheme.DYNAMIC, colorDialog)
+            }
         }
         binding.colorCard.setOnClickListener {
             if (colorDialog.root.parent != null) {
@@ -286,6 +297,27 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         val appVersion = "${getString(R.string.version)}: ${BuildConfig.VERSION_NAME}"
         binding.aboutSubtitle.text = appVersion
+
+        binding.hapticCard.setOnClickListener {
+            var selectedHaptic = viewModel.hapticFeedback.value!!
+            dialog = MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.choose_haptic_feedback))
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                    viewModel.setHapticFeedback(selectedHaptic)
+                    logEvent(CHANGE_HAPTIC_FEEDBACK, bundleOf("value" to selectedHaptic.name))
+                    dialog.dismiss()
+                }
+                .setSingleChoiceItems(
+                    hapticItems,
+                    viewModel.hapticFeedback.value!!.ordinal
+                ) { _, which ->
+                    selectedHaptic = HapticFeedback.entries.find { it.ordinal == which }
+                        ?: HapticFeedback.FOLLOW_SYSTEM
+                }
+                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }.show()
+        }
 
         binding.themeCard.setOnClickListener {
             var selectedThemeChoice = viewModel.selectedTheme.value!!.ordinal
@@ -370,6 +402,9 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             val precision = viewModel.getAnswerPrecision()
             val precisionDialogLayout = PrecisionDialogBinding.inflate(layoutInflater, null, false)
             precisionDialogLayout.precisionSlider.value = precision.toFloat()
+            precisionDialogLayout.precisionSlider.addOnChangeListener { slider, _, _ ->
+                slider.performAppHapticFeedback(viewModel.getHapticFeedback())
+            }
             dialog = MaterialAlertDialogBuilder(this)
                 .setView(precisionDialogLayout.root)
                 .setTitle(getString(R.string.set_answer_precision))
@@ -461,30 +496,15 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
         colorDialog.pinkCheck.visible(false)
         colorDialog.redCheck.visible(false)
         colorDialog.greyCheck.visible(false)
+        colorDialog.dynamicCheck.visible(false)
         when (accentTheme) {
-            AccentTheme.BLUE -> {
-                colorDialog.defaultCheck.visible(true)
-            }
-
-            AccentTheme.GREEN -> {
-                colorDialog.greenCheck.visible(true)
-            }
-
-            AccentTheme.PURPLE -> {
-                colorDialog.purpleCheck.visible(true)
-            }
-
-            AccentTheme.PINK -> {
-                colorDialog.pinkCheck.visible(true)
-            }
-
-            AccentTheme.RED -> {
-                colorDialog.redCheck.visible(true)
-            }
-
-            AccentTheme.GREY -> {
-                colorDialog.greyCheck.visible(true)
-            }
+            AccentTheme.BLUE -> colorDialog.defaultCheck.visible(true)
+            AccentTheme.GREEN -> colorDialog.greenCheck.visible(true)
+            AccentTheme.PURPLE -> colorDialog.purpleCheck.visible(true)
+            AccentTheme.PINK -> colorDialog.pinkCheck.visible(true)
+            AccentTheme.RED -> colorDialog.redCheck.visible(true)
+            AccentTheme.GREY -> colorDialog.greyCheck.visible(true)
+            AccentTheme.DYNAMIC -> colorDialog.dynamicCheck.visible(true)
         }
         viewModel.selectedAccentTheme = accentTheme
     }

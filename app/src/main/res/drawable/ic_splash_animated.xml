@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Animated splash icon: white calculator symbols (+, -, ×, =) on a primary-color circle.
+
+    First frame: all symbols at scale 1.0 — looks correct as a static image on pre-API-31 devices
+    (the compat splashscreen library only shows the first frame on Android < 12).
+
+    On API 31+ the system plays the animation: each symbol pulses (1.0 → 1.2 → 1.0) in a
+    staggered cascade, +150 ms apart, giving a lively "calculator booting up" feel.
+
+    Pivot points are at each symbol's visual centre:
+      plus  → (42, 42)   minus  → (66, 42)
+      times → (42, 66)   equals → (66, 66)
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="108dp"
+            android:height="108dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+
+            <!-- Plus sign — top left, pivot (42, 42) -->
+            <group
+                android:name="plus"
+                android:pivotX="42"
+                android:pivotY="42"
+                android:scaleX="1"
+                android:scaleY="1">
+                <!-- horizontal bar -->
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M33,42L33,42A2.25,2.25 0,0 1,35.25 39.75L48.75,39.75A2.25,2.25 0,0 1,51 42L51,42A2.25,2.25 0,0 1,48.75 44.25L35.25,44.25A2.25,2.25 0,0 1,33 42z" />
+                <!-- vertical bar -->
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M42,33L42,33A2.25,2.25 0,0 1,44.25 35.25L44.25,48.75A2.25,2.25 0,0 1,42 51L42,51A2.25,2.25 0,0 1,39.75 48.75L39.75,35.25A2.25,2.25 0,0 1,42 33z" />
+            </group>
+
+            <!-- Minus sign — top right, pivot (66, 42) -->
+            <group
+                android:name="minus"
+                android:pivotX="66"
+                android:pivotY="42"
+                android:scaleX="1"
+                android:scaleY="1">
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M58.5,42L58.5,42A2.25,2.25 0,0 1,60.75 39.75L71.25,39.75A2.25,2.25 0,0 1,73.5 42L73.5,42A2.25,2.25 0,0 1,71.25 44.25L60.75,44.25A2.25,2.25 0,0 1,58.5 42z" />
+            </group>
+
+            <!-- Multiply sign — bottom left, pivot (42, 66) -->
+            <group
+                android:name="multiply"
+                android:pivotX="42"
+                android:pivotY="66"
+                android:scaleX="1"
+                android:scaleY="1">
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M48.36,59.64L48.36,59.64A2.25,2.25 96.83,0 1,48.36 62.82L38.82,72.36A2.25,2.25 94.89,0 1,35.64 72.36L35.64,72.36A2.25,2.25 94.89,0 1,35.64 69.18L45.18,59.64A2.25,2.25 96.83,0 1,48.36 59.64z" />
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M35.64,59.64L35.64,59.64A2.25,2.25 0,0 1,38.82 59.64L48.36,69.18A2.25,2.25 107.48,0 1,48.36 72.36L48.36,72.36A2.25,2.25 107.48,0 1,45.18 72.36L35.64,62.82A2.25,2.25 0,0 1,35.64 59.64z" />
+            </group>
+
+            <!-- Equals sign — bottom right, pivot (66, 66) -->
+            <group
+                android:name="equals"
+                android:pivotX="66"
+                android:pivotY="66"
+                android:scaleX="1"
+                android:scaleY="1">
+                <!-- top bar -->
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M58.5,62.63L58.5,62.63A1.88,1.88 0,0 1,60.38 60.75L71.63,60.75A1.88,1.88 0,0 1,73.5 62.63L73.5,62.63A1.88,1.88 0,0 1,71.63 64.5L60.38,64.5A1.88,1.88 0,0 1,58.5 62.63z" />
+                <!-- bottom bar -->
+                <path
+                    android:fillColor="@color/splashIcon"
+                    android:pathData="M58.5,69.38L58.5,69.38A1.88,1.88 0,0 1,60.38 67.5L71.63,67.5A1.88,1.88 0,0 1,73.5 69.38L73.5,69.38A1.88,1.88 0,0 1,71.63 71.25L60.38,71.25A1.88,1.88 0,0 1,58.5 69.38z" />
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <!-- Plus pulses first (t=0) -->
+    <target android:name="plus">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="0"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="0"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Minus pulses second (t=150ms) -->
+    <target android:name="minus">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="150"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="150"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Multiply pulses third (t=300ms) -->
+    <target android:name="multiply">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="300"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="300"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- Equals pulses last (t=450ms) -->
+    <target android:name="equals">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="450"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:valueFrom="1.0"
+                    android:valueTo="1.25"
+                    android:duration="220"
+                    android:startOffset="450"
+                    android:repeatCount="1"
+                    android:repeatMode="reverse"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator" />
+            </set>
+        </aapt:attr>
+    </target>
+
+</animated-vector>

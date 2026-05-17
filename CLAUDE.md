@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Calculator Plus** is a single-module Android calculator app (package `com.gigaworks.tech.calculator`) supporting both a standard numpad and a scientific pad. Current release is **v2.6.0** (versionCode 66, targetSdk 35, minSdk 23).
+**Calculator Plus** is a single-module Android calculator app (package `com.gigaworks.tech.calculator`) supporting both a standard numpad and a scientific pad. Current release is **v3.0.0** (versionCode 75, targetSdk 36, minSdk 23).
 
 ---
 

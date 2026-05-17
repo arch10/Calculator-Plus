@@ -13,6 +13,7 @@
     <color name="textDisable">#9AA0A6</color>
     <color name="error">#E75E65</color>
     <color name="numPadPrimary">#202124</color>
+    <color name="surfaceContainerHigh">#202124</color>
 
     <!-- Material Green Theme -->
     <color name="primaryGreen">#388E3C</color>
@@ -33,4 +34,7 @@
     <!-- Material Pink Theme -->
     <color name="primaryPink">#C2185B</color>
     <color name="primaryPinkVariant">#EC407A</color>
+
+    <!-- Splash icon color -->
+    <color name="splashIcon">#FFFFFF</color>
 </resources>
