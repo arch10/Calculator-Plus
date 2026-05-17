@@ -2,13 +2,24 @@
 
 ## v3.0.0
 
+### New Features
+- **Haptic feedback**: optional vibration on every button tap; toggled in Settings (`AppPreference.HAPTIC_FEEDBACK`, `HapticFeedback.kt`)
+- **Compact mode**: result display area compresses automatically on small or landscape screens; layout breakpoints defined in `result_pad.xml` for sw360dp, sw400dp, sw480dp
+
 ### Material You Design Overhaul
 - Migrated all `TextAppearance` styles from `TextAppearance.MaterialComponents.*` to `TextAppearance.Material3.*` parents
 - Re-pointed all custom theme attrs (`operatorBtnColor`, `numPadPrimary`, `textPrimary`, etc.) to M3 semantic tokens so Dynamic Colors works automatically
 - Added `MaterialDynamicTheme` style — activates `DynamicColors.applyToActivityIfAvailable()` on Android 12+ to colour the UI from the device wallpaper
 - Added `DYNAMIC` to `AccentTheme` enum; Dynamic swatch appears in the colour picker only on API 31+ devices
-- Animated splash screen via `Theme.SplashScreen` (`installSplashScreen()` called in `MainActivity`)
 - Centralised accent theme application in `BaseActivity` — `HistoryActivity` and `AboutActivity` now correctly inherit the selected accent theme
+- Replaced Open Sans with Google Sans across all `TextAppearance` styles
+
+### Bug Fixes
+- **DynamicColors broken on API 27+ devices**: `values-v27/themes.xml` and `values-night-v27/themes.xml` were not updated during the Material You migration — custom attrs (`textPrimary`, `textSecondary`, `border`, `operatorBtnColor`, etc.) were pointing to static colour resources instead of M3 semantic tokens, so Dynamic Colors had no effect on the vast majority of active devices
+
+### Splash Screen
+- Replaced static mipmap launcher icon with `ic_splash_animated.xml` — an `AnimatedVectorDrawable` containing the four calculator symbols (+, −, ×, =); on API 31+ they cascade-pulse with a 150 ms stagger; the first frame is fully rendered so the compat layer displays correctly on Android 7+
+- Icon uses `@color/splashIcon` (dark in light mode, white in dark mode) against `@color/background` — no forced brand colour that clashes with accent themes
 
 ### Numpad & Buttons
 - `button_corner_radius` raised `0dp` → `16dp` — all buttons now have M3 medium-shape rounded corners
@@ -19,9 +30,11 @@
 ### Settings Screen
 - Each settings section (General, User Interface, App) wrapped in a `MaterialCardView` with `12dp` corner radius and `colorSurfaceContainerHigh` background
 - Internal row dividers use `?attr/colorOutlineVariant`
+- Added Haptic Feedback toggle row with vibrate icon
 
 ### About Screen
-- All `MaterialCardView`s bumped from `cardCornerRadius="0dp"` to `12dp`
+- Items (Join Beta, Open Source, Privacy Policy, Terms of Use) regrouped into a single `MaterialCardView` matching the settings page pattern — 72dp rows with two-line title/subtitle layout (`Body1`/`Body2`) and `colorOutlineVariant` dividers between items
+- All `MaterialCardView` corner radii bumped from `0dp` to `12dp`
 
 ## v2.7.0
 
