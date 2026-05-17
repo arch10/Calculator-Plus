@@ -131,42 +131,66 @@
 
     <!-- Text Styles — M3 type scale parents -->
     <style name="TextAppearance.CalculatorPlus.Headline2" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
 
     <style name="TextAppearance.CalculatorPlus.Headline3" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
 
     <style name="TextAppearance.CalculatorPlus.Headline4" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Headline5" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Headline6" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Subtitle1" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Subtitle2" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
     <style name="TextAppearance.CalculatorPlus.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/google_sans</item>
         <item name="android:textColor">?attr/textPrimary</item>
-        <item name="android:textSize">12sp</item>
     </style>
+    <style name="TextAppearance.CalculatorPlus.NumPad.Digit" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.CalculatorPlus.NumPad.Operator" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
     <style name="TextAppearance.CalculatorPlus.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/textPrimary</item>
     </style>
