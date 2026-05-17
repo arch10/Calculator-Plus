@@ -5,7 +5,8 @@
     <color name="primaryLight">#2f9ef8</color>
     <color name="surface">#2D3033</color>
     <color name="background">#202124</color>
-    <color name="border">#3E3E3E</color>
+    <!-- Bumped from #3E3E3E so dividers stay visible against the new #3C4043 surfaceContainerHigh. -->
+    <color name="border">#5F6368</color>
     <color name="clear">#424547</color>
     <color name="textPrimary">#FFFFFF</color>
     <color name="textSecondary">#E1E1E1</color>
@@ -13,7 +14,9 @@
     <color name="textDisable">#9AA0A6</color>
     <color name="error">#E75E65</color>
     <color name="numPadPrimary">#202124</color>
-    <color name="surfaceContainerHigh">#202124</color>
+    <!-- Visible elevation above #202124 background — required when the user picks a
+         non-dynamic accent (DynamicColors otherwise overrides this at runtime on Android 12+). -->
+    <color name="surfaceContainerHigh">#3C4043</color>
 
     <!-- Material Green Theme -->
     <color name="primaryGreen">#388E3C</color>

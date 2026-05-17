@@ -3,7 +3,9 @@
     "allow": [
       "Bash(./gradlew assembleDebug)",
       "Bash(./gradlew test *)",
-      "Bash(./gradlew lint *)"
+      "Bash(./gradlew lint *)",
+      "Bash(./gradlew assembleDebug --console=plain)",
+      "Bash(./gradlew clean *)"
     ]
   }
 }
