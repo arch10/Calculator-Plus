@@ -113,10 +113,13 @@
     <style name="ThemeOverlay.CalculatorPlus.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
     </style>
 
-    <!-- Splash screen — postSplashScreenTheme transitions to the user-chosen accent at runtime -->
+    <!-- Splash screen — postSplashScreenTheme transitions to the user-chosen accent at runtime.
+         Icon uses @color/textPrimary so it reads against the app background in both light (#263238
+         on white) and dark (#FFFFFF on dark) without imposing any particular accent colour. -->
     <style name="Theme.CalculatorPlus.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_animated</item>
+        <item name="android:windowSplashScreenAnimationDuration">900</item>
         <item name="postSplashScreenTheme">@style/BaseTheme</item>
     </style>
 

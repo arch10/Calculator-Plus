@@ -34,4 +34,7 @@
     <!-- Material Pink Theme -->
     <color name="primaryPink">#C2185B</color>
     <color name="primaryPinkVariant">#EC407A</color>
+
+    <!-- Splash icon color -->
+    <color name="splashIcon">#FFFFFF</color>
 </resources>
