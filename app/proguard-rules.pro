@@ -39,3 +39,6 @@
 
 # ── Navigation fragments (instantiated by class name from about_nav_graph.xml) ─
 -keep class com.gigaworks.tech.calculator.ui.about.fragment.** { <init>(); }
+
+# ── Hilt — keep Application class so R8 doesn't break GeneratedComponentManagerHolder instanceof check ─
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
