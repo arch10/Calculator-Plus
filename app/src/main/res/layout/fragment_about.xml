@@ -51,10 +51,7 @@
                 android:gravity="center"
                 android:text="@string/app_name"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Headline5"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/version"
@@ -64,227 +61,319 @@
                 android:layout_marginTop="@dimen/space_m"
                 android:layout_marginEnd="@dimen/space_l"
                 android:gravity="center"
-                tools:text="Version: 2.0.0"
                 android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
                 android:textColor="?attr/textSecondary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                tools:text="Version: 3.0.0" />
 
+            <!-- Hidden: What's New — kept for changelog navigation -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_xl"
+                android:layout_marginEnd="@dimen/space_l"
                 android:visibility="gone"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                app:strokeWidth="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/whatsNewCard"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="72dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/whatsNewIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:contentDescription="@string/whats_new"
+                        android:src="@drawable/history"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?attr/textPrimary" />
 
                     <TextView
                         android:id="@+id/whatsNew"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="center|start"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:gravity="center_vertical"
                         android:text="@string/whats_new"
                         android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
                         android:textColor="?attr/textPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:src="@drawable/chevron_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/whats_new" />
+                        app:layout_constraintStart_toEndOf="@+id/whatsNewIcon"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Navigation items grouped like settings cards -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_l"
                 android:layout_marginTop="@dimen/space_xl"
-                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="@dimen/space_l"
                 app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+                app:strokeWidth="0dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/betaCard"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/beta"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                    <!-- Join Beta -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/betaCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/betaIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/join_beta"
+                            android:src="@drawable/star"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/beta"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/join_beta"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/betaSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/betaIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/betaSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/join_beta_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/betaIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/beta" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
                         android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="center|start"
-                        android:text="@string/join_beta"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                        android:textColor="?attr/textPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
 
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:src="@drawable/chevron_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/join_beta" />
+                    <!-- Open Source Licenses -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/openSourceCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <ImageView
+                            android:id="@+id/openSourceIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/open_source"
+                            android:src="@drawable/share"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/openSource"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/open_source"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/openSourceSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/openSourceIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/openSourceSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/open_source_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/openSourceIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/openSource" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <!-- Privacy Policy -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/privacyCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/privacyIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/privacy_policy"
+                            android:src="@drawable/alert_circle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/privacy"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/privacy_policy"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/privacySubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/privacyIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/privacySubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/privacy_policy_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/privacyIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/privacy" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <!-- Terms of Use -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/termsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/termsIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/terms_of_use"
+                            android:src="@drawable/check"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/terms"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/terms_of_use"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/termsSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/termsIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/termsSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:text="@string/terms_of_use_desc"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/termsIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/terms" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/openSourceCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/openSource"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="center|start"
-                        android:text="@string/open_source"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                        android:textColor="?attr/textPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:src="@drawable/chevron_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/open_source" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/privacyCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/privacy"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="center|start"
-                        android:text="@string/privacy_policy"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                        android:textColor="?attr/textPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:src="@drawable/chevron_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/privacy_policy" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="@dimen/space_xl"
-                android:background="?attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/termsCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/terms"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/space_l"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:gravity="center|start"
-                        android:text="@string/terms_of_use"
-                        android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
-                        android:textColor="?attr/textPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/imageView6"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/space_m"
-                        android:src="@drawable/chevron_right"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/terms_of_use" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

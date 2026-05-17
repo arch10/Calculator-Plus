@@ -59,10 +59,14 @@
     <string name="follow_desc">Follow me on twitter</string>
     <string name="whats_new">What\'s new?</string>
     <string name="join_beta">Join the beta program</string>
+    <string name="join_beta_desc">Help test pre-release features</string>
     <string name="open_source">Open-source licenses</string>
+    <string name="open_source_desc">Third-party library licenses</string>
     <string name="privacy_policy">Privacy policy</string>
+    <string name="privacy_policy_desc">How we handle your data</string>
     <string name="version">Version</string>
     <string name="terms_of_use">Terms of Use</string>
+    <string name="terms_of_use_desc">Usage terms and conditions</string>
     <string name="no_history">No History</string>
     <string name="arrow">Arrow</string>
     <string name="clear">Clear</string>
