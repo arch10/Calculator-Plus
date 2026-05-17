@@ -80,3 +80,6 @@ const val HIDDEN_SETTINGS_ENABLED = "hidden_settings_enabled"
 
 //change disable ads
 const val CHANGE_DISABLE_ADS = "change_disable_ads"
+
+//change haptic feedback
+const val CHANGE_HAPTIC_FEEDBACK = "change_haptic_feedback"

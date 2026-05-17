@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -62,6 +61,7 @@ import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
+import com.gigaworks.tech.calculator.util.performAppHapticFeedback
 import com.google.android.material.color.MaterialColors
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -197,8 +197,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private val buttonClick = View.OnClickListener {
-        it.isHapticFeedbackEnabled = true
-        it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        it.performAppHapticFeedback(viewModel.getHapticFeedback())
         val text = (it as Button).text.toString()
         val expression = removeNumberSeparator(getExpression())
         var newExpression = handleClick(expression, text, viewModel.isPrevResult)
@@ -349,8 +348,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //delete onClick
         binding.numPad.delete.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val expression = removeNumberSeparator(getExpression())
             if (expression.isEmpty()) {
                 return@setOnClickListener
@@ -377,8 +375,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //equal onClick
         binding.numPad.equal.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val expression = removeNumberSeparator(getExpression())
             val result = getResult()
             if (expression.isNotEmpty()) {
@@ -423,8 +420,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //memory store click
         binding.scientificPad.memoryStore.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val result = removeNumberSeparator(getResult())
             if (result.isNumber()) {
                 Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
@@ -435,8 +431,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         //memory restore click
         binding.scientificPad.memoryRestore.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val expression = removeNumberSeparator(getExpression())
             var newExpression = handleConstantClick(expression, memory, viewModel.isPrevResult)
@@ -452,8 +447,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         binding.scientificPad.memoryAdd.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val result = removeNumberSeparator(getResult())
             if (result.isNumber() && memory.isNumber()) {
@@ -464,8 +458,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         binding.scientificPad.memorySub.setOnClickListener {
-            it.isHapticFeedbackEnabled = true
-            it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            it.performAppHapticFeedback(viewModel.getHapticFeedback())
             val memory = viewModel.getMemory()
             val result = removeNumberSeparator(getResult())
             if (result.isNumber() && memory.isNumber()) {

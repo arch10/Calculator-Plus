@@ -1,5 +1,6 @@
 package com.gigaworks.tech.calculator.ui.settings.helper
 
+import com.gigaworks.tech.calculator.util.HapticFeedback
 import com.gigaworks.tech.calculator.util.HistoryAutoDelete
 
 fun HistoryAutoDelete.getDays(): Int {
@@ -9,6 +10,14 @@ fun HistoryAutoDelete.getDays(): Int {
         HistoryAutoDelete.THIRTY_DAYS -> 30
         HistoryAutoDelete.THREE_MONTHS -> 90
         else -> -1
+    }
+}
+
+fun HapticFeedback.getString(): String {
+    return when (this) {
+        HapticFeedback.FOLLOW_SYSTEM -> "Follow system"
+        HapticFeedback.ENABLED -> "Enabled"
+        HapticFeedback.DISABLED -> "Disabled"
     }
 }
 

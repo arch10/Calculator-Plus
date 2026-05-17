@@ -400,6 +400,66 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="@dimen/space_l"
+                        android:layout_marginEnd="@dimen/space_l"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/hapticCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:id="@+id/hapticIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:contentDescription="@string/haptic_feedback"
+                            android:src="@drawable/vibrate"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/textPrimary" />
+
+                        <TextView
+                            android:id="@+id/hapticFeedback"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="bottom"
+                            android:text="@string/haptic_feedback"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body1"
+                            android:textColor="?attr/textPrimary"
+                            app:layout_constraintBottom_toTopOf="@id/hapticFeedbackSubtitle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/hapticIcon"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/hapticFeedbackSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/space_l"
+                            android:layout_marginEnd="@dimen/space_l"
+                            android:gravity="top"
+                            android:paddingTop="2dp"
+                            android:textAppearance="@style/TextAppearance.CalculatorPlus.Body2"
+                            android:textColor="?attr/textDisable"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/hapticIcon"
+                            app:layout_constraintTop_toBottomOf="@+id/hapticFeedback"
+                            tools:text="Follow system" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

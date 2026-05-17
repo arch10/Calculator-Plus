@@ -32,7 +32,8 @@ abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
         // DynamicColors must be applied after setTheme() but before super.onCreate();
         // anywhere else and the first frame draws with the wrong palette.
         val appPreference = AppPreference(this)
-        val accentTheme = appPreference.getStringPreference(AppPreference.ACCENT_THEME, AccentTheme.BLUE.name)
+        val defaultAccent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) AccentTheme.DYNAMIC.name else AccentTheme.BLUE.name
+        val accentTheme = appPreference.getStringPreference(AppPreference.ACCENT_THEME, defaultAccent)
         setTheme(getAccentTheme(accentTheme))
         if (accentTheme == AccentTheme.DYNAMIC.name && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             DynamicColors.applyToActivityIfAvailable(this)

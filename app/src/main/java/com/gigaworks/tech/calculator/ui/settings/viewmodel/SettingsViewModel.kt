@@ -1,5 +1,6 @@
 package com.gigaworks.tech.calculator.ui.settings.viewmodel
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import com.gigaworks.tech.calculator.ui.settings.helper.getDays
 import com.gigaworks.tech.calculator.util.*
 import com.gigaworks.tech.calculator.util.AppPreference.Companion.ACCENT_THEME
 import com.gigaworks.tech.calculator.util.AppPreference.Companion.APP_THEME
+import com.gigaworks.tech.calculator.util.AppPreference.Companion.HAPTIC_FEEDBACK
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -46,6 +48,10 @@ class SettingsViewModel @Inject constructor(
     val disableAds: LiveData<Boolean>
         get() = _disableAds
 
+    private val _hapticFeedback = MutableLiveData(getHapticFeedback())
+    val hapticFeedback: LiveData<HapticFeedback>
+        get() = _hapticFeedback
+
     fun shouldAskUserRating(): Boolean {
         val launchCount = appPreference.getLongPreference(AppPreference.LAUNCH_COUNT)
         val lastLaunchDate = appPreference.getLongPreference(AppPreference.LAST_LAUNCH_DAY)
@@ -65,11 +71,12 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun getAccentTheme(): AccentTheme {
-        val accentTheme = appPreference.getStringPreference(ACCENT_THEME, AccentTheme.BLUE.name)
+        val defaultAccent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) AccentTheme.DYNAMIC.name else AccentTheme.BLUE.name
+        val accentTheme = appPreference.getStringPreference(ACCENT_THEME, defaultAccent)
         return try {
             AccentTheme.valueOf(accentTheme)
         } catch (e: IllegalArgumentException) {
-            AccentTheme.BLUE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) AccentTheme.DYNAMIC else AccentTheme.BLUE
         }
     }
 
@@ -154,6 +161,20 @@ class SettingsViewModel @Inject constructor(
     fun setDisableAds(isDisabled: Boolean) {
         _disableAds.value = isDisabled
         appPreference.setBooleanPreference(AppPreference.DISABLE_ADS, isDisabled)
+    }
+
+    fun getHapticFeedback(): HapticFeedback {
+        val value = appPreference.getStringPreference(HAPTIC_FEEDBACK, HapticFeedback.FOLLOW_SYSTEM.name)
+        return try {
+            HapticFeedback.valueOf(value)
+        } catch (e: IllegalArgumentException) {
+            HapticFeedback.FOLLOW_SYSTEM
+        }
+    }
+
+    fun setHapticFeedback(hapticFeedback: HapticFeedback) {
+        _hapticFeedback.value = hapticFeedback
+        appPreference.setStringPreference(HAPTIC_FEEDBACK, hapticFeedback.name)
     }
 
 }

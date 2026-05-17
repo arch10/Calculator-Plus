@@ -1,6 +1,7 @@
 package com.gigaworks.tech.calculator.util
 
 import android.app.Activity
+import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -44,6 +45,22 @@ fun Activity.logW(msg: String?) {
 
 fun Activity.logE(msg: String?) {
     printLogE(this.getClassName(), msg)
+}
+
+fun View.performAppHapticFeedback(hapticFeedback: HapticFeedback) {
+    when (hapticFeedback) {
+        HapticFeedback.FOLLOW_SYSTEM -> {
+            isHapticFeedbackEnabled = true
+            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        }
+        HapticFeedback.ENABLED -> {
+            performHapticFeedback(
+                HapticFeedbackConstants.VIRTUAL_KEY,
+                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+            )
+        }
+        HapticFeedback.DISABLED -> Unit
+    }
 }
 
 fun View.visible(visible: Boolean) {
