@@ -49,8 +49,10 @@ private val BackgroundLight = Color(0xFFFFFFFF)
 private val BackgroundDark = Color(0xFF202124)
 private val OnSurfaceLight = Color(0xFF263238)
 private val OnSurfaceDark = Color(0xFFFFFFFF)
-private val OnSurfaceVariantLight = Color(0xFF3A444A)
-private val OnSurfaceVariantDark = Color(0xFFE1E1E1)
+// Match the legacy `textDisable` palette — secondary/muted text reads as a true gray rather than
+// a near-black. Used for subtitles, history result rows, etc.
+private val OnSurfaceVariantLight = Color(0xFF80868B)
+private val OnSurfaceVariantDark = Color(0xFF9AA0A6)
 private val OutlineLight = Color(0xFFDADCE0)
 // Bumped from #3E3E3E so dividers stay visible against the new #3C4043 surfaceContainerHigh card.
 private val OutlineDark = Color(0xFF5F6368)

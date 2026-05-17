@@ -1,7 +1,9 @@
 package com.gigaworks.tech.calculator.ui.history.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.gigaworks.tech.calculator.cache.model.toDomain
 import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.domain.HistoryAdapterItem
 import com.gigaworks.tech.calculator.repository.HistoryRepository
@@ -9,6 +11,10 @@ import com.gigaworks.tech.calculator.ui.settings.helper.getDays
 import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.HistoryAutoDelete
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.*
@@ -21,6 +27,13 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val historyList = historyRepository.getAllHistory()
+
+    // Pre-transformed mirror for Compose collectors. Stays in sync with [historyList] but emits
+    // List<HistoryAdapterItem> with date-grouping flags already applied so the UI doesn't have to.
+    val historyItems: StateFlow<List<HistoryAdapterItem>> = historyList
+        .asFlow()
+        .map { entities -> transformHistory(entities.map { it.toDomain() }) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
         val historyAutoDelete = getAutoDeleteHistory()

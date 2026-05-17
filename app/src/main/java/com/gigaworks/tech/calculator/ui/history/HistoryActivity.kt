@@ -2,176 +2,117 @@ package com.gigaworks.tech.calculator.ui.history
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
-import androidx.activity.addCallback
-import androidx.activity.viewModels
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gigaworks.tech.calculator.R
-import com.gigaworks.tech.calculator.cache.model.toDomain
-import com.gigaworks.tech.calculator.databinding.ActivityHistoryBinding
+import com.gigaworks.tech.calculator.compose.history.HistoryScreen
+import com.gigaworks.tech.calculator.compose.theme.CalculatorPlusTheme
 import com.gigaworks.tech.calculator.domain.HistoryAdapterItem
-import com.gigaworks.tech.calculator.ui.base.BaseActivity
-import com.gigaworks.tech.calculator.ui.history.adapter.HistoryAdapter
 import com.gigaworks.tech.calculator.ui.history.viewmodel.HistoryViewModel
 import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.AccentTheme
+import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.logD
-import com.gigaworks.tech.calculator.util.visible
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
+class HistoryActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<HistoryViewModel>()
-    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        firebaseAnalytics = Firebase.analytics
 
-        setSupportActionBar(binding.toolbar)
+        val accent = readAccentPreference()
+        val adUnitId = resolveAdUnitId()
 
-        setupView()
-        setupObservables()
-        setupEdgeToEdge(
-            topInsetsView = binding.appBar,
-            bottomInsetsView = binding.root
-        )
-
-        // enable Google ads
-        enableAds()
+        setContent {
+            CalculatorPlusTheme(accent = accent, darkTheme = isSystemInDarkTheme()) {
+                HistoryScreenHost(adUnitId = adUnitId)
+            }
+        }
     }
 
-    private fun enableAds() {
-        googleMobileAdsConsentManager =
-            GoogleMobileAdsConsentManager.getInstance(applicationContext)
-        val remoteConfig = Firebase.remoteConfig
-        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
-        if (!shouldEnableAds) {
-            logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED) {
-                param("reason", "ads_disabled")
-            }
-            return
+    @Composable
+    private fun HistoryScreenHost(adUnitId: String?) {
+        val viewModel: HistoryViewModel = hiltViewModel()
+        val items by viewModel.historyItems.collectAsStateWithLifecycle()
+        HistoryScreen(
+            items = items,
+            adUnitId = adUnitId,
+            onBack = { finish() },
+            onItemClick = { item: HistoryAdapterItem ->
+                viewModel.saveExpression(removeNumberSeparator(item.expression))
+                finish()
+            },
+            onItemDelete = { item -> viewModel.deleteHistory(item.expression) },
+            onItemShare = { item -> shareItem(item) },
+            onClearAll = { viewModel.clearHistory() },
+        )
+    }
+
+    private fun shareItem(item: HistoryAdapterItem) {
+        val sharedEquation = "${item.expression} = ${item.result}"
+        firebaseAnalytics.logEvent(SHARE_EXPRESSION, null)
+        startActivity(
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression")
+                    putExtra(Intent.EXTRA_TEXT, sharedEquation)
+                },
+                getString(R.string.choose),
+            )
+        )
+    }
+
+    private fun readAccentPreference(): AccentTheme {
+        val prefs = AppPreference(this)
+        val default = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            AccentTheme.DYNAMIC.name
+        } else {
+            AccentTheme.BLUE.name
         }
-        //test ad unit id - uncomment below line to enable test ads
-        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        val raw = prefs.getStringPreference(AppPreference.ACCENT_THEME, default)
+        return runCatching { AccentTheme.valueOf(raw) }.getOrDefault(AccentTheme.BLUE)
+    }
+
+    // Returns the ad unit id if all of: Remote Config enable_ads, non-empty history_ad_id, and
+    // UMP consent are satisfied. Null means do not render the banner.
+    private fun resolveAdUnitId(): String? {
+        val remoteConfig = Firebase.remoteConfig
+        if (!remoteConfig["enable_ads"].asBoolean()) {
+            logD("disabling ads due to remote config")
+            firebaseAnalytics.logEvent(ADS_DISABLED) { param("reason", "ads_disabled") }
+            return null
+        }
         val adUnitId = remoteConfig["history_ad_id"].asString()
         if (adUnitId.isEmpty()) {
             logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED) {
-                param("reason", "empty_ad_unit")
-            }
-            return
+            firebaseAnalytics.logEvent(ADS_DISABLED) { param("reason", "empty_ad_unit") }
+            return null
         }
-
-//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
-//        val localDisableAds = viewModel.getDisableAds()
-//        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
-//        if (allowDisablingAds && localDisableAds) {
-//            logD("disabling ads due to user setting")
-//            logEvent(ADS_DISABLED)
-//            return
-//        }
-
-        if (googleMobileAdsConsentManager.canRequestAds) {
-            binding.rv.layoutParams = binding.rv.layoutParams.apply {
-                (this as ViewGroup.MarginLayoutParams).bottomMargin =
-                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
-            }
-            binding.adViewContainer.visible(true)
-            val adRequest = AdRequest.Builder().build()
-            val adView = AdView(this)
-            adView.setAdSize(AdSize.BANNER)
-            adView.adUnitId = adUnitId
-            binding.adViewContainer.addView(adView)
-            adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
-        }
-
+        val consent = GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        if (!consent.canRequestAds) return null
+        firebaseAnalytics.logEvent(ADS_ENABLED, null)
+        return adUnitId
     }
-
-    private fun setupObservables() {
-        viewModel.historyList.observe(this) { historyList ->
-            if (historyList != null && historyList.isNotEmpty()) {
-                binding.noHistory.visible(false)
-                binding.rv.visible(true)
-                val list = viewModel.transformHistory(historyList.map { it.toDomain() })
-                val adapter = HistoryAdapter(list, object : HistoryAdapter.OnHistoryClickListener {
-                    override fun onHistoryClick(history: HistoryAdapterItem) {
-                        viewModel.saveExpression(removeNumberSeparator(history.expression))
-                        finish()
-                    }
-                })
-                binding.rv.adapter = adapter
-            } else {
-                binding.rv.visible(false)
-                binding.noHistory.visible(true)
-            }
-        }
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            101 -> {
-                val position = item.groupId
-                val history = (binding.rv.adapter as HistoryAdapter).getHistory(position)
-                viewModel.deleteHistory(history.expression)
-                true
-            }
-
-            102 -> {
-                val position = item.groupId
-                val history = (binding.rv.adapter as HistoryAdapter).getHistory(position)
-                val sharedEquation = "${history.expression} = ${history.result}"
-                logEvent(SHARE_EXPRESSION)
-                startActivity(
-                    Intent.createChooser(
-                        Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_SUBJECT, "Calculator Plus Expression")
-                            putExtra(Intent.EXTRA_TEXT, sharedEquation)
-                        },
-                        getString(R.string.choose)
-                    )
-                )
-                true
-            }
-
-            else -> super.onContextItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.history_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.history_trash -> viewModel.clearHistory()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun setupView() {
-        binding.toolbar.setNavigationOnClickListener { finish() }
-        // Add back press callback
-        onBackPressedDispatcher.addCallback(this) {
-            finish()
-        }
-    }
-
-    override fun getViewBinding(inflater: LayoutInflater) = ActivityHistoryBinding.inflate(inflater)
-
 }
