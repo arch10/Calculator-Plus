@@ -1,5 +1,32 @@
 # Changelog
 
+## v3.1.0
+
+### New Features
+- **TapMind waterfall mediation**: integrated the TapMind custom event adapter as waterfall backfill beneath AdMob bidding on all three banner placements (main, history, settings). Three eCPM tiers are mapped in the AdMob console against `com.tapmind.mediation.TapMindAdmobAdapter`
+- **Ad source logging**: new `ResponseInfo.logAdSource()` extension in `ExtensionFunctions.kt` logs the winning ad source plus the full waterfall attempt list (adapter class, latency, per-rung error) from `onAdLoaded` and `onAdFailedToLoad`. Debug builds only — `printLogD` is a no-op in release
+- **Height-gated banner**: the banner is now gated on a `show_banner_ad` bool, `false` in `values/` and `true` in `values-h400dp/`. A 50dp banner needs roughly 387dp of height to coexist with the system chrome, expression and five numpad rows, so short configurations (landscape phones, small split-screen windows) drop it instead of clipping the pads. Only `MainActivity` is gated; History and Settings scroll
+
+### Bug Fixes
+- **Release crash on launch**: R8 could rename or inline Hilt-generated superclasses, breaking the `GeneratedComponentManagerHolder` instanceof check inside `ActivityComponentManager.createComponent`. Added a keep rule for `@HiltAndroidApp`-annotated classes (issue #72)
+- **Live result hidden on tall, narrow screens**: every layout showing the result view was gated behind an `sw` qualifier, so a device whose smallestWidth falls under 360dp dropped to base `layout/` and got compact mode regardless of available height. A OnePlus 11R (1240x2772 @ 560dpi) resolves to sw354dp/h792dp — it misses the floor by 6dp. Added an unqualified `layout-h500dp/result_pad.xml` so the height qualifier can apply on its own
+- **Landscape rendered the portrait layout**: `-land` variants existed only for sw360dp, sw400dp and sw480dp, so devices below the sw360dp floor fell through to the portrait base layout with the numpad crushed into unreadable slivers. Added `layout-land/`
+- **Numpad clipped in landscape**: `Widget.CalculatorPlus.NumPad.*` inherits AppCompat's 48dp/88dp `minHeight`/`minWidth` via `Widget.Material3.Button`, but landscape allocates roughly 32dp per row, so buttons overflowed their rows and glyphs were sliced. Cleared both minimums and set `includeFontPadding=false` on `NumPad.Primary`, `NumPad.Operator` and `NumPad.Secondary`
+
+### UI
+- Qualified layouts realigned with the v3.0.0 Material You migration, which had only updated the base `layout/` files — most phones (sw>=360dp) were still getting the pre-3.0 design. Deleted `layout-sw360dp/num_pad.xml` and `layout-sw400dp/num_pad.xml` (byte-identical to base apart from 5 stale divider Views and the pre-M3 operator styling) and `layout-sw360dp/activity_main.xml` and `layout-sw400dp/activity_main.xml` (a single stale `clearView` background)
+- Ported M3 tokens into the variants carrying real differences: `operatorBtnColor` to `colorPrimary`, `clearColor` to `colorPrimaryContainer`, and the missing `colorSurface` root background on `scientific_pad`
+- `values-land/themes.xml` drops the numpad type scale to `TitleLarge`, restored to the full portrait scale for tablets in `values-sw480dp-land/themes.xml`
+- The result view is hidden in the landscape result pads and the expression takes the whole area; pressing equals writes the result into the expression via the existing compact path
+
+### Dependencies
+- `com.google.android.material:material` 1.12.0 → 1.13.0
+- `com.google.gms:google-services` 4.4.4 → 4.5.0
+- Added `io.github.tapmind-tech:customadapter-admob:3.0.2` and the JitPack repository
+- `play-services-ads` is declared as 24.8.0 but now resolves to 25.0.0, pulled up transitively by the TapMind SDK
+
+---
+
 ## v3.0.0
 
 ### New Features

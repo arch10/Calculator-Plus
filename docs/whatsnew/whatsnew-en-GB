@@ -1,7 +1,7 @@
-🎉 Calculator Plus v3.0.0 is here!
+🎉 Calculator Plus v3.1.0 is here!
 
-✨ Material You design — rounded buttons, dynamic wallpaper colours, and a refreshed look throughout
-🌈 Dynamic theme (Android 12+) — app colours automatically match your wallpaper
-🔔 Haptic feedback — optional vibration on button taps, toggle it in Settings
-📐 Compact mode — smarter layout on smaller screens and in landscape orientation
-💫 Animated splash screen and a smoother experience from the moment you open the app
+✨ Material You everywhere — the refreshed design now appears correctly on every phone, not just some
+👀 Live results on more devices — watch your answer update as you type, on screens that previously hid it
+📐 Better landscape — the keypad now fits properly instead of being cut off, with more room to work in
+🛠️ Fixed a crash that could stop the app from opening
+⚡ Smoother and more consistent across different screen sizes
