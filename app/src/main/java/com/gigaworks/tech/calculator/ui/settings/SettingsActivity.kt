@@ -43,13 +43,17 @@ import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
 import com.gigaworks.tech.calculator.util.capitalize
+import com.gigaworks.tech.calculator.util.getClassName
+import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.performAppHapticFeedback
 import com.gigaworks.tech.calculator.util.visible
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.Firebase
@@ -188,6 +192,16 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             adView.setAdSize(AdSize.BANNER)
             adView.adUnitId = adUnitId
             binding.adViewContainer.addView(adView)
+            adView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    adView.responseInfo.logAdSource(getClassName())
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    logD("ad failed to load: ${error.message}")
+                    error.responseInfo.logAdSource(getClassName())
+                }
+            }
             adView.loadAd(adRequest)
             logEvent(ADS_ENABLED)
         }

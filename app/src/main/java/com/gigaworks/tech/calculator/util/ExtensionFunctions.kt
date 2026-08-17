@@ -5,6 +5,7 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.ads.ResponseInfo
 import java.util.Locale
 
 fun Fragment.getClassName(): String {
@@ -45,6 +46,28 @@ fun Activity.logW(msg: String?) {
 
 fun Activity.logE(msg: String?) {
     printLogE(this.getClassName(), msg)
+}
+
+fun ResponseInfo?.logAdSource(className: String) {
+    if (this == null) {
+        printLogD(className, "ad response info unavailable")
+        return
+    }
+    val loaded = loadedAdapterResponseInfo
+    if (loaded != null) {
+        printLogD(
+            className,
+            "ad filled by ${loaded.adSourceName} / ${loaded.adSourceInstanceName} (${loaded.adapterClassName})"
+        )
+    } else {
+        printLogD(className, "no ad source filled the request")
+    }
+    adapterResponses.forEach { response ->
+        printLogD(
+            className,
+            "  waterfall: ${response.adapterClassName} ${response.latencyMillis}ms — ${response.adError?.message ?: "FILLED"}"
+        )
+    }
 }
 
 fun View.performAppHapticFeedback(hapticFeedback: HapticFeedback) {

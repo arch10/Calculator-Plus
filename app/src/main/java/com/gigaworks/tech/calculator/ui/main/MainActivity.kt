@@ -45,7 +45,6 @@ import com.gigaworks.tech.calculator.ui.view.CalculatorEditText
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.AngleType
-import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.AppTheme
 import com.gigaworks.tech.calculator.util.CHANGE_ANGLE
 import com.gigaworks.tech.calculator.util.CLICK_ABOUT
@@ -59,13 +58,17 @@ import com.gigaworks.tech.calculator.util.EVALUATE
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.getClassName
+import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.performAppHapticFeedback
 import com.google.android.material.color.MaterialColors
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -74,6 +77,8 @@ import com.google.firebase.remoteconfig.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.sqrt
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.isGone
 
 
 @AndroidEntryPoint
@@ -121,6 +126,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         adView.setAdSize(AdSize.BANNER)
         adView.adUnitId = adUnitId
         binding.adViewContainer.addView(adView)
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView.responseInfo.logAdSource(getClassName())
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                logD("ad failed to load: ${error.message}")
+                error.responseInfo.logAdSource(getClassName())
+            }
+        }
         adView.loadAd(adRequest)
         logEvent(ADS_ENABLED)
     }
@@ -287,14 +302,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         // Resolve colorPrimary at runtime so it correctly reflects the active accent theme
         // on all devices/modes — XML inflate-time resolution can diverge on some Android 16 builds.
-        val accentColor = com.google.android.material.color.MaterialColors.getColor(
+        // colorPrimary is declared by AppCompat, not Material — material 1.13.0 dropped it
+        // from its own R class, so referencing it via the Material R crashes at runtime.
+        val accentColor = MaterialColors.getColor(
             binding.root,
-            com.google.android.material.R.attr.colorPrimary,
+            androidx.appcompat.R.attr.colorPrimary,
             android.graphics.Color.BLUE
         )
         binding.scientificPad.arrowFrame.setBackgroundColor(accentColor)
         binding.clearView.setBackgroundColor(
-            com.google.android.material.color.MaterialColors.getColor(
+            MaterialColors.getColor(
                 binding.root,
                 com.google.android.material.R.attr.colorPrimaryContainer,
                 accentColor
@@ -307,12 +324,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             minus.setTextColor(accentColor)
             equal.setTextColor(accentColor)
 
-            val onSurface = com.google.android.material.color.MaterialColors.getColor(
+            val onSurface = MaterialColors.getColor(
                 binding.root,
                 com.google.android.material.R.attr.colorOnSurface,
                 android.graphics.Color.BLACK
             )
-            val surfaceHigh = com.google.android.material.color.MaterialColors.getColor(
+            val surfaceHigh = MaterialColors.getColor(
                 binding.root,
                 com.google.android.material.R.attr.colorSurfaceContainerHigh,
                 android.graphics.Color.LTGRAY
@@ -325,8 +342,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             )
             delete.background = android.graphics.drawable.RippleDrawable(
                 android.content.res.ColorStateList.valueOf(rippleColor),
-                android.graphics.drawable.ColorDrawable(surfaceHigh),
-                android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE)
+                surfaceHigh.toDrawable(),
+                android.graphics.Color.WHITE.toDrawable()
             )
             delete.imageTintList = android.content.res.ColorStateList.valueOf(accentColor)
         }
@@ -491,10 +508,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     /**
-     * Setup the views with saved or initial values
+     * Set up the views with saved or initial values
      * */
     private fun setupView() {
-        isCompactMode = getResultEditText().visibility == View.GONE
+        isCompactMode = getResultEditText().isGone
         viewModel.updateLaunchStatistics()
         binding.resultPad.expression.setOnTextSizeChangeListener(textSizeChangeListener)
         binding.resultPad.expression.addTextChangedListener(expressionChangeListener)
@@ -836,7 +853,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         val themeName = viewModel.getAppTheme()
         return try {
             AppTheme.valueOf(themeName)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             AppTheme.SYSTEM_DEFAULT
         }
     }

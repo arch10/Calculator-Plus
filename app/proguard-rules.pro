@@ -42,3 +42,8 @@
 
 # ── Hilt — keep Application class so R8 doesn't break GeneratedComponentManagerHolder instanceof check ─
 -keep @dagger.hilt.android.HiltAndroidApp class * { *; }
+
+# ── TapMind AdMob mediation ──────────────────────────────────────────────────
+# Deliberately no keep rule: customadapter-admob and tapmindsdk both ship consumer
+# rules that already keep com.tapmind.mediation.TapMindAdmobAdapter (reflected by
+# name from the AdMob console mapping) and the com.tapminds.** SDK internals.

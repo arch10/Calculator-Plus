@@ -20,11 +20,15 @@ import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.getClassName
+import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.visible
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
@@ -95,6 +99,16 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
             adView.setAdSize(AdSize.BANNER)
             adView.adUnitId = adUnitId
             binding.adViewContainer.addView(adView)
+            adView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    adView.responseInfo.logAdSource(getClassName())
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    logD("ad failed to load: ${error.message}")
+                    error.responseInfo.logAdSource(getClassName())
+                }
+            }
             adView.loadAd(adRequest)
             logEvent(ADS_ENABLED)
         }
