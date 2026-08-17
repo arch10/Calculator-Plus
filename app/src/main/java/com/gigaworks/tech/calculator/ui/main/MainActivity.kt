@@ -128,6 +128,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        if (!resources.getBoolean(R.bool.show_banner_ad)) {
+            logD("disabling ads due to insufficient vertical space")
+            logEvent(ADS_DISABLED) {
+                param("reason", "short_screen")
+            }
+            return
+        }
         val remoteConfig = Firebase.remoteConfig
         val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
         logD("enable_ads=$shouldEnableAds")

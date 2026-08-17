@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Overridden to true in values-h500dp. Short configurations (landscape phones,
+         split-screen) need the vertical space for the pads more than the banner. -->
+    <bool name="show_banner_ad">false</bool>
+</resources>
