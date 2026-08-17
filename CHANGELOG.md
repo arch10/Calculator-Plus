@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.1.0
+## v3.1.1
 
 ### New Features
 - **TapMind waterfall mediation**: integrated the TapMind custom event adapter as waterfall backfill beneath AdMob bidding on all three banner placements (main, history, settings). Three eCPM tiers are mapped in the AdMob console against `com.tapmind.mediation.TapMindAdmobAdapter`
