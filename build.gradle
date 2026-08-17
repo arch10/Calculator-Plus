@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:9.2.1'
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
-        classpath 'com.google.gms:google-services:4.4.4'
+        classpath 'com.google.gms:google-services:4.5.0'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.7'
         classpath 'com.google.firebase:perf-plugin:2.0.2'
 
@@ -25,6 +25,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
