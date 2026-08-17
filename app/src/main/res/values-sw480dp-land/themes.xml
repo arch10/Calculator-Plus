@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tablets in landscape have the height for the full portrait type scale, so undo the
+         reduction values-land applies for phones. -->
+    <style name="TextAppearance.CalculatorPlus.NumPad.Digit" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.CalculatorPlus.NumPad.Operator" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+</resources>

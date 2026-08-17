@@ -70,11 +70,14 @@
     <!-- NumPad.Secondary — accent-filled buttons (scientific pad + equals key).
          Explicit backgroundTint prevents transparent flash during ViewPager drag. -->
     <style name="Widget.CalculatorPlus.NumPad.Secondary" parent="Widget.Material3.Button">
+        <item name="android:includeFontPadding">false</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:maxLines">1</item>
@@ -84,11 +87,16 @@
 
     <!-- NumPad.Primary — neutral fill for digit/utility buttons. -->
     <style name="Widget.CalculatorPlus.NumPad.Primary" parent="Widget.Material3.Button">
+        <item name="android:includeFontPadding">false</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <!-- AppCompat's 48dp/88dp minimums exceed the row height the chain allocates in
+             landscape, which overflows the pad and clips glyphs. -->
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
         <item name="iconPadding">0dp</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
@@ -97,10 +105,13 @@
          (same mechanism as backgroundTint on filled buttons, reliable across all devices).
          backgroundTint tints the shape drawable to give a solid gray fill. -->
     <style name="Widget.CalculatorPlus.NumPad.Operator" parent="Widget.Material3.Button.TextButton">
+        <item name="android:includeFontPadding">false</item>
         <item name="cornerRadius">@dimen/button_corner_radius</item>
         <item name="backgroundTint">?attr/colorSurfaceContainerHigh</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
         <item name="iconPadding">0dp</item>
         <item name="android:stateListAnimator">@null</item>
     </style>
