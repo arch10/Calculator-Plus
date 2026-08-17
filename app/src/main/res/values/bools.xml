@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Overridden to true in values-h400dp. A 50dp banner needs ~387dp of height to
+         coexist with the chrome, expression and five numpad rows, so below that it
+         clips the pads rather than costing an impression. -->
+    <bool name="show_banner_ad">false</bool>
+</resources>

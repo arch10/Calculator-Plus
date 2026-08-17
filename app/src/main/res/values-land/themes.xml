@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Landscape gives the numpad ~32dp per row on a phone. The portrait type scale
+         (24sp digits / 28sp operators) overflows that and clips glyphs, and no guideline
+         split fixes it: the result pad, numpad and system chrome together want more
+         height than a landscape phone has. Restored to the portrait scale for tablets
+         in values-sw480dp-land. -->
+    <style name="TextAppearance.CalculatorPlus.NumPad.Digit" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.CalculatorPlus.NumPad.Operator" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+</resources>
