@@ -171,6 +171,10 @@ Insert a new section at the top of `CHANGELOG.md`, immediately after the
 This file is published to the Google Play Store and read by end users.
 
 ### Rules
+- **Hard limit: 500 characters.** Google Play rejects the upload above this
+  (`release notes in language en-GB with length N, which is too long`), and it
+  fails at the *end* of the release workflow, after the AAB has already built.
+  See "Checking the length" below — always verify before Step 8.
 - **4 to 6 bullet points maximum**
 - One emoji at the start of each line
 - First line is always: `🎉 Calculator Plus vX.Y.Z is here!`
@@ -182,6 +186,12 @@ This file is published to the Google Play Store and read by end users.
   not recognise
 - Focus on what a user would notice: new features, visible UI changes,
   performance improvements, crash fixes, new Android version support
+- **Cover every version the user has not seen, not just this one.** CI deploys
+  to the Play **beta** track and promotion to production is manual, so several
+  released versions may never have reached production users. Ask which version
+  production is on if it is not obvious, and write the notes to span everything
+  from there to this release. `CHANGELOG.md` stays per-version — only this file
+  is cumulative
 - Read the existing file first and match its tone and brevity exactly
 
 ### Example
@@ -195,6 +205,24 @@ This file is published to the Google Play Store and read by end users.
 ```
 
 Overwrite the entire file with the new content.
+
+### Checking the length
+
+Play counts **UTF-16 code units, including the trailing newline** — a Java
+string length, not bytes and not characters as a human would count them. Most
+emoji sit outside the BMP and cost **2** units each; `🛠️` costs **3** (emoji
+plus variation selector). So `wc -c` (bytes) and `wc -m` (codepoints) both
+report the wrong number — 711 and 678 for a file Play measured at 685.
+
+Verify with:
+
+```bash
+python -c "import io; s=io.open('docs/whatsnew/whatsnew-en-GB',encoding='utf-8').read(); n=len(s.encode('utf-16-le'))//2; print(n,'/500  headroom:',500-n)"
+```
+
+Aim for **480 or below** so a later wording tweak does not push it over. If the
+text is too long, cut words from the bullets rather than dropping a bullet —
+the goal is still to cover every user-facing change in the range.
 
 ---
 
@@ -262,3 +290,4 @@ Then tell the user two things:
 - No emojis in `CHANGELOG.md`
 - No class/library/version names in `whatsnew-en-GB`
 - No build tooling changes in `whatsnew-en-GB`
+- Never leave `whatsnew-en-GB` above 500 UTF-16 units — verify, do not estimate
