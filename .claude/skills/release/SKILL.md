@@ -7,7 +7,8 @@ description: >
   "prepare v2.x", "update version for release", or "generate what's new".
   This skill handles everything: finding what changed since the last release,
   asking for the new version number, updating app/build.gradle, writing the
-  CHANGELOG.md entry, and writing docs/whatsnew/whatsnew-en-GB.
+  CHANGELOG.md entry, writing docs/whatsnew/whatsnew-en-GB, having the user
+  review both texts, and then committing and pushing once they approve.
 ---
 
 # Calculator Plus — Release Preparation
@@ -197,22 +198,57 @@ Overwrite the entire file with the new content.
 
 ---
 
-## Step 8 — Summary and commit offer
+## Step 8 — Have the user review the release notes
 
-Show the user a concise summary of every file changed:
+Both texts are published: the CHANGELOG entry becomes the GitHub Release body
+and the what's new file becomes the Play Store release notes. The user must
+read and approve them before anything is committed.
+
+Show **verbatim**, in full:
+
+1. The complete new `## vX.Y.Z` section you wrote in `CHANGELOG.md`
+2. The complete contents of `docs/whatsnew/whatsnew-en-GB`
+
+Then ask: **"Is the changelog and what's new text correct, or do you want
+anything changed?"**
+
+- If the user asks for edits, apply them, show the changed text again, and ask
+  again. Repeat until they approve.
+- Do not move to Step 9 until the user has explicitly approved both texts.
+- Approval of one is not approval of the other — if they only comment on one,
+  ask about the other before proceeding.
+
+---
+
+## Step 9 — Get permission, then commit and push
+
+Show a concise summary of every file changed:
 
 1. `app/build.gradle` — `versionName` updated to `X.Y.Z`
 2. `CHANGELOG.md` — new `## vX.Y.Z` section added at the top
 3. `docs/whatsnew/whatsnew-en-GB` — updated for the new release
 
-Then ask: **"Do you want me to commit these changes?"**
+Then ask: **"Shall I commit and push these changes?"**
 
-If yes, stage only these three files and commit:
-```
-chore: prepare release vX.Y.Z
-```
-Do **not** push — the user triggers the GitHub Actions release workflow
-manually from the Actions tab.
+Only if the user says yes:
+
+1. Stage **only** those three files — never `git add -A`, and never stage the
+   untracked `.idea/` or `.vscode/` files
+2. Commit:
+   ```
+   chore: prepare release vX.Y.Z
+   ```
+3. Push to `main`
+
+Then tell the user two things:
+
+- Pushing to `main` triggers `auto-bump.yml`, which adds its own
+  `ci: bump version code to N (vX.Y.Z)` commit. This is expected. Confirm
+  afterwards that `versionName` is still `X.Y.Z` — if it changed, the Fastlane
+  `bump` lane has regressed and is writing `versionName` again
+- The release itself is still manual: they trigger the `App Release` workflow
+  from the Actions tab, which builds the AAB and uploads to the Play Store
+  **beta** track
 
 ---
 
@@ -220,7 +256,9 @@ manually from the Actions tab.
 
 - Never edit `version.properties` — CI owns `VERSION_CODE`
 - Never run `./gradlew bumpVersionCode` — CI does this during the release workflow
-- Never push to remote
+- Never commit or push before the user has approved both texts in Step 8
+- Never push without the explicit go-ahead asked for in Step 9
+- Never trigger the release workflow yourself — the user does that manually
 - No emojis in `CHANGELOG.md`
 - No class/library/version names in `whatsnew-en-GB`
 - No build tooling changes in `whatsnew-en-GB`
