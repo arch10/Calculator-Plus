@@ -313,7 +313,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.clearView.setBackgroundColor(
             MaterialColors.getColor(
                 binding.root,
-                com.google.android.material.R.attr.colorPrimaryContainer,
+                R.attr.clearColor,
                 accentColor
             )
         )

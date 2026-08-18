@@ -63,8 +63,12 @@
         <item name="clearColor">@color/primaryPinkClear</item>
     </style>
 
-    <!-- Dynamic theme: operatorBtnColor chains through colorPrimary so DynamicColors overlay works -->
-    <style name="MaterialDynamicTheme" parent="BaseTheme" />
+    <!-- Dynamic theme: operatorBtnColor chains through colorPrimary so DynamicColors overlay works.
+         clearColor chains to the M3 container token for the same reason — the static accents use
+         their own tinted @color/primary*Clear values, which the overlay never touches. -->
+    <style name="MaterialDynamicTheme" parent="BaseTheme">
+        <item name="clearColor">?attr/colorPrimaryContainer</item>
+    </style>
 
     <!-- Widget Styles -->
     <!-- NumPad.Secondary — accent-filled buttons (scientific pad + equals key).

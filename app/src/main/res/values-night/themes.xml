@@ -67,6 +67,7 @@
     <!-- Dynamic: re-point operatorBtnColor to colorPrimary so DynamicColors P-80 applies correctly -->
     <style name="MaterialDynamicTheme" parent="BaseTheme">
         <item name="operatorBtnColor">?attr/colorPrimary</item>
+        <item name="clearColor">?attr/colorPrimaryContainer</item>
     </style>
 
 </resources>
