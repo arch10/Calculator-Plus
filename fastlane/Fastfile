@@ -24,32 +24,25 @@ def read_version_name
   File.read(APP_GRADLE).match(/versionName\s+"([^"]+)"/)[1]
 end
 
-def write_version_name(name)
-  content = File.read(APP_GRADLE)
-  File.write(APP_GRADLE, content.gsub(/versionName\s+"[^"]+"/, "versionName \"#{name}\""))
-end
-
-def bump_patch(version)
-  parts = version.split(".")
-  parts[2] = (parts[2].to_i + 1).to_s
-  parts.join(".")
-end
-
 # ── Lanes ─────────────────────────────────────────────────────────────────────
 
 platform :android do
 
-  desc "Bump patch versionName and versionCode, then commit and push"
+  # versionName is owned by a human — see CLAUDE.md. This lane runs on every push
+  # to main, so writing versionName here would overwrite whatever a release commit
+  # had just set, making any minor or major bump impossible to ship.
+  # The message must keep its "ci: bump" prefix: auto-bump.yml skips on it to
+  # avoid re-triggering itself.
+  desc "Bump versionCode, then commit and push"
   lane :bump do
     new_code = read_version_code + 1
-    new_name = bump_patch(read_version_name)
+    version_name = read_version_name
 
     write_version_code(new_code)
-    write_version_name(new_name)
 
     git_commit(
-      path: [VERSION_PROPS, APP_GRADLE],
-      message: "ci: bump version to #{new_name} (#{new_code})"
+      path: [VERSION_PROPS],
+      message: "ci: bump version code to #{new_code} (v#{version_name})"
     )
     push_to_git_remote
   end
