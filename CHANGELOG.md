@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.1.2
+
+### Bug Fixes
+- **Accent colours lost in the clear animation**: the `clearView` reveal read `colorPrimaryContainer` directly in `MainActivity` and all six `activity_main.xml` variants, bypassing the tinted `@color/primary*Clear` values each static accent theme defines, so every accent animated in the same container colour. The layouts and `MainActivity.setAccentColor` now resolve `?attr/clearColor`, and `MaterialDynamicTheme` declares its own `clearColor` pointing at `colorPrimaryContainer` in both `values/themes.xml` and `values-night/themes.xml` so Dynamic Colors still resolves through the overlay
+
+### Build & Toolchain
+- Added the `com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING` manifest flag, letting the Mobile Ads SDK move part of its initialisation off the critical path — the banner loads during `MainActivity` startup
+
+### CI & Tooling
+- **Fastlane `bump` lane overwrote `versionName`**: the lane ran `bump_patch(read_version_name)` and wrote the result back to `app/build.gradle`. Because `auto-bump.yml` fires on every push to `main`, a release commit setting a new `versionName` was immediately overwritten with a patch bump of the old one, making any minor or major release impossible to ship — this is how 3.1.0 became 3.1.1. The lane now bumps `VERSION_CODE` only and commits `version.properties` alone; `versionName` stays human-owned. Removed the dead `write_version_name` and `bump_patch` helpers
+
+---
+
 ## v3.1.1
 
 ### New Features
