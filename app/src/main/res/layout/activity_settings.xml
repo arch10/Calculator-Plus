@@ -463,6 +463,17 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- ── Inline ad ──────────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/inlineAdViewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxl"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <!-- ── Hidden Settings ─────────────────────────── -->
             <LinearLayout
                 android:id="@+id/hiddenSettings"

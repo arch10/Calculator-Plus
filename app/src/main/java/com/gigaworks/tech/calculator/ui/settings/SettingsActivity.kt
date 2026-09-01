@@ -36,18 +36,24 @@ import com.gigaworks.tech.calculator.util.CLICK_ABOUT
 import com.gigaworks.tech.calculator.util.FOLLOW_ME
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.HistoryAutoDelete
+import com.gigaworks.tech.calculator.util.INLINE_ADS_DISABLED
+import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
+import com.gigaworks.tech.calculator.util.InlineAdDecision
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.RATE_APP
 import com.gigaworks.tech.calculator.util.REPORT_PROBLEM
 import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
+import com.gigaworks.tech.calculator.util.SETTINGS_INLINE_AD_ID
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
 import com.gigaworks.tech.calculator.util.capitalize
+import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.performAppHapticFeedback
+import com.gigaworks.tech.calculator.util.resolveInlineAd
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -80,6 +86,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private val viewModel by viewModels<SettingsViewModel>()
     private var dialog: AlertDialog? = null
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var inlineAdView: AdView? = null
 
     // Declaring sensorManager
     // and acceleration constants
@@ -102,6 +109,12 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         // enable Google ads
         enableAds()
+    }
+
+    override fun onDestroy() {
+        inlineAdView?.destroy()
+        inlineAdView = null
+        super.onDestroy()
     }
 
 //    private val sensorListener: SensorEventListener = object : SensorEventListener {
@@ -152,6 +165,11 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        enableBannerAd()
+        enableInlineAd()
+    }
+
+    private fun enableBannerAd() {
         val remoteConfig = Firebase.remoteConfig
         val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
         if (!shouldEnableAds) {
@@ -206,6 +224,33 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
             logEvent(ADS_ENABLED)
         }
 
+    }
+
+    private fun enableInlineAd() {
+        when (val decision = resolveInlineAd(SETTINGS_INLINE_AD_ID)) {
+            is InlineAdDecision.Blocked -> {
+                logD("disabling inline ad: ${decision.reason}")
+                logEvent(INLINE_ADS_DISABLED) {
+                    param("reason", decision.reason)
+                }
+            }
+
+            is InlineAdDecision.Allowed -> {
+                if (!googleMobileAdsConsentManager.canRequestAds) {
+                    return
+                }
+                val adView = createInlineAdView(
+                    this,
+                    decision.adUnitId,
+                    getClassName()
+                ) {
+                    binding.inlineAdViewContainer.visible(true)
+                }
+                binding.inlineAdViewContainer.addView(adView)
+                inlineAdView = adView
+                logEvent(INLINE_ADS_ENABLED)
+            }
+        }
     }
 
     private fun setUpObservables() {

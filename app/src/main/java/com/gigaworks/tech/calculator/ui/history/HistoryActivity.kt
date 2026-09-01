@@ -19,10 +19,16 @@ import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
+import com.gigaworks.tech.calculator.util.HISTORY_INLINE_AD_ID
+import com.gigaworks.tech.calculator.util.INLINE_ADS_DISABLED
+import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
+import com.gigaworks.tech.calculator.util.InlineAdDecision
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
+import com.gigaworks.tech.calculator.util.resolveInlineAd
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -39,6 +45,8 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
     private val viewModel by viewModels<HistoryViewModel>()
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var inlineAdView: AdView? = null
+    private var isInlineAdLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,19 +54,29 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         setSupportActionBar(binding.toolbar)
 
         setupView()
+        // enable Google ads before the observables so the list adapter can host the inline ad
+        enableAds()
         setupObservables()
         setupEdgeToEdge(
             topInsetsView = binding.appBar,
             bottomInsetsView = binding.root
         )
+    }
 
-        // enable Google ads
-        enableAds()
+    override fun onDestroy() {
+        inlineAdView?.destroy()
+        inlineAdView = null
+        super.onDestroy()
     }
 
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        enableBannerAd()
+        enableInlineAd()
+    }
+
+    private fun enableBannerAd() {
         val remoteConfig = Firebase.remoteConfig
         val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
         if (!shouldEnableAds) {
@@ -115,18 +133,51 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
     }
 
+    private fun enableInlineAd() {
+        when (val decision = resolveInlineAd(HISTORY_INLINE_AD_ID)) {
+            is InlineAdDecision.Blocked -> {
+                logD("disabling inline ad: ${decision.reason}")
+                logEvent(INLINE_ADS_DISABLED) {
+                    param("reason", decision.reason)
+                }
+            }
+
+            is InlineAdDecision.Allowed -> {
+                if (!googleMobileAdsConsentManager.canRequestAds) {
+                    return
+                }
+                inlineAdView = createInlineAdView(
+                    this,
+                    decision.adUnitId,
+                    getClassName()
+                ) { adView ->
+                    isInlineAdLoaded = true
+                    // posted so the row is never inserted while the RecyclerView is laying out
+                    binding.rv.post {
+                        (binding.rv.adapter as? HistoryAdapter)?.showInlineAd(adView)
+                    }
+                }
+                logEvent(INLINE_ADS_ENABLED)
+            }
+        }
+    }
+
     private fun setupObservables() {
         viewModel.historyList.observe(this) { historyList ->
             if (historyList != null && historyList.isNotEmpty()) {
                 binding.noHistory.visible(false)
                 binding.rv.visible(true)
                 val list = viewModel.transformHistory(historyList.map { it.toDomain() })
-                val adapter = HistoryAdapter(list, object : HistoryAdapter.OnHistoryClickListener {
-                    override fun onHistoryClick(history: HistoryAdapterItem) {
-                        viewModel.saveExpression(removeNumberSeparator(history.expression))
-                        finish()
-                    }
-                })
+                val adapter = HistoryAdapter(
+                    list,
+                    object : HistoryAdapter.OnHistoryClickListener {
+                        override fun onHistoryClick(history: HistoryAdapterItem) {
+                            viewModel.saveExpression(removeNumberSeparator(history.expression))
+                            finish()
+                        }
+                    },
+                    inlineAdView.takeIf { isInlineAdLoaded }
+                )
                 binding.rv.adapter = adapter
             } else {
                 binding.rv.visible(false)
