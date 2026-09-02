@@ -13,6 +13,10 @@
     <value>ca-app-pub-2673776259760115/5156890070</value>
   </entry>
   <entry>
+    <key>about_ad_id</key>
+    <value></value>
+  </entry>
+  <entry>
     <key>enable_ads</key>
     <value>false</value>
   </entry>
@@ -34,10 +38,6 @@
   </entry>
   <entry>
     <key>settings_inline_ad_id</key>
-    <value></value>
-  </entry>
-  <entry>
-    <key>about_inline_ad_id</key>
     <value></value>
   </entry>
 </defaults>

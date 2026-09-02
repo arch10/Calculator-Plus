@@ -14,23 +14,23 @@ import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.FragmentAboutBinding
 import com.gigaworks.tech.calculator.ui.base.BaseFragment
-import com.gigaworks.tech.calculator.util.ABOUT_INLINE_AD_ID
+import com.gigaworks.tech.calculator.util.ADS_DISABLED
+import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
-import com.gigaworks.tech.calculator.util.INLINE_ADS_DISABLED
-import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
-import com.gigaworks.tech.calculator.util.InlineAdDecision
 import com.gigaworks.tech.calculator.util.JOIN_BETA
 import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logD
-import com.gigaworks.tech.calculator.util.resolveInlineAd
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdView
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 
 class AboutFragment : BaseFragment<FragmentAboutBinding>() {
 
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
-    private var inlineAdView: AdView? = null
+    private var adView: AdView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,41 +44,51 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
         )
 
         setUpView()
-        enableInlineAd()
+        enableAd()
     }
 
     override fun onDestroyView() {
-        inlineAdView?.destroy()
-        inlineAdView = null
+        adView?.destroy()
+        adView = null
         super.onDestroyView()
     }
 
-    private fun enableInlineAd() {
+    /**
+     * A standalone 300x250 placement gated only by enable_ads — separate from the
+     * enable_inline_ads experiment running on History and Settings.
+     */
+    private fun enableAd() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(requireContext().applicationContext)
-        when (val decision = resolveInlineAd(ABOUT_INLINE_AD_ID)) {
-            is InlineAdDecision.Blocked -> {
-                logD("disabling inline ad: ${decision.reason}")
-                logEvent(INLINE_ADS_DISABLED) {
-                    param("reason", decision.reason)
-                }
+        val remoteConfig = Firebase.remoteConfig
+        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
+        if (!shouldEnableAds) {
+            logD("disabling ads due to remote config")
+            logEvent(ADS_DISABLED) {
+                param("reason", "ads_disabled")
             }
+            return
+        }
+        val adUnitId = remoteConfig["about_ad_id"].asString()
+        if (adUnitId.isEmpty()) {
+            logD("disabling ads due to empty ad unit id")
+            logEvent(ADS_DISABLED) {
+                param("reason", "empty_ad_unit")
+            }
+            return
+        }
 
-            is InlineAdDecision.Allowed -> {
-                if (!googleMobileAdsConsentManager.canRequestAds) {
-                    return
-                }
-                val adView = createInlineAdView(
-                    requireContext(),
-                    decision.adUnitId,
-                    getClassName()
-                ) {
-                    binding.inlineAdViewContainer.visible(true)
-                }
-                binding.inlineAdViewContainer.addView(adView)
-                inlineAdView = adView
-                logEvent(INLINE_ADS_ENABLED)
+        if (googleMobileAdsConsentManager.canRequestAds) {
+            val newAdView = createInlineAdView(
+                requireContext(),
+                adUnitId,
+                getClassName()
+            ) {
+                binding.inlineAdViewContainer.visible(true)
             }
+            binding.inlineAdViewContainer.addView(newAdView)
+            adView = newAdView
+            logEvent(ADS_ENABLED)
         }
     }
 
