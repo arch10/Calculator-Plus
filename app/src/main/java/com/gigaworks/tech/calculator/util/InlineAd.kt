@@ -12,6 +12,7 @@ import com.google.firebase.remoteconfig.remoteConfig
 
 const val HISTORY_INLINE_AD_ID = "history_inline_ad_id"
 const val SETTINGS_INLINE_AD_ID = "settings_inline_ad_id"
+const val ABOUT_INLINE_AD_ID = "about_inline_ad_id"
 
 /**
  * Position of the inline ad inside the history list. Clamped to the list size
