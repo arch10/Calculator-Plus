@@ -14,9 +14,27 @@ import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.FragmentAboutBinding
 import com.gigaworks.tech.calculator.ui.base.BaseFragment
+import com.gigaworks.tech.calculator.util.ADS_DISABLED
+import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.JOIN_BETA
+import com.gigaworks.tech.calculator.util.getClassName
+import com.gigaworks.tech.calculator.util.logAdSource
+import com.gigaworks.tech.calculator.util.logD
+import com.gigaworks.tech.calculator.util.visible
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 
 class AboutFragment : BaseFragment<FragmentAboutBinding>() {
+
+    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var adView: AdView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,6 +48,58 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
         )
 
         setUpView()
+        enableBannerAd()
+    }
+
+    override fun onDestroyView() {
+        adView?.destroy()
+        adView = null
+        super.onDestroyView()
+    }
+
+    private fun enableBannerAd() {
+        googleMobileAdsConsentManager =
+            GoogleMobileAdsConsentManager.getInstance(requireContext().applicationContext)
+        val remoteConfig = Firebase.remoteConfig
+        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
+        if (!shouldEnableAds) {
+            logD("disabling ads due to remote config")
+            logEvent(ADS_DISABLED) {
+                param("reason", "ads_disabled")
+            }
+            return
+        }
+        //test ad unit id - uncomment below line to enable test ads
+        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
+        val adUnitId = remoteConfig["about_ad_id"].asString()
+        if (adUnitId.isEmpty()) {
+            logD("disabling ads due to empty ad unit id")
+            logEvent(ADS_DISABLED) {
+                param("reason", "empty_ad_unit")
+            }
+            return
+        }
+
+        if (googleMobileAdsConsentManager.canRequestAds) {
+            binding.adViewContainer.visible(true)
+            val newAdView = AdView(requireContext())
+            newAdView.setAdSize(AdSize.BANNER)
+            newAdView.adUnitId = adUnitId
+            binding.adViewContainer.addView(newAdView)
+            newAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    newAdView.responseInfo.logAdSource(getClassName())
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    logD("ad failed to load: ${error.message}")
+                    error.responseInfo.logAdSource(getClassName())
+                }
+            }
+            newAdView.loadAd(AdRequest.Builder().build())
+            adView = newAdView
+            logEvent(ADS_ENABLED)
+        }
     }
 
     private fun setUpView() {
