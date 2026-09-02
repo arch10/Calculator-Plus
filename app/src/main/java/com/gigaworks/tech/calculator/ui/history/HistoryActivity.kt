@@ -18,17 +18,17 @@ import com.gigaworks.tech.calculator.ui.history.viewmodel.HistoryViewModel
 import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.AdPlacement
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
+import com.gigaworks.tech.calculator.util.HISTORY_AD_ID
 import com.gigaworks.tech.calculator.util.HISTORY_INLINE_AD_ID
-import com.gigaworks.tech.calculator.util.INLINE_ADS_DISABLED
 import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
-import com.gigaworks.tech.calculator.util.InlineAdDecision
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
 import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
-import com.gigaworks.tech.calculator.util.resolveInlineAd
+import com.gigaworks.tech.calculator.util.resolveAdPlacement
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -76,32 +76,8 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
-        enableBannerAd()
-        enableInlineAd()
-    }
 
-    private fun enableBannerAd() {
-        val remoteConfig = Firebase.remoteConfig
-        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
-        if (!shouldEnableAds) {
-            logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED) {
-                param("reason", "ads_disabled")
-            }
-            return
-        }
-        //test ad unit id - uncomment below line to enable test ads
-        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        val adUnitId = remoteConfig["history_ad_id"].asString()
-        if (adUnitId.isEmpty()) {
-            logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED) {
-                param("reason", "empty_ad_unit")
-            }
-            return
-        }
-
-//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val allowDisablingAds = Firebase.remoteConfig["allow_disabling_ads"].asBoolean()
 //        val localDisableAds = viewModel.getDisableAds()
 //        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
 //        if (allowDisablingAds && localDisableAds) {
@@ -110,57 +86,56 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 //            return
 //        }
 
-        if (googleMobileAdsConsentManager.canRequestAds) {
-            binding.rv.layoutParams = binding.rv.layoutParams.apply {
-                (this as ViewGroup.MarginLayoutParams).bottomMargin =
-                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
-            }
-            binding.adViewContainer.visible(true)
-            val adRequest = AdRequest.Builder().build()
-            val adView = AdView(this)
-            adView.setAdSize(AdSize.BANNER)
-            adView.adUnitId = adUnitId
-            binding.adViewContainer.addView(adView)
-            adView.adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    adView.responseInfo.logAdSource(getClassName())
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    logD("ad failed to load: ${error.message}")
-                    error.responseInfo.logAdSource(getClassName())
+        //test ad unit id - pass "ca-app-pub-3940256099942544/6300978111" below to enable test ads
+        when (val placement = resolveAdPlacement(HISTORY_INLINE_AD_ID, HISTORY_AD_ID)) {
+            is AdPlacement.Inline -> showInlineAd(placement.adUnitId)
+            is AdPlacement.BottomBanner -> showBottomBannerAd(placement.adUnitId)
+            is AdPlacement.None -> {
+                logD("no ad shown: ${placement.reason}")
+                logEvent(ADS_DISABLED) {
+                    param("reason", placement.reason)
                 }
             }
-            adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
         }
-
     }
 
-    private fun enableInlineAd() {
-        when (val decision = resolveInlineAd(HISTORY_INLINE_AD_ID)) {
-            is InlineAdDecision.Blocked -> {
-                logD("disabling inline ad: ${decision.reason}")
-                logEvent(INLINE_ADS_DISABLED) {
-                    param("reason", decision.reason)
-                }
+    private fun showBottomBannerAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        binding.rv.layoutParams = binding.rv.layoutParams.apply {
+            (this as ViewGroup.MarginLayoutParams).bottomMargin =
+                resources.getDimensionPixelSize(R.dimen.banner_ad_height)
+        }
+        binding.adViewContainer.visible(true)
+        val adRequest = AdRequest.Builder().build()
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = adUnitId
+        binding.adViewContainer.addView(adView)
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView.responseInfo.logAdSource(getClassName())
             }
 
-            is InlineAdDecision.Allowed -> {
-                if (!googleMobileAdsConsentManager.canRequestAds) {
-                    return
-                }
-                inlineAdView = createInlineAdView(
-                    this,
-                    decision.adUnitId,
-                    getClassName()
-                ) { adView ->
-                    isInlineAdLoaded = true
-                    attachInlineAd(adView)
-                }
-                logEvent(INLINE_ADS_ENABLED)
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                logD("ad failed to load: ${error.message}")
+                error.responseInfo.logAdSource(getClassName())
             }
         }
+        adView.loadAd(adRequest)
+        logEvent(ADS_ENABLED)
+    }
+
+    private fun showInlineAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        inlineAdView = createInlineAdView(this, adUnitId, getClassName()) { adView ->
+            isInlineAdLoaded = true
+            attachInlineAd(adView)
+        }
+        logEvent(INLINE_ADS_ENABLED)
     }
 
     /**

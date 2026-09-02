@@ -14,6 +14,7 @@ import com.gigaworks.tech.calculator.BuildConfig
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.databinding.FragmentAboutBinding
 import com.gigaworks.tech.calculator.ui.base.BaseFragment
+import com.gigaworks.tech.calculator.util.ABOUT_AD_ID
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
@@ -69,7 +70,7 @@ class AboutFragment : BaseFragment<FragmentAboutBinding>() {
             }
             return
         }
-        val adUnitId = remoteConfig["about_ad_id"].asString()
+        val adUnitId = remoteConfig[ABOUT_AD_ID].asString()
         if (adUnitId.isEmpty()) {
             logD("disabling ads due to empty ad unit id")
             logEvent(ADS_DISABLED) {

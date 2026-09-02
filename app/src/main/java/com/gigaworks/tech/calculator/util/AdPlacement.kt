@@ -10,6 +10,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 
+const val HISTORY_AD_ID = "history_ad_id"
+const val SETTINGS_AD_ID = "settings_ad_id"
+const val ABOUT_AD_ID = "about_ad_id"
 const val HISTORY_INLINE_AD_ID = "history_inline_ad_id"
 const val SETTINGS_INLINE_AD_ID = "settings_inline_ad_id"
 
@@ -19,28 +22,43 @@ const val SETTINGS_INLINE_AD_ID = "settings_inline_ad_id"
  */
 const val HISTORY_INLINE_AD_POSITION = 3
 
-sealed class InlineAdDecision {
-    data class Allowed(val adUnitId: String) : InlineAdDecision()
-    data class Blocked(val reason: String) : InlineAdDecision()
+/**
+ * The single ad a screen shows, in priority order: the inline 300x250 first, then the
+ * anchored bottom banner, then nothing.
+ */
+sealed class AdPlacement {
+    data class Inline(val adUnitId: String) : AdPlacement()
+    data class BottomBanner(val adUnitId: String) : AdPlacement()
+    data class None(val reason: String) : AdPlacement()
 }
 
 /**
- * Inline ads are an ad revenue experiment on top of the existing banners, so they
- * need both the master `enable_ads` switch and the `enable_inline_ads` flag to be on.
+ * Picks the one ad a screen shows, so a screen never stacks an inline ad and a banner.
+ *
+ * The choice is made from Remote Config before any request goes out, which means a screen
+ * that picks the inline ad does not fall back to the banner when that request fails to
+ * fill: the session stays purely inline so the experiment reads cleanly. An inline ad
+ * whose unit id is unset is not a usable placement, so it falls through to the banner.
+ *
+ * The inline 300x250 is an ad revenue experiment, so it needs `enable_inline_ads` on top
+ * of the master `enable_ads` switch; the banner needs only `enable_ads`.
  */
-fun resolveInlineAd(adUnitIdKey: String): InlineAdDecision {
+fun resolveAdPlacement(inlineAdUnitIdKey: String, bannerAdUnitIdKey: String): AdPlacement {
     val remoteConfig = Firebase.remoteConfig
     if (!remoteConfig["enable_ads"].asBoolean()) {
-        return InlineAdDecision.Blocked("ads_disabled")
+        return AdPlacement.None("ads_disabled")
     }
-    if (!remoteConfig["enable_inline_ads"].asBoolean()) {
-        return InlineAdDecision.Blocked("inline_ads_disabled")
+    if (remoteConfig["enable_inline_ads"].asBoolean()) {
+        val inlineAdUnitId = remoteConfig[inlineAdUnitIdKey].asString()
+        if (inlineAdUnitId.isNotEmpty()) {
+            return AdPlacement.Inline(inlineAdUnitId)
+        }
     }
-    val adUnitId = remoteConfig[adUnitIdKey].asString()
-    if (adUnitId.isEmpty()) {
-        return InlineAdDecision.Blocked("empty_ad_unit")
+    val bannerAdUnitId = remoteConfig[bannerAdUnitIdKey].asString()
+    if (bannerAdUnitId.isNotEmpty()) {
+        return AdPlacement.BottomBanner(bannerAdUnitId)
     }
-    return InlineAdDecision.Allowed(adUnitId)
+    return AdPlacement.None("empty_ad_unit")
 }
 
 /**
