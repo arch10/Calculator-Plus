@@ -48,6 +48,10 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
     private var inlineAdView: AdView? = null
     private var isInlineAdLoaded = false
 
+    // defaults to false to match the layout's default state (rv visible, noHistory gone)
+    // until the first historyList emission says otherwise
+    private var isHistoryEmpty = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -152,22 +156,41 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                     getClassName()
                 ) { adView ->
                     isInlineAdLoaded = true
-                    // posted so the row is never inserted while the RecyclerView is laying out
-                    binding.rv.post {
-                        (binding.rv.adapter as? HistoryAdapter)?.showInlineAd(adView)
-                    }
+                    attachInlineAd(adView)
                 }
                 logEvent(INLINE_ADS_ENABLED)
             }
         }
     }
 
+    /**
+     * Routes the loaded inline ad to wherever it currently belongs: a real row in the
+     * history list, or the empty-state view when there is no history to scroll through.
+     * Called both when the ad finishes loading and whenever the list flips between empty
+     * and non-empty (e.g. the user clears history while this screen is open), since either
+     * event can happen first.
+     */
+    private fun attachInlineAd(adView: AdView) {
+        if (isHistoryEmpty) {
+            (adView.parent as? ViewGroup)?.removeView(adView)
+            binding.noHistoryAdContainer.removeAllViews()
+            binding.noHistoryAdContainer.addView(adView)
+            binding.noHistoryAdContainer.visible(true)
+        } else {
+            // posted so the row is never inserted while the RecyclerView is laying out
+            binding.rv.post {
+                (binding.rv.adapter as? HistoryAdapter)?.showInlineAd(adView)
+            }
+        }
+    }
+
     private fun setupObservables() {
         viewModel.historyList.observe(this) { historyList ->
-            if (historyList != null && historyList.isNotEmpty()) {
+            isHistoryEmpty = historyList.isNullOrEmpty()
+            if (!isHistoryEmpty) {
                 binding.noHistory.visible(false)
                 binding.rv.visible(true)
-                val list = viewModel.transformHistory(historyList.map { it.toDomain() })
+                val list = viewModel.transformHistory(historyList!!.map { it.toDomain() })
                 val adapter = HistoryAdapter(
                     list,
                     object : HistoryAdapter.OnHistoryClickListener {
@@ -183,6 +206,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
                 binding.rv.visible(false)
                 binding.noHistory.visible(true)
             }
+            inlineAdView.takeIf { isInlineAdLoaded }?.let { attachInlineAd(it) }
         }
     }
 

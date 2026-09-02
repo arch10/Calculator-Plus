@@ -42,22 +42,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/history"
-                android:contentDescription="@string/no_history" />
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
-            <TextView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/history"
+                    android:contentDescription="@string/no_history" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_history"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/space_l"
+                    android:textColor="?attr/textPrimary"
+                    android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/noHistoryAdContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/no_history"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/space_l"
-                android:textColor="?attr/textPrimary"
-                android:textAppearance="@style/TextAppearance.CalculatorPlus.Subtitle1" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_xxl"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
     </FrameLayout>
