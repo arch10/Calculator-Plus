@@ -9,7 +9,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.Firebase
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,6 +43,10 @@ abstract class BaseFragment<B : ViewBinding> : Fragment() {
 
     protected fun logEvent(eventName: String, @Nullable bundle: Bundle? = null) {
         firebaseAnalytics.logEvent(eventName, bundle)
+    }
+
+    protected fun logEvent(eventName: String, block: ParametersBuilder.() -> Unit) {
+        firebaseAnalytics.logEvent(eventName, block)
     }
 
     abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): B

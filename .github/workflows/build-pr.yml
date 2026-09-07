@@ -1,0 +1,54 @@
+name: PR Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: pr-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "zulu"
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run unit tests
+        run: ./gradlew test
+      # lint has no baseline yet, so it reports rather than blocks the build
+      - name: Run lint
+        run: ./gradlew lint
+        continue-on-error: true
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+      - name: Check app version
+        run: |
+          APP_VERSION=$(./gradlew -q printVersionName)
+          echo "APP_VERSION = " ${APP_VERSION}
+          echo "APP_VERSION=${APP_VERSION}" >> $GITHUB_ENV
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-plus-v${{ env.APP_VERSION }}-debug-${{ github.run_number }}
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload test and lint reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports-${{ github.run_number }}
+          path: |
+            app/build/reports/tests/**
+            app/build/reports/lint-results-*.html
+          if-no-files-found: ignore
+          retention-days: 14

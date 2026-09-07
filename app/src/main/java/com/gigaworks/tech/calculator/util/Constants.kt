@@ -83,3 +83,6 @@ const val CHANGE_DISABLE_ADS = "change_disable_ads"
 
 //change haptic feedback
 const val CHANGE_HAPTIC_FEEDBACK = "change_haptic_feedback"
+
+//inline 300x250 ad placement enabled
+const val INLINE_ADS_ENABLED = "inline_ads_enabled"

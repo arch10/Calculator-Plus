@@ -22,6 +22,7 @@ import com.gigaworks.tech.calculator.ui.settings.viewmodel.SettingsViewModel
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
 import com.gigaworks.tech.calculator.util.AccentTheme
+import com.gigaworks.tech.calculator.util.AdPlacement
 import com.gigaworks.tech.calculator.util.AppPreference
 import com.gigaworks.tech.calculator.util.CHANGE_ACCENT_COLOR
 import com.gigaworks.tech.calculator.util.CHANGE_DISABLE_ADS
@@ -36,18 +37,23 @@ import com.gigaworks.tech.calculator.util.CLICK_ABOUT
 import com.gigaworks.tech.calculator.util.FOLLOW_ME
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
 import com.gigaworks.tech.calculator.util.HistoryAutoDelete
+import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import com.gigaworks.tech.calculator.util.RATE_APP
 import com.gigaworks.tech.calculator.util.REPORT_PROBLEM
 import com.gigaworks.tech.calculator.util.SEND_FEEDBACK
+import com.gigaworks.tech.calculator.util.SETTINGS_AD_ID
+import com.gigaworks.tech.calculator.util.SETTINGS_INLINE_AD_ID
 import com.gigaworks.tech.calculator.util.SHARE_APP
 import com.gigaworks.tech.calculator.util.TRIGGER_STORE_FEEDBACK
 import com.gigaworks.tech.calculator.util.capitalize
+import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
 import com.gigaworks.tech.calculator.util.logE
 import com.gigaworks.tech.calculator.util.performAppHapticFeedback
+import com.gigaworks.tech.calculator.util.resolveAdPlacement
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -80,6 +86,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private val viewModel by viewModels<SettingsViewModel>()
     private var dialog: AlertDialog? = null
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var inlineAdView: AdView? = null
 
     // Declaring sensorManager
     // and acceleration constants
@@ -102,6 +109,12 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 
         // enable Google ads
         enableAds()
+    }
+
+    override fun onDestroy() {
+        inlineAdView?.destroy()
+        inlineAdView = null
+        super.onDestroy()
     }
 
 //    private val sensorListener: SensorEventListener = object : SensorEventListener {
@@ -152,27 +165,8 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
-        val remoteConfig = Firebase.remoteConfig
-        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
-        if (!shouldEnableAds) {
-            logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED) {
-                param("reason", "ads_disabled")
-            }
-            return
-        }
-        //test ad unit id - uncomment below line to enable test ads
-        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        val adUnitId = remoteConfig["settings_ad_id"].asString()
-        if (adUnitId.isEmpty()) {
-            logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED) {
-                param("reason", "empty_ad_unit")
-            }
-            return
-        }
 
-//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val allowDisablingAds = Firebase.remoteConfig["allow_disabling_ads"].asBoolean()
 //        val localDisableAds = viewModel.getDisableAds()
 //        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
 //        if (allowDisablingAds && localDisableAds) {
@@ -181,31 +175,57 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>() {
 //            return
 //        }
 
-        if (googleMobileAdsConsentManager.canRequestAds) {
-            binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
-                (this as ViewGroup.MarginLayoutParams).bottomMargin =
-                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
-            }
-            binding.adViewContainer.visible(true)
-            val adRequest = AdRequest.Builder().build()
-            val adView = AdView(this)
-            adView.setAdSize(AdSize.BANNER)
-            adView.adUnitId = adUnitId
-            binding.adViewContainer.addView(adView)
-            adView.adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    adView.responseInfo.logAdSource(getClassName())
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    logD("ad failed to load: ${error.message}")
-                    error.responseInfo.logAdSource(getClassName())
+        //test ad unit id - pass "ca-app-pub-3940256099942544/6300978111" below to enable test ads
+        when (val placement = resolveAdPlacement(SETTINGS_INLINE_AD_ID, SETTINGS_AD_ID)) {
+            is AdPlacement.Inline -> showInlineAd(placement.adUnitId)
+            is AdPlacement.BottomBanner -> showBottomBannerAd(placement.adUnitId)
+            is AdPlacement.None -> {
+                logD("no ad shown: ${placement.reason}")
+                logEvent(ADS_DISABLED) {
+                    param("reason", placement.reason)
                 }
             }
-            adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
         }
+    }
 
+    private fun showBottomBannerAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        binding.profileView.layoutParams = binding.profileView.layoutParams.apply {
+            (this as ViewGroup.MarginLayoutParams).bottomMargin =
+                resources.getDimensionPixelSize(R.dimen.banner_ad_height)
+        }
+        binding.adViewContainer.visible(true)
+        val adRequest = AdRequest.Builder().build()
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = adUnitId
+        binding.adViewContainer.addView(adView)
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView.responseInfo.logAdSource(getClassName())
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                logD("ad failed to load: ${error.message}")
+                error.responseInfo.logAdSource(getClassName())
+            }
+        }
+        adView.loadAd(adRequest)
+        logEvent(ADS_ENABLED)
+    }
+
+    private fun showInlineAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        val adView = createInlineAdView(this, adUnitId, getClassName()) {
+            binding.inlineAdViewContainer.visible(true)
+        }
+        binding.inlineAdViewContainer.addView(adView)
+        inlineAdView = adView
+        logEvent(INLINE_ADS_ENABLED)
     }
 
     private fun setUpObservables() {

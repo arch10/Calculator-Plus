@@ -18,11 +18,17 @@ import com.gigaworks.tech.calculator.ui.history.viewmodel.HistoryViewModel
 import com.gigaworks.tech.calculator.ui.main.helper.removeNumberSeparator
 import com.gigaworks.tech.calculator.util.ADS_DISABLED
 import com.gigaworks.tech.calculator.util.ADS_ENABLED
+import com.gigaworks.tech.calculator.util.AdPlacement
 import com.gigaworks.tech.calculator.util.GoogleMobileAdsConsentManager
+import com.gigaworks.tech.calculator.util.HISTORY_AD_ID
+import com.gigaworks.tech.calculator.util.HISTORY_INLINE_AD_ID
+import com.gigaworks.tech.calculator.util.INLINE_ADS_ENABLED
 import com.gigaworks.tech.calculator.util.SHARE_EXPRESSION
+import com.gigaworks.tech.calculator.util.createInlineAdView
 import com.gigaworks.tech.calculator.util.getClassName
 import com.gigaworks.tech.calculator.util.logAdSource
 import com.gigaworks.tech.calculator.util.logD
+import com.gigaworks.tech.calculator.util.resolveAdPlacement
 import com.gigaworks.tech.calculator.util.visible
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -39,6 +45,12 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 
     private val viewModel by viewModels<HistoryViewModel>()
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var inlineAdView: AdView? = null
+    private var isInlineAdLoaded = false
+
+    // defaults to false to match the layout's default state (rv visible, noHistory gone)
+    // until the first historyList emission says otherwise
+    private var isHistoryEmpty = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,40 +58,26 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
         setSupportActionBar(binding.toolbar)
 
         setupView()
+        // enable Google ads before the observables so the list adapter can host the inline ad
+        enableAds()
         setupObservables()
         setupEdgeToEdge(
             topInsetsView = binding.appBar,
             bottomInsetsView = binding.root
         )
+    }
 
-        // enable Google ads
-        enableAds()
+    override fun onDestroy() {
+        inlineAdView?.destroy()
+        inlineAdView = null
+        super.onDestroy()
     }
 
     private fun enableAds() {
         googleMobileAdsConsentManager =
             GoogleMobileAdsConsentManager.getInstance(applicationContext)
-        val remoteConfig = Firebase.remoteConfig
-        val shouldEnableAds = remoteConfig["enable_ads"].asBoolean()
-        if (!shouldEnableAds) {
-            logD("disabling ads due to remote config")
-            logEvent(ADS_DISABLED) {
-                param("reason", "ads_disabled")
-            }
-            return
-        }
-        //test ad unit id - uncomment below line to enable test ads
-        //val adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        val adUnitId = remoteConfig["history_ad_id"].asString()
-        if (adUnitId.isEmpty()) {
-            logD("disabling ads due to empty ad unit id")
-            logEvent(ADS_DISABLED) {
-                param("reason", "empty_ad_unit")
-            }
-            return
-        }
 
-//        val allowDisablingAds = remoteConfig["allow_disabling_ads"].asBoolean()
+//        val allowDisablingAds = Firebase.remoteConfig["allow_disabling_ads"].asBoolean()
 //        val localDisableAds = viewModel.getDisableAds()
 //        logD("allowDisablingAds=$allowDisablingAds, localDisableAds=$localDisableAds")
 //        if (allowDisablingAds && localDisableAds) {
@@ -88,50 +86,102 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>() {
 //            return
 //        }
 
-        if (googleMobileAdsConsentManager.canRequestAds) {
-            binding.rv.layoutParams = binding.rv.layoutParams.apply {
-                (this as ViewGroup.MarginLayoutParams).bottomMargin =
-                    resources.getDimensionPixelSize(R.dimen.banner_ad_height)
-            }
-            binding.adViewContainer.visible(true)
-            val adRequest = AdRequest.Builder().build()
-            val adView = AdView(this)
-            adView.setAdSize(AdSize.BANNER)
-            adView.adUnitId = adUnitId
-            binding.adViewContainer.addView(adView)
-            adView.adListener = object : AdListener() {
-                override fun onAdLoaded() {
-                    adView.responseInfo.logAdSource(getClassName())
-                }
-
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    logD("ad failed to load: ${error.message}")
-                    error.responseInfo.logAdSource(getClassName())
+        //test ad unit id - pass "ca-app-pub-3940256099942544/6300978111" below to enable test ads
+        when (val placement = resolveAdPlacement(HISTORY_INLINE_AD_ID, HISTORY_AD_ID)) {
+            is AdPlacement.Inline -> showInlineAd(placement.adUnitId)
+            is AdPlacement.BottomBanner -> showBottomBannerAd(placement.adUnitId)
+            is AdPlacement.None -> {
+                logD("no ad shown: ${placement.reason}")
+                logEvent(ADS_DISABLED) {
+                    param("reason", placement.reason)
                 }
             }
-            adView.loadAd(adRequest)
-            logEvent(ADS_ENABLED)
         }
+    }
 
+    private fun showBottomBannerAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        binding.rv.layoutParams = binding.rv.layoutParams.apply {
+            (this as ViewGroup.MarginLayoutParams).bottomMargin =
+                resources.getDimensionPixelSize(R.dimen.banner_ad_height)
+        }
+        binding.adViewContainer.visible(true)
+        val adRequest = AdRequest.Builder().build()
+        val adView = AdView(this)
+        adView.setAdSize(AdSize.BANNER)
+        adView.adUnitId = adUnitId
+        binding.adViewContainer.addView(adView)
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView.responseInfo.logAdSource(getClassName())
+            }
+
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                logD("ad failed to load: ${error.message}")
+                error.responseInfo.logAdSource(getClassName())
+            }
+        }
+        adView.loadAd(adRequest)
+        logEvent(ADS_ENABLED)
+    }
+
+    private fun showInlineAd(adUnitId: String) {
+        if (!googleMobileAdsConsentManager.canRequestAds) {
+            return
+        }
+        inlineAdView = createInlineAdView(this, adUnitId, getClassName()) { adView ->
+            isInlineAdLoaded = true
+            attachInlineAd(adView)
+        }
+        logEvent(INLINE_ADS_ENABLED)
+    }
+
+    /**
+     * Routes the loaded inline ad to wherever it currently belongs: a real row in the
+     * history list, or the empty-state view when there is no history to scroll through.
+     * Called both when the ad finishes loading and whenever the list flips between empty
+     * and non-empty (e.g. the user clears history while this screen is open), since either
+     * event can happen first.
+     */
+    private fun attachInlineAd(adView: AdView) {
+        if (isHistoryEmpty) {
+            (adView.parent as? ViewGroup)?.removeView(adView)
+            binding.noHistoryAdContainer.removeAllViews()
+            binding.noHistoryAdContainer.addView(adView)
+            binding.noHistoryAdContainer.visible(true)
+        } else {
+            // posted so the row is never inserted while the RecyclerView is laying out
+            binding.rv.post {
+                (binding.rv.adapter as? HistoryAdapter)?.showInlineAd(adView)
+            }
+        }
     }
 
     private fun setupObservables() {
         viewModel.historyList.observe(this) { historyList ->
-            if (historyList != null && historyList.isNotEmpty()) {
+            isHistoryEmpty = historyList.isNullOrEmpty()
+            if (!isHistoryEmpty) {
                 binding.noHistory.visible(false)
                 binding.rv.visible(true)
-                val list = viewModel.transformHistory(historyList.map { it.toDomain() })
-                val adapter = HistoryAdapter(list, object : HistoryAdapter.OnHistoryClickListener {
-                    override fun onHistoryClick(history: HistoryAdapterItem) {
-                        viewModel.saveExpression(removeNumberSeparator(history.expression))
-                        finish()
-                    }
-                })
+                val list = viewModel.transformHistory(historyList!!.map { it.toDomain() })
+                val adapter = HistoryAdapter(
+                    list,
+                    object : HistoryAdapter.OnHistoryClickListener {
+                        override fun onHistoryClick(history: HistoryAdapterItem) {
+                            viewModel.saveExpression(removeNumberSeparator(history.expression))
+                            finish()
+                        }
+                    },
+                    inlineAdView.takeIf { isInlineAdLoaded }
+                )
                 binding.rv.adapter = adapter
             } else {
                 binding.rv.visible(false)
                 binding.noHistory.visible(true)
             }
+            inlineAdView.takeIf { isInlineAdLoaded }?.let { attachInlineAd(it) }
         }
     }
 
