@@ -9,5 +9,6 @@ enum class CalculationMessage {
     INVALID_EXPRESSION,
     DIVIDE_BY_ZERO,
     VALUE_TOO_LARGE,
-    DOMAIN_ERROR
+    DOMAIN_ERROR,
+    TIMEOUT
 }

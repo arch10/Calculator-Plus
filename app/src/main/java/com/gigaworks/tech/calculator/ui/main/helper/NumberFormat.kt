@@ -44,6 +44,7 @@ private fun addSeparator(string: String, separator: Char, isIndian: Boolean): St
     var temp = 0
     var switch = true
     for (i in decimalIndex - 1 downTo 1) {
+        ensureCalculationActive()
         temp++
         if (switch && temp % 3 == 0) {
             temp = 0
@@ -174,6 +175,7 @@ fun solveExpression(
     if (expressionStack.contains("-")) {
         stack = Stack()
         while (expressionStack.isNotEmpty()) {
+            ensureCalculationActive()
             if (expressionStack.peek() == "-") {
                 expressionStack.pop()
                 val negValue = "-${expressionStack.pop()}"
@@ -235,6 +237,7 @@ fun solveAddition(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         if (temp == "+") {
             val precision = MathContext(20)
@@ -254,6 +257,7 @@ fun solveMultiplication(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         if (temp == "*") {
             val precision = MathContext(20)
@@ -273,6 +277,7 @@ fun solveDivision(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         if (temp == "/") {
             val precision = MathContext(20)
@@ -295,6 +300,7 @@ private fun solveTrigonometricExpression(stack: Stack<String>, angleType: String
     val isDegree = (angleType == AngleType.DEG.name)
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         when (temp) {
             "sin", "-sin" -> {
@@ -436,6 +442,7 @@ private fun solveLeftUnary(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         when (temp) {
             "√", "-√", "∛", "-∛" -> {
@@ -481,6 +488,7 @@ private fun solveRightUnary(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         when (temp) {
             "%" -> {
@@ -530,6 +538,7 @@ private fun solvePower(stack: Stack<String>): Stack<String> {
     val tempStack = Stack<String>()
     var temp: String
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         temp = stack.pop()
         if (temp == "^") {
             val precision = MathContext(20)
@@ -573,6 +582,7 @@ private fun solvePower(stack: Stack<String>): Stack<String> {
 private fun solveRoots(stack: Stack<String>): Double {
     var num = stack.pop().toDouble()
     while (stack.isNotEmpty()) {
+        ensureCalculationActive()
         val kk = stack.pop()
         if (kk == "√") {
             num = sqrt(num)

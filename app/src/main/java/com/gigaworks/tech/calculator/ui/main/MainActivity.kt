@@ -89,6 +89,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
     private var isCompactMode = false
+    private var isEqualPending = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -263,10 +264,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         override fun afterTextChanged(s: Editable?) {
+            isEqualPending = false
             setResult("")
             getResultEditText().setTextColor(getResultTextColor())
             if (!removeNumberSeparator(s.toString()).isNumber()) {
                 viewModel.calculateExpression(s.toString())
+            } else {
+                viewModel.cancelCalculation()
             }
         }
 
@@ -400,46 +404,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         //equal onClick
         binding.numPad.equal.setOnClickListener {
             it.performAppHapticFeedback(viewModel.getHapticFeedback())
-            val expression = removeNumberSeparator(getExpression())
-            val result = getResult()
-            if (expression.isNotEmpty()) {
-                if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
-                    if (isCompactMode) {
-                        val errorStringId = viewModel.error.value ?: R.string.invalid
-                        if (errorStringId != -1) {
-                            val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
-                            getExpressionEditText().startAnimation(shake)
-                            Toast.makeText(this, getString(errorStringId), Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
-                        getResultEditText().setTextColor(getResultTextColor(true))
-                        val errorStringId = viewModel.error.value ?: R.string.invalid
-                        if (errorStringId == -1) {
-                            setResult("")
-                        } else {
-                            setResult(getString(errorStringId))
-                            getResultEditText().startAnimation(shake)
-                        }
-                    }
+            //the answer is computed off the main thread, so it may not have arrived yet;
+            //remember the tap and finish it once the pending calculation settles
+            if (viewModel.isCalculating.value == true) {
+                isEqualPending = true
+                if (isCompactMode) {
+                    //the result view is hidden in compact mode, so it cannot carry the hint
+                    Toast.makeText(this, R.string.calculating, Toast.LENGTH_SHORT).show()
                 } else {
-                    val balancedExpression = viewModel.getCalculatedExpression()
-                    val history = History(
-                        expression = balancedExpression,
-                        result = result,
-                        date = System.currentTimeMillis()
-                    )
-                    viewModel.insertHistory(history)
-                    viewModel.isPrevResult = true
-                    if (isCompactMode) {
-                        setExpression(result)
-                        setResult("")
-                    } else {
-                        setExpressionAfterEqual(result)
-                    }
-                    logEvent(EVALUATE)
+                    setResult(getString(R.string.calculating))
                 }
+                return@setOnClickListener
             }
+            onEqualClicked()
         }
 
         //memory store click
@@ -499,11 +476,62 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     /**
+     * Applies the current answer to the expression, or reports why there isn't one.
+     * Runs either straight from the equal button or, when the calculation was still
+     * running at that point, as soon as it settles.
+     */
+    private fun onEqualClicked() {
+        val expression = removeNumberSeparator(getExpression())
+        val result = getResult()
+        if (expression.isEmpty()) return
+        if (result.isEmpty() || !removeNumberSeparator(result).isNumber()) {
+            val errorStringId = viewModel.error.value ?: R.string.invalid
+            val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+            if (isCompactMode) {
+                if (errorStringId != -1) {
+                    getExpressionEditText().startAnimation(shake)
+                    Toast.makeText(this, getString(errorStringId), Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                getResultEditText().setTextColor(getResultTextColor(true))
+                if (errorStringId == -1) {
+                    setResult("")
+                } else {
+                    setResult(getString(errorStringId))
+                    getResultEditText().startAnimation(shake)
+                }
+            }
+        } else {
+            val balancedExpression = viewModel.getCalculatedExpression()
+            val history = History(
+                expression = balancedExpression,
+                result = result,
+                date = System.currentTimeMillis()
+            )
+            viewModel.insertHistory(history)
+            viewModel.isPrevResult = true
+            if (isCompactMode) {
+                setExpression(result)
+                setResult("")
+            } else {
+                setExpressionAfterEqual(result)
+            }
+            logEvent(EVALUATE)
+        }
+    }
+
+    /**
      * Setup viewModel observers to observe the data change
      * */
     private fun setupObservers() {
         viewModel.result.observe(this) {
             setResult(it)
+        }
+        viewModel.isCalculating.observe(this) { isCalculating ->
+            if (!isCalculating && isEqualPending) {
+                isEqualPending = false
+                onEqualClicked()
+            }
         }
     }
 

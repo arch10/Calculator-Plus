@@ -58,6 +58,8 @@
     <string name="divide_by_zero">No se puede dividir por 0</string>
     <string name="value_too_large">Valor demasiado grande</string>
     <string name="domain_error">error de dominio</string>
+    <string name="calculation_timeout">Se agotó el tiempo de cálculo</string>
+    <string name="calculating">Calculando…</string>
     <string name="error">Error</string>
     <string name="choose_theme">Escoge un tema</string>
     <string name="choose_number_separator">Elija el número separador</string>

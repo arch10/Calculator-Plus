@@ -7,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.gigaworks.tech.calculator.R
 import com.gigaworks.tech.calculator.domain.History
 import com.gigaworks.tech.calculator.repository.HistoryRepository
-import com.gigaworks.tech.calculator.ui.main.helper.addNumberSeparator
-import com.gigaworks.tech.calculator.ui.main.helper.getResult
+import com.gigaworks.tech.calculator.ui.main.helper.evaluateExpression
 import com.gigaworks.tech.calculator.ui.main.helper.isExpressionBalanced
 import com.gigaworks.tech.calculator.ui.main.helper.isNumber
 import com.gigaworks.tech.calculator.ui.main.helper.prepareExpression
-import com.gigaworks.tech.calculator.ui.main.helper.roundMyAnswer
 import com.gigaworks.tech.calculator.ui.main.helper.tryBalancingBrackets
 import com.gigaworks.tech.calculator.util.AngleType
 import com.gigaworks.tech.calculator.util.AppPreference
@@ -22,6 +20,8 @@ import com.gigaworks.tech.calculator.util.CalculationMessage
 import com.gigaworks.tech.calculator.util.HapticFeedback
 import com.gigaworks.tech.calculator.util.NumberSeparator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,6 +35,11 @@ class MainViewModel @Inject constructor(
 
     private var calculatedExpression: String = ""
 
+    private var calculationJob: Job? = null
+
+    //identifies the newest calculation, so a superseded one cannot overwrite its state
+    private var calculationId: Long = 0
+
     private val _result = MutableLiveData<String>()
     val result: LiveData<String>
         get() = _result
@@ -42,6 +47,10 @@ class MainViewModel @Inject constructor(
     private val _error = MutableLiveData(-1)
     val error: LiveData<Int>
         get() = _error
+
+    private val _isCalculating = MutableLiveData(false)
+    val isCalculating: LiveData<Boolean>
+        get() = _isCalculating
 
     private fun setResult(result: String) {
         _result.value = result
@@ -63,51 +72,81 @@ class MainViewModel @Inject constructor(
     }
 
     fun calculateExpression(expression: String) {
+        //a keystroke makes the in-flight answer stale, so stop paying for it
+        calculationJob?.cancel()
+        val id = ++calculationId
+
         val exp = if (isExpressionBalanced(expression)) {
             setError(-1)
             calculatedExpression = expression
             prepareExpression(expression)
         } else {
-            val exp = tryBalancingBrackets(expression)
-            if (getSmartCalculation() && isExpressionBalanced(exp)) {
+            val balanced = tryBalancingBrackets(expression)
+            if (getSmartCalculation() && isExpressionBalanced(balanced)) {
                 setError(-1)
                 calculatedExpression = expression
-                prepareExpression(exp)
+                prepareExpression(balanced)
             } else {
                 setError(R.string.invalid)
                 ""
             }
         }
-        try {
-            val rawResult = getResult(exp)
-            val result = roundMyAnswer(rawResult, getAnswerPrecision())
-            val formattedResult = if (getNumberSeparator() != NumberSeparator.OFF) {
-                addNumberSeparator(
-                    expression = result,
-                    isIndian = (getNumberSeparator() == NumberSeparator.INDIAN)
-                )
-            } else {
-                result
-            }
-            setResult(formattedResult)
-        } catch (e: CalculationException) {
-            val errorMessage = when (e.msg) {
-                CalculationMessage.INVALID_EXPRESSION -> R.string.invalid
-                CalculationMessage.DIVIDE_BY_ZERO -> R.string.divide_by_zero
-                CalculationMessage.VALUE_TOO_LARGE -> R.string.value_too_large
-                CalculationMessage.DOMAIN_ERROR -> R.string.domain_error
-            }
-            setError(errorMessage)
+
+        if (exp.isEmpty()) {
+            _isCalculating.value = false
             setResult("")
-        } catch (e: Exception) {
-            setError(R.string.error)
-            setResult("")
+            return
         }
 
+        _isCalculating.value = true
+        calculationJob = viewModelScope.launch {
+            try {
+                val formattedResult = evaluateExpression(
+                    expression = exp,
+                    angleType = getAngleType(),
+                    precision = getAnswerPrecision(),
+                    separator = getNumberSeparator()
+                )
+                if (id == calculationId) {
+                    setResult(formattedResult)
+                }
+            } catch (e: CalculationException) {
+                if (id == calculationId) {
+                    setError(errorMessageFor(e.msg))
+                    setResult("")
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                if (id == calculationId) {
+                    setError(R.string.error)
+                    setResult("")
+                }
+            } finally {
+                if (id == calculationId) {
+                    _isCalculating.value = false
+                }
+            }
+        }
     }
 
-    private fun getResult(expression: String): String {
-        return getResult(expression, getAngleType())
+    /**
+     * Drops any evaluation still in flight. Used when the expression no longer needs one,
+     * so a stale answer cannot land on top of it.
+     */
+    fun cancelCalculation() {
+        calculationJob?.cancel()
+        calculationJob = null
+        calculationId++
+        _isCalculating.value = false
+    }
+
+    private fun errorMessageFor(message: CalculationMessage): Int = when (message) {
+        CalculationMessage.INVALID_EXPRESSION -> R.string.invalid
+        CalculationMessage.DIVIDE_BY_ZERO -> R.string.divide_by_zero
+        CalculationMessage.VALUE_TOO_LARGE -> R.string.value_too_large
+        CalculationMessage.DOMAIN_ERROR -> R.string.domain_error
+        CalculationMessage.TIMEOUT -> R.string.calculation_timeout
     }
 
     fun getAppTheme(): String {

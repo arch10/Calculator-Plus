@@ -45,6 +45,16 @@ fun prepareExpression(expression: String): String {
     return exp
 }
 
+//big-math and BigDecimal never check for thread interruption, so the evaluator polls the
+//flag itself between steps. runInterruptible turns the resulting InterruptedException into
+//coroutine cancellation, which is what lets a timed out calculation stop burning CPU.
+@Throws(InterruptedException::class)
+fun ensureCalculationActive() {
+    if (Thread.currentThread().isInterrupted) {
+        throw InterruptedException("Calculation was cancelled")
+    }
+}
+
 //solves the given expression and returns the result
 fun getResult(expression: String, angleType: String): String {
     if (expression.isEmpty()) return ""
@@ -67,6 +77,7 @@ fun getResult(expression: String, angleType: String): String {
     val stack = Stack<String>()
     val temp = StringBuilder()
     for (i in exp.indices) {
+        ensureCalculationActive()
         val char = exp[i]
         if (char.isOperator() || char == '(') {
             if (temp.isNotEmpty()) {
