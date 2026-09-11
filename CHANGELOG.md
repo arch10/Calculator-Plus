@@ -1,5 +1,27 @@
 # Changelog
 
+## v3.2.0
+
+### New Features
+- **Ad placement priority system**: new `util/AdPlacement.kt` resolves the single ad a screen may show before any request goes out — `AdPlacement.Inline`, `AdPlacement.BottomBanner` or `AdPlacement.None(reason)`. `resolveAdPlacement(inlineKey, bannerKey)` reads Remote Config only, so a screen that picks the inline ad never falls back to the banner on a no-fill and the experiment reads cleanly. An inline unit id left empty falls through to the banner
+- **Inline 300x250 placements on History and Settings**: `HistoryActivity` and `SettingsActivity` route through `resolveAdPlacement` into `showInlineAd` or `showBottomBannerAd`. The inline ad is gated on `enable_inline_ads` on top of the master `enable_ads` switch. `createInlineAdView` surfaces the `AdView` only from `onAdLoaded`, since a `MEDIUM_RECTANGLE` reserves its full height even when the request does not fill
+- **Inline ad row in the history list**: `HistoryAdapter` now serves two view types and takes an optional `AdView`. The row sits at `HISTORY_INLINE_AD_POSITION` (3), clamped to the list size so shorter lists render it last, and is inserted via `showInlineAd` once the request fills. `HistoryActivity.attachInlineAd` routes the loaded ad to the list row or to the empty-state `noHistoryAdContainer`, and re-routes when the list flips between empty and non-empty
+- **Standalone 300x250 on the About screen**: `AboutFragment` loads its own `about_ad_id` placement into `inlineAdViewContainer`, gated on `enable_ads` alone and independent of the `enable_inline_ads` experiment. `BaseFragment` gained a `logEvent(eventName, block)` overload so fragments can log parameterised analytics events
+- New analytics event constant `INLINE_ADS_ENABLED` (`inline_ads_enabled`) in `util/Constants.kt`
+
+### Bug Fixes
+- **Play Store rejected the v3.1.2 upload**: `upload-google-play` failed with `notes in language en-GB with length 685, which is too long (max: 500)` at the end of the release workflow, after the AAB had already built. Play counts UTF-16 code units including the trailing newline, so most emoji cost 2 each and both `wc -c` and `wc -m` under-report. `docs/whatsnew/whatsnew-en-GB` was trimmed to 434 units with every user-facing theme kept
+- **Stale rows in the history list**: `HistoryViewHolder.bind` only ever hid the date and border views, never restored them, so a recycled holder could keep a hidden date or border. Both are now set from the item on every bind
+- `HistoryAdapter` context menu switched from the deprecated `adapterPosition` to `bindingAdapterPosition`
+- `AdView` instances are destroyed in `onDestroy` / `onDestroyView` on all three screens
+
+### CI & Tooling
+- New `build-pr.yml` workflow: runs `./gradlew test`, `./gradlew lint` and `./gradlew assembleDebug` on every pull request, uploading the debug APK and the test and lint reports as artifacts for 14 days. Lint has no baseline yet so it reports rather than blocks, via `continue-on-error`. Concurrency is grouped per ref with `cancel-in-progress`
+- `build-prerelease.yml` can now be triggered manually with `workflow_dispatch` in addition to pushes to `beta`
+- The release skill now requires the user to approve the CHANGELOG and what's new texts before anything is committed, then asks permission before pushing. It also documents the 500-unit Play limit, the UTF-16 counting rule with a command to verify it, and that the what's new file must cover every version since the one on the production track
+
+---
+
 ## v3.1.2
 
 ### Bug Fixes
